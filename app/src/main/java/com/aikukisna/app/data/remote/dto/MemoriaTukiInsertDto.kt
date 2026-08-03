@@ -1,4 +1,12 @@
 package com.aikukisna.app.data.remote.dto
 
-class MemoriaTukiInsertDto {
-}
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class MemoriaTukiInsertDto(
+    @SerialName("usuario_id") val usuarioId: String,
+    val tipo: String,
+    val resumen: String,
+    val fecha: String
+)

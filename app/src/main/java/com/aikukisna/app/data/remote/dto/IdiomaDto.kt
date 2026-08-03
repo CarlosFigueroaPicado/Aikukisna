@@ -1,4 +1,10 @@
 package com.aikukisna.app.data.remote.dto
 
-class IdiomaDto {
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class IdiomaDto(
+    val id: Int,
+    val codigo: String,
+    val nombre: String
+)

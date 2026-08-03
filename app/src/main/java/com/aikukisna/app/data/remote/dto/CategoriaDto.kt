@@ -1,4 +1,9 @@
 package com.aikukisna.app.data.remote.dto
 
-class CategoriaDto {
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CategoriaDto(
+    val id: Int,
+    val nombre: String
+)
