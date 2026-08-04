@@ -5,5 +5,6 @@ data class Leccion(
     val titulo: String,
     val capituloNumero: Int?,
     val nivel: Int,
-    val categoria: Categoria?
+    val categoria: Categoria?,
+    val idiomaMeta: Idioma
 )
