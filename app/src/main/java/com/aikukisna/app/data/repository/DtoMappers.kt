@@ -39,5 +39,6 @@ internal fun LeccionDto.toDomain() = Leccion(
     titulo = titulo,
     capituloNumero = capituloNumero,
     nivel = nivel,
-    categoria = categoria?.let { Categoria(it.id, it.nombre) }
+    categoria = categoria?.let { Categoria(it.id, it.nombre) },
+    idiomaMeta = Idioma(idiomaMeta.id, idiomaMeta.codigo, idiomaMeta.nombre)
 )

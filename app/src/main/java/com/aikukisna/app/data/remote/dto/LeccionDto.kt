@@ -9,5 +9,6 @@ data class LeccionDto(
     val titulo: String,
     @SerialName("capitulo_numero") val capituloNumero: Int? = null,
     val nivel: Int,
-    val categoria: CategoriaDto? = null
+    val categoria: CategoriaDto? = null,
+    @SerialName("idioma_meta") val idiomaMeta: IdiomaDto
 )

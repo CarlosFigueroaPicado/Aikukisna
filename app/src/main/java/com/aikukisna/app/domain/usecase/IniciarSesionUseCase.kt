@@ -2,8 +2,9 @@ package com.aikukisna.app.domain.usecase
 
 import com.aikukisna.app.domain.repository.AuthRepository
 import java.util.UUID
+import javax.inject.Inject
 
-class IniciarSesionUseCase(
+class IniciarSesionUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(correo: String, contrasena: String): UUID {

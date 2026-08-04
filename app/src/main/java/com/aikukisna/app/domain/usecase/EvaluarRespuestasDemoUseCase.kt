@@ -1,6 +1,7 @@
 package com.aikukisna.app.domain.usecase
 
 import com.aikukisna.app.domain.model.Palabra
+import javax.inject.Inject
 
 data class ResultadoDemo(
     val correctas: Int,
@@ -8,7 +9,7 @@ data class ResultadoDemo(
     val puntosGanados: Int
 )
 
-class EvaluarRespuestasDemoUseCase {
+class EvaluarRespuestasDemoUseCase @Inject constructor (){
     operator fun invoke(respuestas: Map<Palabra, String>): ResultadoDemo {
         val correctas = respuestas.count { (palabra, respuestaUsuario) ->
             respuestaUsuario.trim().equals(palabra.texto.trim(), ignoreCase = true)
