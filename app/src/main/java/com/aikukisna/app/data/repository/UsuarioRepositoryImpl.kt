@@ -31,7 +31,7 @@ class UsuarioRepositoryImpl @Inject constructor(
 
     override suspend fun obtenerUsuario(id: UUID): Usuario? {
         return client.from("usuario")
-            .select(Columns.raw("*, idioma_meta(*)")) {
+            .select(Columns.raw("*, idioma_meta:idioma_meta_id(*)")) {
                 filter { eq("id", id.toString()) }
             }
             .decodeSingleOrNull<UsuarioDto>()
@@ -46,7 +46,7 @@ class UsuarioRepositoryImpl @Inject constructor(
     }
     override suspend fun obtenerProgreso(usuarioId: UUID): List<ProgresoLeccion> {
         return client.from("progreso_leccion")
-            .select(Columns.raw("*, leccion(*, categoria(*))")) {
+            .select(Columns.raw("*, leccion(*, categoria(*), idioma_meta:idioma_meta_id(*))")) {
                 filter { eq("usuario_id", usuarioId.toString()) }
             }
             .decodeList<ProgresoLeccionDto>()

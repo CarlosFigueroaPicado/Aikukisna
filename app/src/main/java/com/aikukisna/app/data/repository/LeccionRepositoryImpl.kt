@@ -20,7 +20,7 @@ class LeccionRepositoryImpl @Inject constructor(
 
     override suspend fun obtenerLecciones(nivel: Int?): List<Leccion> {
         return client.from("leccion")
-            .select(Columns.raw("*, categoria(*)")) {
+            .select(Columns.raw("*, categoria(*), idioma_meta:idioma_meta_id(*)")) {
                 filter {
                     nivel?.let { eq("nivel", it) }
                 }
@@ -31,7 +31,7 @@ class LeccionRepositoryImpl @Inject constructor(
 
     override suspend fun obtenerLeccionPorId(id: Int): Leccion? {
         return client.from("leccion")
-            .select(Columns.raw("*, categoria(*)")) {
+            .select(Columns.raw("*, categoria(*), idioma_meta:idioma_meta_id(*)")) {
                 filter { eq("id", id) }
             }
             .decodeSingleOrNull<LeccionDto>()
