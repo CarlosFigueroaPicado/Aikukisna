@@ -4,8 +4,9 @@ import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.domain.model.Usuario
 import com.aikukisna.app.domain.repository.AuthRepository
 import com.aikukisna.app.domain.repository.UsuarioRepository
+import javax.inject.Inject
 
-class RegistrarUsuarioUseCase(
+class RegistrarUsuarioUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val usuarioRepository: UsuarioRepository
 ) {
