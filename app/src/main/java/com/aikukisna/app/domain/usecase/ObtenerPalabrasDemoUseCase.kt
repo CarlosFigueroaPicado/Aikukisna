@@ -9,7 +9,8 @@ class ObtenerPalabrasDemoUseCase @Inject constructor(
     private val leccionRepository: LeccionRepository
 ) {
     companion object {
-        const val LECCION_DEMO_ID = 1 // placeholder — pendiente confirmar el id real en tu tabla `leccion`
+
+        const val LECCION_DEMO_ID = 2
     }
 
     suspend operator fun invoke(): List<Palabra> {

@@ -1,7 +1,6 @@
 package com.aikukisna.app.data.repository
 
 import com.aikukisna.app.data.remote.dto.LogroDesbloqueadoDto
-import com.aikukisna.app.data.remote.dto.LogroDesbloqueadoInsertDto
 import com.aikukisna.app.data.remote.dto.LogroDto
 import com.aikukisna.app.domain.model.Categoria
 import com.aikukisna.app.domain.model.Logro
@@ -9,7 +8,10 @@ import com.aikukisna.app.domain.model.LogroDesbloqueado
 import com.aikukisna.app.domain.repository.LogroRepository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -35,12 +37,10 @@ class LogroRepositoryImpl @Inject constructor(
     }
 
     override suspend fun desbloquearLogro(usuarioId: UUID, logroId: Int) {
-        client.from("logro_desbloqueado").insert(
-            LogroDesbloqueadoInsertDto(
-                usuarioId = usuarioId.toString(),
-                logroId = logroId,
-                fecha = Instant.now().toString()
-            )
+
+        client.postgrest.rpc(
+            "desbloquear_logro",
+            buildJsonObject { put("p_logro_id", logroId) }
         )
     }
 }
