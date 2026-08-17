@@ -67,8 +67,8 @@ class LeccionRepositoryImpl @Inject constructor(
 
 private fun OracionEjemploDto.toDomain() = OracionEjemplo(
     id = id,
-    textoMiskito = textoMiskito,
-    textoEspanol = textoEspanol,
+    textoOrigen = textoOrigen,
+    textoDestino = textoDestino,
     leccion = null, // ya se conoce el contexto (leccionId) desde donde se llamó; no se re-embebe
     fuente = FuenteDocumento(fuente.id, fuente.titulo, fuente.autor, fuente.anio, fuente.institucion)
 )
