@@ -4,20 +4,28 @@ import com.aikukisna.app.domain.repository.AuthRepository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.providers.Google
+import io.github.jan.supabase.auth.providers.builtin.IDToken
 import java.util.UUID
 import javax.inject.Inject
+import kotlinx.serialization.json.JsonObject
 
 class AuthRepositoryImpl @Inject constructor(
     private val client: SupabaseClient
 ) : AuthRepository {
 
-    override suspend fun registrarse(correo: String, contrasena: String): UUID {
-        client.auth.signUpWith(Email) {
+    override suspend fun registrarse(
+        correo: String,
+        contrasena: String,
+        metadatos: JsonObject
+    ): UUID {
+        val usuarioCreado = client.auth.signUpWith(Email) {
             email = correo
             password = contrasena
+            data = metadatos
         }
-        return obtenerIdUsuarioActual()
-            ?: error("No se pudo obtener el usuario tras el registro")
+        return usuarioCreado?.id?.let(UUID::fromString)
+            ?: error("No se creó el usuario tras registrarse")
     }
 
     override suspend fun iniciarSesion(correo: String, contrasena: String): UUID {
@@ -27,6 +35,16 @@ class AuthRepositoryImpl @Inject constructor(
         }
         return obtenerIdUsuarioActual()
             ?: error("No se pudo obtener el usuario tras iniciar sesión")
+    }
+
+    override suspend fun iniciarSesionConGoogle(idTokenGoogle: String, nonce: String?): UUID {
+        client.auth.signInWith(IDToken) {
+            idToken = idTokenGoogle
+            provider = Google
+            this.nonce = nonce
+        }
+        return usuarioActualId()
+            ?: error("No se pudo obtener el usuario tras iniciar sesión con Google")
     }
 
     override suspend fun cerrarSesion() {

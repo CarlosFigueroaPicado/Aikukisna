@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class OracionEjemploDto(
     val id: Int,
-    @SerialName("texto_miskito") val textoMiskito: String,
-    @SerialName("texto_espanol") val textoEspanol: String,
+    @SerialName("texto_origen") val textoOrigen: String,
+    @SerialName("texto_destino") val textoDestino: String,
     @SerialName("fuente_documento") val fuente: FuenteDocumentoDto
 )

@@ -146,7 +146,7 @@ private fun Usuario.toUpdateDto() = UsuarioUpdateDto(
     nombre = nombre,
     apellido = apellido,
     nombreUsuario = nombreUsuario,
-    correo = correo,
+
     edad = edad,
     pais = pais,
     ciudad = ciudad,

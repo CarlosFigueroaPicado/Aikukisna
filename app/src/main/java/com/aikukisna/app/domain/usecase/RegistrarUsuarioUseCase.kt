@@ -3,12 +3,12 @@ package com.aikukisna.app.domain.usecase
 import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.domain.model.Usuario
 import com.aikukisna.app.domain.repository.AuthRepository
-import com.aikukisna.app.domain.repository.UsuarioRepository
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 class RegistrarUsuarioUseCase @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val usuarioRepository: UsuarioRepository
+    private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
         correo: String,
@@ -21,9 +21,18 @@ class RegistrarUsuarioUseCase @Inject constructor(
         ciudad: String,
         idiomaMeta: Idioma
     ): Usuario {
-        val id = authRepository.registrarse(correo, contrasena)
+        val metadatos = buildJsonObject {
+            put("nombre", nombre)
+            put("apellido", apellido)
+            put("nombre_usuario", nombreUsuario)
+            put("edad", edad)
+            put("pais", pais)
+            put("ciudad", ciudad)
+        }
 
-        val usuario = Usuario(
+        val id = authRepository.registrarse(correo, contrasena, metadatos)
+
+        return Usuario(
             id = id,
             nombre = nombre,
             apellido = apellido,
@@ -38,8 +47,5 @@ class RegistrarUsuarioUseCase @Inject constructor(
             rachaMaxima = 0,
             ultimaActividad = null
         )
-
-        usuarioRepository.actualizarUsuario(usuario)
-        return usuario
     }
 }

@@ -23,7 +23,10 @@ object NetworkModule {
             supabaseKey = BuildConfig.SUPABASE_ANON_KEY
         ) {
             install(Postgrest)
-            install(Auth)
+            install(Auth) {
+                scheme = "aikukisna"
+                host = "auth-callback"
+            }
         }
     }
 }

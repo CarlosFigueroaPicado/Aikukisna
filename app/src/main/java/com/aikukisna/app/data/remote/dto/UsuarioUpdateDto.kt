@@ -8,7 +8,7 @@ data class UsuarioUpdateDto(
     val nombre: String? = null,
     val apellido: String? = null,
     @SerialName("nombre_usuario") val nombreUsuario: String? = null,
-    val correo: String? = null,
+
     val edad: Int? = null,
     val pais: String? = null,
     val ciudad: String? = null,
