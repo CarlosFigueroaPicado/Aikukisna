@@ -20,17 +20,17 @@ import androidx.compose.ui.unit.dp
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.presentacion.componentes.AikukisnaTextField
 import com.aikukisna.app.presentacion.componentes.ButtonStyle
-import com.aikukisna.app.presentacion.viewmodel.LoginViewModel
+import com.aikukisna.app.presentacion.viewmodel.RegisterViewModel
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel,
-    onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+fun RegisterScreen(
+    viewModel: RegisterViewModel,
+    onRegisterSuccess: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
-    LaunchedEffect(viewModel.loginExitoso, onLoginSuccess) {
-        if (viewModel.loginExitoso) {
-            onLoginSuccess()
+    LaunchedEffect(viewModel.registroExitoso, onRegisterSuccess) {
+        if (viewModel.registroExitoso) {
+            onRegisterSuccess()
         }
         if (viewModel.errorMessage != null) {
             println("Error: ${viewModel.errorMessage}")
@@ -39,19 +39,19 @@ fun LoginScreen(
 
     Column(
         modifier = Modifier.fillMaxSize().padding(40.dp),
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Iniciar Sesión",
+                text = "Crear cuenta",
                 style = MaterialTheme.typography.displayLarge
             )
 
             Text(
-                text = "!Bienvenido de nuevo!",
+                text = "Comienza tu viaje con el Miskito",
                 style = MaterialTheme.typography.bodyMedium
             )
 
@@ -62,21 +62,28 @@ fun LoginScreen(
             )
 
             AikukisnaTextField(
+                value = viewModel.nombreUsuario,
+                onValueChange = { viewModel.onNombreUsuarioChange(it) },
+                label = "Nombre",
+                leadingIcon = com.aikukisna.app.R.drawable.user,
+
+            )
+
+            AikukisnaTextField(
                 value = viewModel.email,
                 onValueChange = { viewModel.onEmailChange(it) },
                 label = "Correo electrónico",
-                leadingIcon = com.aikukisna.app.R.drawable.mail,
+                leadingIcon = com.aikukisna.app.R.drawable.mail
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
 
             AikukisnaTextField(
                 value = viewModel.password,
                 onValueChange = { viewModel.onPasswordChange(it) },
                 label = "Contraseña",
                 isPassword = true,
-                leadingIcon = com.aikukisna.app.R.drawable.lock,
+                leadingIcon = com.aikukisna.app.R.drawable.lock
             )
 
             Text(
@@ -84,34 +91,37 @@ fun LoginScreen(
                 text = "¿Olvidaste tu contraseña?",
                 style = MaterialTheme.typography.bodySmall
             )
+
         }
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AikukisnaButton(
-                text = "Iniciar Sesión",
-                onClick = {viewModel.intentarLogin()},
+                text = "Registrarse",
+                onClick = { viewModel.intentarRegistro() },
                 style = ButtonStyle.Secondary,
                 trailingIcon = com.aikukisna.app.R.drawable.login
+
             )
+
             Row {
                 Text(
-                    text = "¿No tienes una cuenta? ",
+                    text = "¿Ya tienes una cuenta? ",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "Regístrate",
+                    text = "Inicia sesión",
                     style = MaterialTheme.typography.bodySmall.copy
                         (color = MaterialTheme.colorScheme.primary),
 
                     modifier = Modifier.clickable {
-                        onNavigateToRegister()
+                        onNavigateToLogin()
                     }
                 )
             }
             Text(
-                text = "O inicia sesión con",
+                text = "O regístrate con",
                 style = MaterialTheme.typography.bodySmall
             )
 
@@ -124,7 +134,7 @@ fun LoginScreen(
                 trailingIcon = com.aikukisna.app.R.drawable.clock_dashed
             )
             AikukisnaButton(
-                text = "Entrar con Google",
+                text = "Continuar con Google",
                 onClick = {},
                 style = ButtonStyle.Ghost,
                 trailingIcon = com.aikukisna.app.R.drawable.google

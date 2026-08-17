@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.aikukisna.app.domain.repository.AuthRepository
 import com.aikukisna.app.domain.repository.UsuarioRepository
 import com.aikukisna.app.presentacion.pantallas.HomeUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val usuarioRepository: UsuarioRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
