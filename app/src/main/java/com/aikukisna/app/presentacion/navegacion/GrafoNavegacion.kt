@@ -2,7 +2,7 @@
 package com.aikukisna.app.presentacion.navegacion
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,8 +19,8 @@ sealed class Destinos(val ruta: String) {
 @Composable
 fun GrafoNavegacion(
     estaAutenticado: Boolean,
-    homeViewModel: HomeViewModel,
-    loginViewModel: com.aikukisna.app.presentacion.viewmodel.LoginViewModel = viewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val inicio = if (estaAutenticado) Destinos.Main.ruta else Destinos.Login.ruta
@@ -29,7 +29,6 @@ fun GrafoNavegacion(
         navController = navController,
         startDestination = inicio
     ) {
-        // PANTALLA LOGIN
         composable(Destinos.Login.ruta) {
             LoginScreen(
                 viewModel = loginViewModel,
@@ -41,7 +40,6 @@ fun GrafoNavegacion(
             )
         }
 
-        // PANTALLA PRINCIPAL CON BOTTOMBAR
         composable(Destinos.Main.ruta) {
             MainScreen(
                 homeViewModel = homeViewModel,
