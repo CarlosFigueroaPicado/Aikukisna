@@ -52,6 +52,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 supabase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabaseBom" }
 supabase-postgrest = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
 supabase-auth = { group = "io.github.jan-tennert.supabase", name = "auth-kt" }
+supabase-functions = { group = "io.github.jan-tennert.supabase", name = "functions-kt" }
 
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
@@ -65,4 +66,3 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
