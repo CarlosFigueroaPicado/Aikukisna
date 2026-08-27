@@ -37,11 +37,27 @@ android {
     }
 
 
+    signingConfigs {
+        create("release") {
+            val keystoreFile = localProperties.getProperty("KEYSTORE_FILE")
+            if (keystoreFile != null) {
+                storeFile = file(keystoreFile)
+                storePassword = localProperties.getProperty("KEYSTORE_PASSWORD")
+                keyAlias = localProperties.getProperty("KEY_ALIAS")
+                keyPassword = localProperties.getProperty("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            optimization {
-                enable = false
-            }
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -88,6 +104,7 @@ dependencies {
     implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.postgrest)
     implementation(libs.supabase.auth)
+    implementation(libs.supabase.functions)
     implementation(libs.ktor.client.okhttp)
 
     implementation(libs.kotlinx.serialization.json)
