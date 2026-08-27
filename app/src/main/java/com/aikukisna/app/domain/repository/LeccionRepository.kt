@@ -13,4 +13,10 @@ interface LeccionRepository {
     suspend fun obtenerLecciones(nivel: Int? = null): List<Leccion>
     suspend fun obtenerLeccionPorId(id: Int): Leccion?
     suspend fun obtenerContenidoLeccion(leccionId: Int): ContenidoLeccion
+
+
+    suspend fun completarLeccion(leccionId: Int, puntaje: Int = 0)
+
+
+    suspend fun sincronizarLeccionesPendientes(): Int
 }

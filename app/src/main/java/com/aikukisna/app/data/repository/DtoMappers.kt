@@ -1,6 +1,8 @@
 package com.aikukisna.app.data.repository
 
 import com.aikukisna.app.data.remote.dto.FuenteDocumentoDto
+import com.aikukisna.app.data.remote.dto.CategoriaDto
+import com.aikukisna.app.data.remote.dto.IdiomaDto
 import com.aikukisna.app.data.remote.dto.LeccionDto
 import com.aikukisna.app.data.remote.dto.PalabraDto
 import com.aikukisna.app.data.remote.dto.TraduccionDto
@@ -10,6 +12,10 @@ import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.domain.model.Leccion
 import com.aikukisna.app.domain.model.Palabra
 import com.aikukisna.app.domain.model.Traduccion
+
+internal fun IdiomaDto.toDomain() = Idioma(id = id, codigo = codigo, nombre = nombre)
+
+internal fun CategoriaDto.toDomain() = Categoria(id = id, nombre = nombre)
 
 internal fun FuenteDocumentoDto.toDomain() = FuenteDocumento(
     id = id,
