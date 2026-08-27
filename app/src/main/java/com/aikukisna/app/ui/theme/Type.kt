@@ -8,8 +8,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.aikukisna.app.R
 
+
 val Nunito = FontFamily(
     Font(R.font.nunito_variablefont_wght, FontWeight.Normal),
+    Font(R.font.nunito_variablefont_wght, FontWeight.Medium),
     Font(R.font.nunito_variablefont_wght, FontWeight.SemiBold),
     Font(R.font.nunito_variablefont_wght, FontWeight.Bold),
     Font(R.font.nunito_variablefont_wght, FontWeight.ExtraBold)
@@ -24,11 +26,13 @@ val JetBrainsMono = FontFamily(
 )
 
 val Typography = Typography(
+
     displayLarge = TextStyle(
         fontFamily = AguDisplay,
         fontWeight = FontWeight.Normal,
-        fontSize = 50.sp
+        fontSize = 32.sp
     ),
+
     titleLarge = TextStyle(
         fontFamily = Nunito,
         fontWeight = FontWeight.ExtraBold,
@@ -44,11 +48,13 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 26.sp
     ),
+
     headlineSmall = TextStyle(
         fontFamily = Nunito,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Medium,
         fontSize = 20.sp
     ),
+
     bodyLarge = TextStyle(
         fontFamily = Nunito,
         fontWeight = FontWeight.Normal,
@@ -66,12 +72,13 @@ val Typography = Typography(
     ),
     labelLarge = TextStyle(
         fontFamily = Nunito,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 14.sp
     ),
+
     labelMedium = TextStyle(
         fontFamily = JetBrainsMono,
         fontWeight = FontWeight.Medium,
-        fontSize = 13.6.sp
+        fontSize = 13.sp
     )
 )
