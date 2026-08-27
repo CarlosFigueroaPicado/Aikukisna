@@ -16,6 +16,12 @@ import com.aikukisna.app.data.repository.LogroRepositoryImpl
 import com.aikukisna.app.domain.repository.LogroRepository
 import com.aikukisna.app.data.repository.UsuarioRepositoryImpl
 import com.aikukisna.app.domain.repository.UsuarioRepository
+import com.aikukisna.app.data.repository.IaRepositoryImpl
+import com.aikukisna.app.domain.repository.IaRepository
+import com.aikukisna.app.data.repository.VozRepositoryImpl
+import com.aikukisna.app.domain.repository.VozRepository
+import com.aikukisna.app.data.repository.SincronizacionRepositoryImpl
+import com.aikukisna.app.domain.repository.SincronizacionRepository
 
 
 
@@ -41,5 +47,14 @@ interface RepositoryModule {
 
     @Binds
     fun bindUsuarioRepository(impl: UsuarioRepositoryImpl): UsuarioRepository
+
+    @Binds
+    fun bindIaRepository(impl: IaRepositoryImpl): IaRepository
+
+    @Binds
+    fun bindVozRepository(impl: VozRepositoryImpl): VozRepository
+
+    @Binds
+    fun bindSincronizacionRepository(impl: SincronizacionRepositoryImpl): SincronizacionRepository
 
 }
