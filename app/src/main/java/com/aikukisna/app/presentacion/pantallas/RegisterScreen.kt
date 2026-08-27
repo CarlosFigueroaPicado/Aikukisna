@@ -4,45 +4,34 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.aikukisna.app.R
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.presentacion.componentes.AikukisnaTextField
 import com.aikukisna.app.presentacion.componentes.InputStyle
-import com.aikukisna.app.presentacion.viewmodel.LoginViewModel
+import com.aikukisna.app.presentacion.viewmodel.RegisterViewModel
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel,
-    onLoginSuccess: () -> Unit,
-    onIrARegistro: () -> Unit = {}
+fun RegisterScreen(
+    viewModel: RegisterViewModel,
+    onRegistroExitoso: () -> Unit,
+    onIrALogin: () -> Unit
 ) {
-    val context = LocalContext.current
-
-    LaunchedEffect(viewModel.loginExitoso, onLoginSuccess) {
-        if (viewModel.loginExitoso) {
-            onLoginSuccess()
-        }
-        if (viewModel.errorMessage != null) {
-            println("Error: ${viewModel.errorMessage}")
+    LaunchedEffect(viewModel.registroExitoso, onRegistroExitoso) {
+        if (viewModel.registroExitoso) {
+            onRegistroExitoso()
         }
     }
 
@@ -58,24 +47,35 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             Text(
-                text = "Iniciar Sesión",
+                text = "Crear cuenta",
                 style = MaterialTheme.typography.displayLarge
             )
 
             Spacer(modifier = Modifier.height(14.dp))
 
             Text(
-                text = "!Bienvenido de nuevo!",
+                text = "Comienza tu viaje con el Miskito",
                 style = MaterialTheme.typography.bodyMedium
             )
 
             Image(
-                painter = painterResource(id = com.aikukisna.app.R.drawable.ic_ave_login),
-                contentDescription = "Logo",
-                modifier = Modifier.height(89.dp).padding(5.dp)
+                painter = painterResource(id = R.drawable.ic_ave_login),
+                contentDescription = null,
+                modifier = Modifier
+                    .height(89.dp)
+                    .padding(5.dp)
             )
+
+            AikukisnaTextField(
+                value = viewModel.nombre,
+                onValueChange = { viewModel.onNombreChange(it) },
+                label = "Nombre completo",
+                style = InputStyle.Outlined,
+                leadingIcon = com.aikukisna.app.R.drawable.user
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             AikukisnaTextField(
                 value = viewModel.email,
@@ -95,14 +95,6 @@ fun LoginScreen(
                 style = InputStyle.Outlined,
                 leadingIcon = com.aikukisna.app.R.drawable.lock
             )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                modifier = Modifier.padding(bottom = 16.dp),
-                text = "¿Olvidaste tu contraseña?",
-                style = MaterialTheme.typography.bodySmall
-            )
         }
 
         Column(
@@ -110,43 +102,18 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             AikukisnaButton(
-                text = "Iniciar sesión",
-                onClick = { viewModel.intentarLogin() },
+                text = "Crear cuenta",
+                onClick = { viewModel.intentarRegistro() },
                 isLoading = viewModel.isLoading
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "¿No tienes una cuenta? Registrate",
+                text = "¿Ya tienes cuenta? Iniciar sesión",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .padding(4.dp)
-                    .clickable { onIrARegistro() }
+                    .clickable { onIrALogin() }
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "O inicia sesión con",
-                style = MaterialTheme.typography.bodySmall
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            OutlinedButton(
-                onClick = { viewModel.iniciarSesionConGoogle(context) },
-                enabled = !viewModel.isLoadingGoogle,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                if (viewModel.isLoadingGoogle) {
-                    CircularProgressIndicator(modifier = Modifier.size(20.dp))
-                } else {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(
-                            painter = painterResource(id = com.aikukisna.app.R.drawable.google),
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Continuar con Google")
-                    }
-                }
-            }
         }
 
         viewModel.errorMessage?.let { error ->
