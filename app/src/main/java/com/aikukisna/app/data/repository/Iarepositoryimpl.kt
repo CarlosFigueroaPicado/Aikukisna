@@ -69,11 +69,28 @@ class IaRepositoryImpl @Inject constructor(
         return decodificarRespuesta(response.body())
     }
 
+    override suspend fun preguntarConAudio(
+        prompt: String,
+        audioBase64: String,
+        audioMimeType: String
+    ): String {
+        val response = client.functions.invoke("gemini-proxy") {
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("prompt", prompt)
+                put("audioBase64", audioBase64)
+                put("audioMimeType", audioMimeType)
+            })
+        }
+        return decodificarRespuesta(response.body())
+    }
+
     private fun decodificarRespuesta(resultado: RespuestaGeminiDto): String =
         resultado.respuesta ?: error(resultado.error ?: "La IA no devolvió respuesta")
 }
 
-
+// Gemini espera exactamente "user" y "model" como valores de role — no son
+// nombres arbitrarios, son los dos únicos que la API acepta.
 private fun RolChat.aRolGemini(): String = when (this) {
     RolChat.USUARIO -> "user"
     RolChat.TUKI -> "model"
