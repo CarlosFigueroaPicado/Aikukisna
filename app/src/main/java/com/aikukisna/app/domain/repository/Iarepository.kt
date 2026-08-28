@@ -16,4 +16,11 @@ interface IaRepository {
         imagenBase64: String,
         mimeType: String = "image/jpeg"
     ): String
+
+
+    suspend fun preguntarConAudio(
+        prompt: String,
+        audioBase64: String,
+        audioMimeType: String = "audio/aac"
+    ): String
 }
