@@ -1,12 +1,17 @@
 package com.aikukisna.app.presentacion.componentes
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -14,17 +19,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aikukisna.app.R
 import com.aikukisna.app.ui.theme.AikukisnaTheme
+import com.aikukisna.app.ui.theme.BorderStrong
+import com.aikukisna.app.ui.theme.CardSurface
+import com.aikukisna.app.ui.theme.MediumGray
 
-enum class InputStyle { Default, Outlined }
+
+enum class InputStyle { Default, Outlined, Compact }
 
 @Composable
 fun AikukisnaTextField(
@@ -43,7 +59,13 @@ fun AikukisnaTextField(
     onFocused: (() -> Unit)? = null
 
 ) {
-    val visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
+
+    var mostrarPassword by remember { mutableStateOf(false) }
+    val visualTransformation = when {
+        isPassword && mostrarPassword -> VisualTransformation.None
+        isPassword -> PasswordVisualTransformation()
+        else -> VisualTransformation.None
+    }
 
     val leadingIconLambda: (@Composable () -> Unit)? = leadingIcon?.let { iconRes ->
         {
@@ -55,13 +77,29 @@ fun AikukisnaTextField(
         }
     }
 
-    val trailingIconLambda: (@Composable () -> Unit)? = trailingIcon?.let { iconRes ->
+    val trailingIconLambda: (@Composable () -> Unit)? = if (isPassword) {
         {
-            Icon(
-                painter = painterResource(id = iconRes),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
+            IconButton(onClick = { mostrarPassword = !mostrarPassword }) {
+                Icon(
+                    // Tachado = oculta (así se ve ahora); sin la línea = visible.
+                    painter = painterResource(
+                        id = if (mostrarPassword) R.drawable.eye_open else R.drawable.eye
+                    ),
+                    contentDescription = if (mostrarPassword) "Ocultar contraseña" else "Mostrar contraseña",
+                    tint = if (mostrarPassword) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    } else {
+        trailingIcon?.let { iconRes ->
+            {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 
@@ -157,6 +195,73 @@ fun AikukisnaTextField(
                 )
             )
         }
+
+        InputStyle.Compact -> {
+
+            val interactionSource = remember { MutableInteractionSource() }
+
+            val colores = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                focusedContainerColor = CardSurface,
+                unfocusedContainerColor = CardSurface,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = BorderStrong,
+                errorBorderColor = MaterialTheme.colorScheme.error,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MediumGray,
+                focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                unfocusedLeadingIconColor = MediumGray,
+                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                unfocusedTrailingIconColor = MediumGray,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
+
+            BasicTextField(
+                value = value,
+                onValueChange = onValueChange,
+                modifier = combinedModifier,
+                enabled = enabled,
+                singleLine = true,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                ),
+                visualTransformation = visualTransformation,
+                interactionSource = interactionSource,
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
+            ) { innerTextField ->
+
+                OutlinedTextFieldDefaults.DecorationBox(
+                    value = value,
+                    innerTextField = innerTextField,
+                    enabled = enabled,
+                    singleLine = true,
+                    visualTransformation = visualTransformation,
+                    interactionSource = interactionSource,
+                    isError = isError,
+                    label = labelLambda,
+                    placeholder = placeholderLambda,
+                    leadingIcon = leadingIconLambda,
+                    trailingIcon = trailingIconLambda,
+                    colors = colores,
+                    contentPadding = OutlinedTextFieldDefaults.contentPadding(
+                        start = 12.dp,
+                        end = 12.dp,
+                        top = 8.dp,
+                        bottom = 8.dp
+                    ),
+                    container = {
+                        OutlinedTextFieldDefaults.Container(
+                            enabled = enabled,
+                            isError = isError,
+                            interactionSource = interactionSource,
+                            colors = colores,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -201,6 +306,23 @@ fun PreviewAikukisnaTextField() {
                 onDisabled = {},
                 onFocused = {},
                 trailingIcon = com.aikukisna.app.R.drawable.error
+            )
+
+            AikukisnaTextField(
+                value = "David",
+                onValueChange = {},
+                label = "Nombre de usuario",
+                style = InputStyle.Compact,
+                leadingIcon = com.aikukisna.app.R.drawable.user
+            )
+
+            AikukisnaTextField(
+                value = "12345678",
+                onValueChange = {},
+                label = "Contraseña",
+                style = InputStyle.Compact,
+                isPassword = true,
+                leadingIcon = com.aikukisna.app.R.drawable.lock
             )
         }
     }

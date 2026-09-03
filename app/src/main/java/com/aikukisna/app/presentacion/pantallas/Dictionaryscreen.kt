@@ -1,5 +1,6 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,19 +21,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aikukisna.app.R
 import com.aikukisna.app.presentacion.componentes.AikukisnaTextField
 import com.aikukisna.app.presentacion.componentes.InputStyle
+
 import com.aikukisna.app.presentacion.viewmodel.DictionaryViewModel
 import com.aikukisna.app.presentacion.viewmodel.PalabraConTraduccion
+import com.aikukisna.app.ui.theme.AikukisnaTheme
 
 @Composable
 fun DictionaryScreen(
     viewModel: DictionaryViewModel
 ) {
+    DictionaryScreenContenido(
+        query = viewModel.query,
+        onQueryChange = viewModel::onQueryChange,
+        isLoading = viewModel.isLoading,
+        errorMessage = viewModel.errorMessage,
+        resultados = viewModel.resultados
+    )
+}
+
+@Composable
+private fun DictionaryScreenContenido(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    isLoading: Boolean,
+    errorMessage: String?,
+    resultados: List<PalabraConTraduccion>
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(20.dp)
     ) {
         Text(
@@ -44,17 +67,17 @@ fun DictionaryScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         AikukisnaTextField(
-            value = viewModel.query,
-            onValueChange = { viewModel.onQueryChange(it) },
+            value = query,
+            onValueChange = onQueryChange,
             label = "Buscar en Miskito",
             style = InputStyle.Outlined,
-            leadingIcon = com.aikukisna.app.R.drawable.search
+            leadingIcon = R.drawable.search
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         when {
-            viewModel.isLoading -> {
+            isLoading -> {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -62,14 +85,14 @@ fun DictionaryScreen(
                     CircularProgressIndicator()
                 }
             }
-            viewModel.errorMessage != null -> {
+            errorMessage != null -> {
                 Text(
-                    text = viewModel.errorMessage ?: "",
+                    text = errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            viewModel.resultados.isEmpty() -> {
+            resultados.isEmpty() -> {
                 Text(
                     text = "Sin resultados",
                     style = MaterialTheme.typography.bodyMedium,
@@ -81,7 +104,7 @@ fun DictionaryScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(bottom = 24.dp)
                 ) {
-                    items(viewModel.resultados) { item ->
+                    items(resultados) { item ->
                         PalabraItem(item)
                     }
                 }
@@ -121,5 +144,53 @@ private fun PalabraItem(item: PalabraConTraduccion) {
                 }
             }
         }
+    }
+}
+
+private val resultadosDeMuestra = listOf(
+    PalabraConTraduccion(texto = "Tingki", traduccion = "Gracias"),
+    PalabraConTraduccion(texto = "Aisabe", traduccion = "Adiós"),
+    PalabraConTraduccion(texto = "Titan yamni", traduccion = "Buenos días")
+)
+
+@Preview(showBackground = true, name = "Con resultados")
+@Composable
+private fun DictionaryScreenContenidoPreview() {
+    AikukisnaTheme {
+        DictionaryScreenContenido(
+            query = "",
+            onQueryChange = {},
+            isLoading = false,
+            errorMessage = null,
+            resultados = resultadosDeMuestra
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Cargando")
+@Composable
+private fun DictionaryScreenContenidoCargandoPreview() {
+    AikukisnaTheme {
+        DictionaryScreenContenido(
+            query = "a",
+            onQueryChange = {},
+            isLoading = true,
+            errorMessage = null,
+            resultados = emptyList()
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Sin resultados")
+@Composable
+private fun DictionaryScreenContenidoVacioPreview() {
+    AikukisnaTheme {
+        DictionaryScreenContenido(
+            query = "zzz",
+            onQueryChange = {},
+            isLoading = false,
+            errorMessage = null,
+            resultados = emptyList()
+        )
     }
 }

@@ -11,12 +11,9 @@ class RegistrarUsuarioUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
     private companion object {
-        // Chequeo pragmático de "tiene forma de correo", no RFC5322 completo.
-        // La verificación real de que el correo existe y es del usuario ya
-        // la hace el deep link de confirmación — esto solo evita mandar
-        // basura evidente al servidor.
+
         val PATRON_CORREO = Regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
-        const val LONGITUD_MINIMA_CONTRASENA = 6
+        const val LONGITUD_MINIMA_CONTRASENA = 8
     }
 
     suspend operator fun invoke(
@@ -33,8 +30,15 @@ class RegistrarUsuarioUseCase @Inject constructor(
         require(correo.isNotBlank() && PATRON_CORREO.matches(correo)) {
             "El correo no tiene un formato válido"
         }
-        require(contrasena.length >= LONGITUD_MINIMA_CONTRASENA) {
-            "La contraseña debe tener al menos $LONGITUD_MINIMA_CONTRASENA caracteres"
+
+        val requisitosFaltantes = buildList {
+            if (contrasena.length < LONGITUD_MINIMA_CONTRASENA) add("al menos $LONGITUD_MINIMA_CONTRASENA caracteres")
+            if (contrasena.none { it.isUpperCase() }) add("una letra mayúscula")
+            if (contrasena.none { it.isDigit() }) add("un número")
+            if (contrasena.none { !it.isLetterOrDigit() }) add("un símbolo (ej: !@#$%)")
+        }
+        require(requisitosFaltantes.isEmpty()) {
+            "La contraseña debe tener " + requisitosFaltantes.joinToString(", ")
         }
         require(nombre.isNotBlank()) {
             "El nombre no puede estar vacío"
@@ -42,11 +46,15 @@ class RegistrarUsuarioUseCase @Inject constructor(
         require(nombreUsuario.isNotBlank()) {
             "El nombre de usuario no puede estar vacío"
         }
-        // 0 es válido a propósito: el registro simplificado no pide edad
-        // todavía (ver RegisterViewModel) y manda 0 como marcador. Se
-        // rechaza solo lo evidentemente inválido (negativo o absurdo).
+
         require(edad in 0..120) {
             "La edad no es válida"
+        }
+
+
+        val yaExiste = authRepository.obtenerCorreoPorNombreUsuario(nombreUsuario) != null
+        require(!yaExiste) {
+            "Ese nombre de usuario ya está en uso"
         }
 
         val metadatos = buildJsonObject {

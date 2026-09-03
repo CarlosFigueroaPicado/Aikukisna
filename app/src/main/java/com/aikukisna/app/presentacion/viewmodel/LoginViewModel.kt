@@ -20,7 +20,8 @@ class LoginViewModel @Inject constructor(
     private val proveedorTokenGoogle: ProveedorTokenGoogle
 ) : ViewModel() {
 
-    var email by mutableStateOf("")
+
+    var identificador by mutableStateOf("")
         private set
     var password by mutableStateOf("")
         private set
@@ -33,11 +34,11 @@ class LoginViewModel @Inject constructor(
     var loginExitoso by mutableStateOf(false)
         private set
 
-    fun onEmailChange(valor: String) { email = valor }
+    fun onIdentificadorChange(valor: String) { identificador = valor }
     fun onPasswordChange(valor: String) { password = valor }
 
     fun intentarLogin() {
-        if (email.isBlank() || password.isBlank()) {
+        if (identificador.isBlank() || password.isBlank()) {
             errorMessage = "Completa todos los campos"
             return
         }
@@ -46,7 +47,7 @@ class LoginViewModel @Inject constructor(
             isLoading = true
             errorMessage = null
             try {
-                iniciarSesionUseCase(email, password)
+                iniciarSesionUseCase(identificador, password)
                 loginExitoso = true
             } catch (e: Exception) {
                 errorMessage = e.message ?: "Error al conectar con el servidor"
@@ -66,7 +67,12 @@ class LoginViewModel @Inject constructor(
                 iniciarSesionConGoogleUseCase(credencial.idToken, credencial.nonce)
                 loginExitoso = true
             } catch (e: Exception) {
-                errorMessage = e.message ?: "Error al iniciar sesión con Google"
+
+                errorMessage = if (e.message?.contains("cancel", ignoreCase = true) == true) {
+                    "Inicio de sesión cancelado"
+                } else {
+                    e.message ?: "Error al iniciar sesión con Google"
+                }
             } finally {
                 isLoadingGoogle = false
             }
