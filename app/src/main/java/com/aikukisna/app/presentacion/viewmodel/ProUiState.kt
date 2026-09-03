@@ -1,4 +1,4 @@
-package com.aikukisna.app.presentacion.pantallas
+package com.aikukisna.app.presentacion.viewmodel
 
 import com.aikukisna.app.domain.model.ProgresoLeccion
 

@@ -12,35 +12,31 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class ProgresoViewModel @Inject constructor(
     private val usuarioRepository: UsuarioRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Cargando)
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<ProgresoUiState>(ProgresoUiState.Cargando)
+    val uiState: StateFlow<ProgresoUiState> = _uiState.asStateFlow()
 
     init {
-        cargarDatos()
+        cargarProgreso()
     }
 
-    fun cargarDatos() {
+    fun cargarProgreso() {
         viewModelScope.launch {
-            _uiState.value = HomeUiState.Cargando
+            _uiState.value = ProgresoUiState.Cargando
             try {
                 val userId = authRepository.usuarioActualId()
                 if (userId != null) {
-                    val usuario = usuarioRepository.obtenerUsuario(userId)
-                    if (usuario != null) {
-                        _uiState.value = HomeUiState.Exito(usuario)
-                    } else {
-                        _uiState.value = HomeUiState.Error("No se encontró el perfil")
-                    }
+                    val lista = usuarioRepository.obtenerProgreso(userId)
+                    _uiState.value = ProgresoUiState.Exito(lista)
                 } else {
-                    _uiState.value = HomeUiState.Error("Sesión no iniciada")
+                    _uiState.value = ProgresoUiState.Error("No se pudo identificar al usuario")
                 }
             } catch (e: Exception) {
-                _uiState.value = HomeUiState.Error("Error de conexión: ${e.message}")
+                _uiState.value = ProgresoUiState.Error(e.message ?: "Error al cargar progreso")
             }
         }
     }

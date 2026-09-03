@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aikukisna.app.domain.model.ProgresoLeccion
-import com.aikukisna.app.presentacion.pantallas.ProgresoUiState
+import com.aikukisna.app.presentacion.viewmodel.ProgresoUiState
 
 @Composable
 fun CardProgreso(

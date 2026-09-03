@@ -64,7 +64,7 @@ class RegisterViewModel @Inject constructor(
     fun onIsLoading(valor: Boolean) { isLoading = valor }
 
     fun intentarRegistro() {
-        if (email.isBlank() || password.isBlank() || nombre.isBlank() || apellido.isBlank() || nombreUsuario.isBlank() || edad == 0 || pais.isBlank() || ciudad.isBlank()) {
+        if (email.isBlank() || password.isBlank()  || nombreUsuario.isBlank ()) {
             errorMessage = "Completa todos los campos"
             return
         } else {

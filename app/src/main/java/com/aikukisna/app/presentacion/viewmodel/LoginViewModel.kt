@@ -34,24 +34,24 @@ class LoginViewModel @Inject constructor(
         password = valor
     }
 
-    fun intentarLogin() {
-        if (email.isBlank() || password.isBlank()) {
-            errorMessage = "Completa todos los campos"
-            return
-        } else {
+        fun intentarLogin() {
+            if (email.isBlank() || password.isBlank()) {
+                errorMessage = "Completa todos los campos"
+                return
+            } else {
 
-            viewModelScope.launch {
-                isLoading = true
-                errorMessage = null
-                try {
-                    iniciarSesionUseCase(email, password)
-                    loginExitoso = true
-                } catch (e: Exception) {
-                    errorMessage = e.message ?: "Error al conectar con el servidor"
-                } finally {
-                    isLoading = false
+                viewModelScope.launch {
+                    isLoading = true
+                    errorMessage = null
+                    try {
+                        iniciarSesionUseCase(email, password)
+                        loginExitoso = true
+                    } catch (e: Exception) {
+                        errorMessage = e.message ?: "Error al conectar con el servidor"
+                    } finally {
+                        isLoading = false
+                    }
                 }
             }
         }
     }
-}

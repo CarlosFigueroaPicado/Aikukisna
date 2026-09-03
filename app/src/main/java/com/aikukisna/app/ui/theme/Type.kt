@@ -1,22 +1,40 @@
 package com.aikukisna.app.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.aikukisna.app.R
 
+@OptIn(ExperimentalTextApi::class)
 val Nunito = FontFamily(
-    Font(R.font.nunito_variablefont_wght, FontWeight.Normal),
-    Font(R.font.nunito_variablefont_wght, FontWeight.SemiBold),
-    Font(R.font.nunito_variablefont_wght, FontWeight.Bold),
-    Font(R.font.nunito_variablefont_wght, FontWeight.ExtraBold)
+    Font(
+        resId = R.font.nunito_variablefont_wght,
+        variationSettings = FontVariation.Settings(FontVariation.weight(400))
+    ),
+    Font(
+        resId = R.font.nunito_variablefont_wght,
+        weight = FontWeight.SemiBold,
+        variationSettings = FontVariation.Settings(FontVariation.weight(600))
+    ),
+    Font(
+        resId = R.font.nunito_variablefont_wght,
+        weight = FontWeight.Bold,
+        variationSettings = FontVariation.Settings(FontVariation.weight(700))
+    ),
+    Font(
+        resId = R.font.nunito_variablefont_wght,
+        weight = FontWeight.ExtraBold,
+        variationSettings = FontVariation.Settings(FontVariation.weight(800))
+    )
 )
 
 val AguDisplay = FontFamily(
-    Font(R.font.agudisplay_regular_variable_font_, FontWeight.Normal)
+    Font(R.font.agudisplay_regular_variable_font_)
 )
 
 val JetBrainsMono = FontFamily(
@@ -72,6 +90,6 @@ val Typography = Typography(
     labelMedium = TextStyle(
         fontFamily = JetBrainsMono,
         fontWeight = FontWeight.Medium,
-        fontSize = 13.6.sp
+        fontSize = 14.sp
     )
 )

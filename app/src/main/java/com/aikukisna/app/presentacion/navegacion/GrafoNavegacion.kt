@@ -1,6 +1,7 @@
 package com.aikukisna.app.presentacion.navegacion
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -11,12 +12,10 @@ import com.aikukisna.app.presentacion.viewmodel.HomeViewModel
 import com.aikukisna.app.presentacion.viewmodel.LoginViewModel
 import com.aikukisna.app.presentacion.viewmodel.RegisterViewModel
 
-import androidx.hilt.navigation.compose.hiltViewModel
-
 sealed class Destinos(val ruta: String) {
-    object Login : Destinos("login_screen")
-    object Register : Destinos("register_screen")
-    object Main : Destinos("main_screen")
+    data object Login : Destinos("login_screen")
+    data object Register : Destinos("register_screen")
+    data object Main : Destinos("main_screen")
 }
 
 @Composable
@@ -41,6 +40,11 @@ fun GrafoNavegacion(
                 },
                 onNavigateToRegister = {
                     navController.navigate(Destinos.Register.ruta)
+                },
+                onGuestLogin = {
+                    navController.navigate(Destinos.Main.ruta) {
+                        popUpTo(Destinos.Login.ruta) { inclusive = true }
+                    }
                 }
             )
         }
@@ -53,23 +57,18 @@ fun GrafoNavegacion(
                     navController.navigate(Destinos.Main.ruta) {
                         popUpTo(Destinos.Login.ruta) { inclusive = true }
                     }
-                    },
-                onNavigateToLogin = {
-                    navController.navigate(Destinos.Login.ruta)
                 },
+                onNavigateToLogin = {
+                    navController.popBackStack()
+                }
             )
         }
 
         composable(Destinos.Main.ruta) {
             val homeViewModel: HomeViewModel = hiltViewModel()
-            MainScreen(
-                homeViewModel = homeViewModel,
-                onCerrarSesion = {
-                    navController.navigate(Destinos.Login.ruta) {
-                        popUpTo(Destinos.Main.ruta) { inclusive = true }
+            MainScreen()
                     }
                 }
-            )
+
         }
-    }
-}
+

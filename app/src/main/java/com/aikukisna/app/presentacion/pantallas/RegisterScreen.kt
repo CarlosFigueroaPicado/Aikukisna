@@ -64,7 +64,7 @@ fun RegisterScreen(
             AikukisnaTextField(
                 value = viewModel.nombreUsuario,
                 onValueChange = { viewModel.onNombreUsuarioChange(it) },
-                label = "Nombre",
+                label = "Usuario",
                 leadingIcon = com.aikukisna.app.R.drawable.user,
 
             )

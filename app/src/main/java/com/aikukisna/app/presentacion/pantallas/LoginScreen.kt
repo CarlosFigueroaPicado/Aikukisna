@@ -26,7 +26,8 @@ import com.aikukisna.app.presentacion.viewmodel.LoginViewModel
 fun LoginScreen(
     viewModel: LoginViewModel,
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    onGuestLogin: () -> Unit
 ) {
     LaunchedEffect(viewModel.loginExitoso, onLoginSuccess) {
         if (viewModel.loginExitoso) {
@@ -119,7 +120,9 @@ fun LoginScreen(
 
             AikukisnaButton(
                 text = "Entrar como invitado",
-                onClick = {},
+                onClick = {
+                    onGuestLogin()
+                },
                 style = ButtonStyle.Ghost,
                 trailingIcon = com.aikukisna.app.R.drawable.clock_dashed
             )
