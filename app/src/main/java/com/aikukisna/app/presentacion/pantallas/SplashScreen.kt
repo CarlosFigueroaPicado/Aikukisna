@@ -1,92 +1,33 @@
 package com.aikukisna.app.presentacion.pantallas
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * Pantalla de arranque real de la app (la parte que se puede controlar desde
+ * Compose). El primer momento del arranque —el ícono "AK" + wordmark quietos—
+ * NO vive acá: lo muestra el splash nativo de Android (Theme.Aikukisna.Splash
+ * en themes.xml + installSplashScreen() en MainActivity), que es lo único
+ * que llega a verse antes de que cualquier línea de Kotlin de esta pantalla
+ * corra.
+ *
+ * Esta función arranca justo después de esa entrega y es un simple pasamano
+ * a [LoadingScreen], que ahora es dueña de todo el tiempo de la pantalla de
+ * carga (revelación del logo + fase de puntos cargando) y avisa sola cuándo
+ * terminó — acá no hay que mantener un temporizador propio sincronizado a
+ * mano con el de LoadingScreen.
+ */
 @Composable
 fun SplashScreen(
-    onSplashFinished: () -> Unit = {
-    }
+    onSplashFinished: () -> Unit = {}
 ) {
-
-    var progress by remember {
-        mutableFloatStateOf(0f)
-    }
-
-    LaunchedEffect(Unit) {
-
-        val duration = 5000L
-        val steps = 100
-
-        repeat(
-            steps
-        ) {
-            delay((duration / steps).milliseconds)
-            progress = (it + 1) / steps.toFloat()
-        }
-
-        onSplashFinished()
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp)
-            .background(color = MaterialTheme.colorScheme.background),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Image(
-            imageVector = ImageVector.vectorResource(id = com.aikukisna.app.R.drawable.aikukisna_imagotipo_principal_vertical_tagline),
-            contentDescription = "Logo",
-            modifier = Modifier.height(350.dp)
-
-        )
-
-        LinearProgressIndicator(
-            progress = { progress },
-            modifier = Modifier.fillMaxWidth().height(12.dp),
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = "${(progress * 100).toInt()}%",
-            fontWeight =  MaterialTheme.typography.titleLarge.fontWeight,
-            color = MaterialTheme.colorScheme.primary
-        )
-    }
+    LoadingScreen(onFinished = onSplashFinished)
 }
 
 @Preview(showBackground = true)
 @Composable
-fun SplashScreen1() {
+private fun SplashScreenPreview() {
     AikukisnaTheme {
         SplashScreen()
     }

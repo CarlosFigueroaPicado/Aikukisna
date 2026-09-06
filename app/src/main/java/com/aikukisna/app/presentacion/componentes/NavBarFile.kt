@@ -1,28 +1,43 @@
 package com.aikukisna.app.presentacion.componentes
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
-
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ImportContacts
-import androidx.compose.material.icons.filled.School
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Tab
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.aikukisna.app.R
 import com.aikukisna.app.ui.theme.AikukisnaTheme
 
+private data class ItemNav(
+    val icono: Int,
+    val etiqueta: String
+)
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+private val itemsNav = listOf(
+    ItemNav(R.drawable.home, "Inicio"),
+    ItemNav(R.drawable.ic_graduation_cap, "Aprender"),
+    ItemNav(R.drawable.book_bookmark, "Diccionario"),
+    ItemNav(R.drawable.user, "Perfil")
+)
+
 @Composable
 fun NavBar(
     selectedIndex: Int,
@@ -32,56 +47,55 @@ fun NavBar(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .navigationBarsPadding()
+            .navigationBarsPadding(),
+        color = MaterialTheme.colorScheme.surface
     ) {
-        val itemsTab = listOf(
-            Icons.Default.Home,
-            Icons.Default.School,
-            Icons.Default.ImportContacts,
-            Icons.Default.AccountCircle
-        )
-
-        PrimaryTabRow(
-            selectedTabIndex = selectedIndex,
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.secondary,
-            indicator = {
-                TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(selectedTabIndex = selectedIndex),
-                    height = 4.dp,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            itemsTab.forEachIndexed { index, icon ->
-                Tab(
-                    selected = selectedIndex == index,
-                    onClick = { onTabSelected(index) },
+            itemsNav.forEachIndexed { index, item ->
+                val seleccionado = selectedIndex == index
+                val color = if (seleccionado) {
+                    MaterialTheme.colorScheme.secondary
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
 
-                    icon = {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = null,
-                            tint = if (selectedIndex == index) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
-                        )
-                    }
-                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { onTabSelected(index) },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = item.icono),
+                        contentDescription = item.etiqueta,
+                        tint = color,
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Text(
+                        text = item.etiqueta,
+                        color = color,
+                        fontSize = 11.sp,
+                        fontWeight = if (seleccionado) FontWeight.Bold else FontWeight.Normal
+                    )
+                }
             }
         }
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewNavBar() {
     AikukisnaTheme {
-        NavBar( selectedIndex = 1, onTabSelected = {})
+        NavBar(selectedIndex = 0, onTabSelected = {})
     }
-
 }
-
-
-

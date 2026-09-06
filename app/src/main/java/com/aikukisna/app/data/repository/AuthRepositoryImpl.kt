@@ -6,9 +6,12 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.IDToken
+import io.github.jan.supabase.postgrest.postgrest
 import java.util.UUID
 import javax.inject.Inject
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class AuthRepositoryImpl @Inject constructor(
     private val client: SupabaseClient
@@ -53,6 +56,13 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun usuarioActualId(): UUID? {
         return obtenerIdUsuarioActual()
+    }
+
+    override suspend fun obtenerCorreoPorNombreUsuario(nombreUsuario: String): String? {
+        return client.postgrest.rpc(
+            "obtener_correo_por_usuario",
+            buildJsonObject { put("p_nombre_usuario", nombreUsuario) }
+        ).decodeAs<String?>()
     }
 
     private fun obtenerIdUsuarioActual(): UUID? {

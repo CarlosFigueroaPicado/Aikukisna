@@ -31,7 +31,8 @@ class DiccionarioRepositoryImpl @Inject constructor(
         query: String,
         idiomaId: Int,
         limite: Int,
-        offset: Int
+        offset: Int,
+        categoriaId: Int?
     ): List<Palabra> {
         if (conectividad.hayConexion()) {
             try {
@@ -40,6 +41,7 @@ class DiccionarioRepositoryImpl @Inject constructor(
                         filter {
                             eq("idioma_id", idiomaId)
                             ilike("texto", "%$query%")
+                            categoriaId?.let { eq("categoria_id", it) }
                         }
                         order("texto", Order.ASCENDING)
                         order("id", Order.ASCENDING)
@@ -54,7 +56,14 @@ class DiccionarioRepositoryImpl @Inject constructor(
                 // seguimos directo a la caché en vez de propagar el error.
             }
         }
-        return cache.buscarPalabrasCacheadas(query, idiomaId, limite, offset)
+        // El DAO de la caché no filtra por categoría (no lo necesitaba hasta
+        // ahora) — se filtra acá en Kotlin en vez de tocar la consulta Room.
+        val cacheadas = cache.buscarPalabrasCacheadas(query, idiomaId, limite, offset)
+        return if (categoriaId == null) {
+            cacheadas
+        } else {
+            cacheadas.filter { it.categoria?.id == categoriaId }
+        }
     }
 
     override suspend fun obtenerPalabraPorId(id: Int): Palabra? {

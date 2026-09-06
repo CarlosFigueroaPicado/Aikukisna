@@ -2,9 +2,12 @@ package com.aikukisna.app.presentacion.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.domain.repository.AuthRepository
 import com.aikukisna.app.domain.repository.EstadoSincronizacion
 import com.aikukisna.app.domain.repository.UsuarioRepository
+import com.aikukisna.app.domain.usecase.CambiarIdiomaMetaUseCase
+import com.aikukisna.app.domain.usecase.ObtenerProximaLeccionUseCase
 import com.aikukisna.app.domain.usecase.SincronizarDatosOfflineUseCase
 import com.aikukisna.app.domain.usecase.SincronizarLeccionesPendientesUseCase
 import com.aikukisna.app.presentacion.pantallas.HomeUiState
@@ -20,8 +23,10 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val usuarioRepository: UsuarioRepository,
     private val authRepository: AuthRepository,
+    private val obtenerProximaLeccionUseCase: ObtenerProximaLeccionUseCase,
     private val sincronizarDatosOfflineUseCase: SincronizarDatosOfflineUseCase,
-    private val sincronizarLeccionesPendientesUseCase: SincronizarLeccionesPendientesUseCase
+    private val sincronizarLeccionesPendientesUseCase: SincronizarLeccionesPendientesUseCase,
+    private val cambiarIdiomaMetaUseCase: CambiarIdiomaMetaUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Cargando)
@@ -45,7 +50,10 @@ class HomeViewModel @Inject constructor(
                 if (userId != null) {
                     val usuario = usuarioRepository.obtenerUsuario(userId)
                     if (usuario != null) {
-                        _uiState.value = HomeUiState.Exito(usuario)
+                        val proximaLeccion = usuario.idiomaMeta?.let { idioma ->
+                            obtenerProximaLeccionUseCase(userId, idioma.id)
+                        }
+                        _uiState.value = HomeUiState.Exito(usuario, proximaLeccion)
                     } else {
                         _uiState.value = HomeUiState.Error("No se encontró el perfil")
                     }
@@ -58,6 +66,18 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun cambiarIdioma(nuevoIdioma: Idioma) {
+        val estadoActual = _uiState.value
+        if (estadoActual !is HomeUiState.Exito) return
+        viewModelScope.launch {
+            try {
+                cambiarIdiomaMetaUseCase(estadoActual.usuario, nuevoIdioma)
+                cargarDatos()
+            } catch (e: Exception) {
+                _uiState.value = HomeUiState.Error(e.message ?: "No se pudo cambiar el idioma")
+            }
+        }
+    }
 
     private fun iniciarSincronizacionSiHaceFalta() {
         viewModelScope.launch {
@@ -71,7 +91,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-private fun reintentarLeccionesPendientes() {
+    private fun reintentarLeccionesPendientes() {
         viewModelScope.launch {
             sincronizarLeccionesPendientesUseCase()
         }

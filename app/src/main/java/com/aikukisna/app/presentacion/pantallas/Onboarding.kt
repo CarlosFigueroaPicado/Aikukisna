@@ -1,10 +1,13 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,68 +15,79 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
 import com.aikukisna.app.R
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
+import com.aikukisna.app.presentacion.componentes.DotsPagination
+import com.aikukisna.app.ui.theme.CardSurface
+import com.aikukisna.app.ui.theme.LightGray
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 
 private data class PaginaOnboarding(
-    val fondo: Int,
-    val tuki: Int,
-    val mensaje: Int? = null,
     val titulo: String,
     val subtitulo: String,
-    val cuerpo: String
+    val cuerpo: String,
 )
 
 private val paginas = listOf(
     PaginaOnboarding(
-        fondo = R.drawable.morning,
-        tuki = R.drawable.wave,
-        mensaje = R.drawable.message,
-        titulo = "Descubre el Miskito",
-        subtitulo = "Lengua viva del caribe",
-        cuerpo = "Aprende el idioma miskito, hablado por más de 120,000 personas en la Costa Caribe de Nicaragua."
+        titulo = "Descubre las lenguas",
+        subtitulo = "Lenguas vivas de la costa caribe de Nicaragua",
+        cuerpo = "Aprende estas lenguas originarias y afrodescendientes, habladas entre 200,000 y 230,000 personas en la Costa Caribe de Nicaragua: Miskito (Miskitu), Mayangna / Sumu, Rama, Creole / Kriol (Inglés Criollo Nicaragüense) y Garífuna."
     ),
-
     PaginaOnboarding(
-        fondo = R.drawable.afternoon,
-        tuki = R.drawable.learn,
         titulo = "Aprende de verdad",
         subtitulo = "Método probado y divertido",
-        cuerpo = "Lecciones breves, quizzes interactivos y un diccionario completo para que domines el Miskito paso a paso."
+        cuerpo = "Lecciones breves, quizzes interactivos y un diccionario completo para que domines estas lenguas paso a paso."
     ),
     PaginaOnboarding(
-        fondo = R.drawable.evening,
-        tuki = R.drawable.celebrate,
         titulo = "¡Gana logros!",
         subtitulo = "Gamificación que motiva",
-        cuerpo = "Acumula XP, mantén tu racha diaria y desbloquea logros únicos mientras dominas el idioma Miskito."
+        cuerpo = "Acumula XP, mantén tu racha diaria y desbloquea logros únicos mientras dominas estas lenguas."
     ),
     PaginaOnboarding(
-        fondo = R.drawable.night,
-        tuki = R.drawable.music,
         titulo = "Conecta con la cultura",
         subtitulo = "Más que un idioma",
-        cuerpo = "Explora la rica cultura, tradiciones, música y gastronomía del pueblo Miskito del Caribe nicaragüense."
-    )
+        cuerpo = "Explora la rica cultura, tradiciones, música y gastronomía de los pueblos originarios y afrodescendientes del Caribe nicaragüense."
+    ),
 )
+
+private val ILUSTRACION_TOP_OFFSET = listOf(120.dp, 132.dp, 130.dp, 132.dp)
+
+private val CONTENIDO_ANCHO_CUERPO = 254.dp
 
 @Composable
 fun OnboardingScreen(
@@ -92,43 +106,70 @@ fun OnboardingScreen(
             state = pagerState,
             modifier = Modifier.weight(1f)
         ) { indice ->
-            PaginaOnboardingContenido(paginas[indice])
-        }
 
-        DotsPagination(
-            totalPaginas = paginas.size,
-            paginaActual = pagerState.currentPage,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical = 8.dp)
-        )
+            val distanciaAlCentro = (
+                    (pagerState.currentPage - indice) + pagerState.currentPageOffsetFraction
+                    ).absoluteValue.coerceIn(0f, 1f)
+
+            PaginaOnboardingContenido(
+                indice = indice,
+                pagina = paginas[indice],
+                paginaActual = pagerState.currentPage,
+                totalPaginas = paginas.size,
+                modifier = Modifier.graphicsLayer {
+                    val escala = lerp(0.88f, 1f, 1f - distanciaAlCentro)
+                    scaleX = escala
+                    scaleY = escala
+                    alpha = lerp(0.3f, 1f, 1f - distanciaAlCentro)
+                }
+            )
+        }
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 40.dp)
-                .padding(bottom = 32.dp, top = 8.dp)
+                .padding(bottom = 32.dp, top = 8.dp),
+            contentAlignment = Alignment.Center
         ) {
             if (pagerState.currentPage == paginas.lastIndex) {
-                AikukisnaButton(
-                    text = "Comenzar",
-                    onClick = onOnboardingTerminado
-                )
+
+                Box(modifier = Modifier.width(240.dp)) {
+                    AikukisnaButton(
+                        text = "¡Empieza a aprender!",
+                        onClick = onOnboardingTerminado,
+                        fontSize = 16.sp
+                    )
+                }
             } else {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 51.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextButton(onClick = onOnboardingTerminado) {
-                        Text("Saltar", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    TextButton(
+                        onClick = onOnboardingTerminado,
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text(
+                            text = "Saltar".uppercase(),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
-                    TextButton(onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                        }
-                    }) {
-                        Text("Siguiente", color = MaterialTheme.colorScheme.primary)
+
+                    Box(modifier = Modifier.width(IntrinsicSize.Min)) {
+                        AikukisnaButton(
+                            text = "Siguiente",
+                            onClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                }
+                            },
+                            trailingIcon = R.drawable.arrow_right,
+                            fontSize = 16.sp
+                        )
                     }
                 }
             }
@@ -137,94 +178,184 @@ fun OnboardingScreen(
 }
 
 @Composable
-private fun PaginaOnboardingContenido(pagina: PaginaOnboarding) {
+private fun PaginaOnboardingContenido(
+    indice: Int,
+    pagina: PaginaOnboarding,
+    paginaActual: Int,
+    totalPaginas: Int,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 26.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(72.dp))
+        Spacer(modifier = Modifier.height(ILUSTRACION_TOP_OFFSET[indice]))
 
-        Box(
-            modifier = Modifier.size(width = 230.dp, height = 157.dp)
+        IlustracionPagina(indice)
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(40.dp)
         ) {
-            // Fondo: llena todo el recuadro.
-            Image(
-                painter = painterResource(pagina.fondo),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
-            // Tuki: esquina inferior derecha, casi tocando el borde.
-            Image(
-                painter = painterResource(pagina.tuki),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(width = 70.dp, height = 87.dp)
-            )
-            // Burbuja de mensaje: solo en la página que la tiene.
-            pagina.mensaje?.let { mensaje ->
-                Image(
-                    painter = painterResource(mensaje),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(start = 33.dp, top = 21.dp)
-                        .size(width = 141.dp, height = 52.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = pagina.titulo,
+                    style = MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = pagina.subtitulo,
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center
                 )
             }
+            Text(
+                text = pagina.cuerpo,
+                // bodySmall (14sp) + 2sp = 16sp, que ya es exactamente bodyMedium
+                // en Type.kt — uso ese escalón existente en vez de un tamaño suelto.
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.width(CONTENIDO_ANCHO_CUERPO)
+            )
+            DotsPagination(
+                totalPageCount = totalPaginas,
+                currentPage = paginaActual
+            )
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
 
-        Text(
-            text = pagina.titulo,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
+@Composable
+private fun IlustracionPagina(indice: Int) {
+    when (indice) {
+        0 -> IlustracionDescubre()
+        1 -> IlustracionAprende()
+        2 -> IlustracionLogros()
+        else -> IlustracionCultura()
+    }
+}
+
+@Composable
+private fun IlustracionDescubre() {
+    Box(modifier = Modifier.size(width = 210.dp, height = 143.dp)) {
+        Image(
+            painter = painterResource(R.drawable.morning),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = pagina.subtitulo,
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center
+        Image(
+            painter = painterResource(R.drawable.wave),
+            contentDescription = null,
+            modifier = Modifier
+                .offset(x = 133.dp, y = 63.dp)
+                .size(width = 64.dp, height = 79.dp)
         )
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = pagina.cuerpo,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
+
+        BurbujaTuki(modifier = Modifier.offset(x = 30.dp, y = (-10).dp))
+    }
+}
+
+@Composable
+private fun IlustracionAprende() {
+    Box(modifier = Modifier.size(width = 207.dp, height = 131.dp)) {
+        Image(
+            painter = painterResource(R.drawable.afternoon),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+        Image(
+            painter = painterResource(R.drawable.learn),
+            contentDescription = null,
+            modifier = Modifier
+                .offset(x = 63.dp, y = 54.dp)
+                .size(width = 80.dp, height = 77.dp)
         )
     }
 }
 
 @Composable
-private fun DotsPagination(
-    totalPaginas: Int,
-    paginaActual: Int,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+private fun IlustracionLogros() {
+    Box(modifier = Modifier.size(width = 213.dp, height = 133.dp)) {
+        Image(
+            painter = painterResource(R.drawable.evening),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+        Image(
+            painter = painterResource(R.drawable.celebrate),
+            contentDescription = null,
+            modifier = Modifier
+                .offset(x = 93.dp, y = 32.dp)
+                .size(80.dp)
+        )
+    }
+}
+
+@Composable
+private fun IlustracionCultura() {
+    Box(modifier = Modifier.size(width = 207.dp, height = 131.dp)) {
+        Image(
+            painter = painterResource(R.drawable.night),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+        Image(
+            painter = painterResource(R.drawable.music),
+            contentDescription = null,
+            modifier = Modifier
+                .offset(x = 63.dp, y = 54.dp)
+                .size(width = 80.dp, height = 77.dp)
+        )
+    }
+}
+
+
+private val MENSAJES_TUKI: List<AnnotatedString> = listOf(
+    buildAnnotatedString {
+        append("¡Hola! Soy ")
+        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append("Tuki") }
+    },
+    AnnotatedString("¡Juntos aprenderemos el fabuloso mundo de los idiomas!"),
+)
+
+private const val MENSAJE_INTERVALO_MS = 3500L
+
+@Composable
+private fun BurbujaTuki(modifier: Modifier = Modifier) {
+    var indiceMensaje by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(MENSAJE_INTERVALO_MS)
+            indiceMensaje = (indiceMensaje + 1) % MENSAJES_TUKI.size
+        }
+    }
+
+    Box(
+
+        modifier = modifier
+            .widthIn(max = 220.dp)
+            .border(width = 1.dp, color = LightGray, shape = RoundedCornerShape(12.dp))
+            .background(color = CardSurface, shape = RoundedCornerShape(12.dp))
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        repeat(totalPaginas) { indice ->
-            val esActual = indice == paginaActual
-            Box(
-                modifier = Modifier
-                    .size(if (esActual) 10.dp else 7.dp)
-                    .background(
-                        color = if (esActual) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.surfaceVariant
-                        },
-                        shape = CircleShape
-                    )
+        Crossfade(targetState = indiceMensaje, label = "mensajeTuki") { i ->
+            Text(
+                text = MENSAJES_TUKI[i],
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }
