@@ -40,13 +40,14 @@ class SincronizacionRepositoryImpl @Inject constructor(
                     76 /*lecciones*/ + 350 /*leccion_palabra*/ + 499 /*oraciones*/
     }
 
-    override suspend fun hayDatosDescargados(): Boolean = cache.hayAlgoDescargado()
+    override suspend fun hayDatosDescargados(idiomaId: Int?): Boolean = cache.hayAlgoDescargado(idiomaId)
 
-    override fun sincronizarTodo(): Flow<EstadoSincronizacion> = flow {
+    override fun sincronizarTodo(idiomaId: Int?): Flow<EstadoSincronizacion> = flow {
         var procesados = 0
         fun progreso() = (procesados.toFloat() / TOTAL_ESTIMADO).coerceIn(0f, 0.99f)
 
         try {
+            cache.marcarDescargaEnProgreso(idiomaId)
             emit(EstadoSincronizacion.EnProgreso("Idiomas y categorías", progreso()))
             val idiomas = client.from("idioma").select().decodeList<IdiomaDto>().map { it.toDomain() }
             cache.cachearIdiomas(idiomas)
@@ -65,6 +66,14 @@ class SincronizacionRepositoryImpl @Inject constructor(
             while (true) {
                 val pagina = client.from("palabra")
                     .select(Columns.raw(PALABRA_EMBED)) {
+                        filter {
+                            idiomaId?.let { targetId ->
+                                or {
+                                    eq("idioma_id", targetId)
+                                    eq("idioma_id", 2)
+                                }
+                            }
+                        }
                         range(offset.toLong(), (offset + TAMANO_PAGINA - 1).toLong())
                     }
                     .decodeList<PalabraDto>()
@@ -97,6 +106,9 @@ class SincronizacionRepositoryImpl @Inject constructor(
             emit(EstadoSincronizacion.EnProgreso("Lecciones", progreso()))
             val lecciones = client.from("leccion")
                 .select(Columns.raw("*, categoria(*), idioma_meta:idioma_meta_id(*)"))
+                {
+                    filter { idiomaId?.let { eq("idioma_meta_id", it) } }
+                }
                 .decodeList<LeccionDto>()
                 .map { it.toDomain() }
             cache.cachearLecciones(lecciones)
@@ -114,11 +126,12 @@ class SincronizacionRepositoryImpl @Inject constructor(
             val oraciones = client.from("oracion_ejemplo")
                 .select(Columns.raw("*, fuente_documento(*)"))
                 .decodeList<OracionEjemploSyncDto>()
-            oraciones.groupBy { it.leccionId }.forEach { (leccionId, grupo) ->
+            oraciones.filter { it.leccionId != null }.groupBy { it.leccionId!! }.forEach { (leccionId, grupo) ->
                 cache.cachearOraciones(leccionId, grupo.map { it.toDomain() })
             }
             procesados += oraciones.size
 
+            cache.marcarDescargaCompleta(idiomaId)
             emit(EstadoSincronizacion.Completado)
         } catch (e: Exception) {
             emit(EstadoSincronizacion.Error(e.message ?: "Error desconocido al sincronizar"))
@@ -137,7 +150,7 @@ private data class OracionEjemploSyncDto(
     val id: Int,
     @SerialName("texto_origen") val textoOrigen: String,
     @SerialName("texto_destino") val textoDestino: String,
-    @SerialName("leccion_id") val leccionId: Int,
+    @SerialName("leccion_id") val leccionId: Int? = null,
     @SerialName("fuente_documento") val fuente: FuenteDocumentoDto
 ) {
     fun toDomain() = OracionEjemplo(
