@@ -16,5 +16,6 @@ data class Usuario(
     val xp: Int,
     val rachaActual: Int,
     val rachaMaxima: Int,
-    val ultimaActividad: LocalDate?
+    val ultimaActividad: LocalDate?,
+    val fotoPerfilUri: String? = null
 )
