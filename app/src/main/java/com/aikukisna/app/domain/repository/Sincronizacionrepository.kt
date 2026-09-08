@@ -10,7 +10,7 @@ sealed interface EstadoSincronizacion {
 
 interface SincronizacionRepository {
 
-    suspend fun hayDatosDescargados(): Boolean
+    suspend fun hayDatosDescargados(idiomaId: Int? = null): Boolean
 
-    fun sincronizarTodo(): Flow<EstadoSincronizacion>
+    fun sincronizarTodo(idiomaId: Int? = null): Flow<EstadoSincronizacion>
 }
