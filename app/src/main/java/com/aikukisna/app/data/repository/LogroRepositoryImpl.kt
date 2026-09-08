@@ -1,6 +1,7 @@
 package com.aikukisna.app.data.repository
 
 import com.aikukisna.app.data.remote.dto.LogroDesbloqueadoDto
+import com.aikukisna.app.data.local.OfflineUserDataCache
 import com.aikukisna.app.data.remote.dto.LogroDto
 import com.aikukisna.app.domain.model.Categoria
 import com.aikukisna.app.domain.model.Logro
@@ -17,23 +18,30 @@ import java.util.UUID
 import javax.inject.Inject
 
 class LogroRepositoryImpl @Inject constructor(
-    private val client: SupabaseClient
+    private val client: SupabaseClient,
+    private val offlineUserDataCache: OfflineUserDataCache
 ) : LogroRepository {
 
     override suspend fun obtenerLogros(): List<Logro> {
-        return client.from("logro")
-            .select(Columns.raw("*, categoria(*)"))
-            .decodeList<LogroDto>()
-            .map { it.toDomain() }
+        return try {
+            client.from("logro")
+                .select(Columns.raw("*, categoria(*)"))
+                .decodeList<LogroDto>()
+                .map { it.toDomain() }
+                .also { offlineUserDataCache.guardarLogros(it) }
+        } catch (_: Exception) { offlineUserDataCache.leerLogros() }
     }
 
     override suspend fun obtenerLogrosDesbloqueados(usuarioId: UUID): List<LogroDesbloqueado> {
-        return client.from("logro_desbloqueado")
-            .select(Columns.raw("*, logro(*, categoria(*))")) {
-                filter { eq("usuario_id", usuarioId.toString()) }
-            }
-            .decodeList<LogroDesbloqueadoDto>()
-            .map { it.toDomain() }
+        return try {
+            client.from("logro_desbloqueado")
+                .select(Columns.raw("*, logro(*, categoria(*))")) {
+                    filter { eq("usuario_id", usuarioId.toString()) }
+                }
+                .decodeList<LogroDesbloqueadoDto>()
+                .map { it.toDomain() }
+                .also { offlineUserDataCache.guardarDesbloqueados(it) }
+        } catch (_: Exception) { offlineUserDataCache.leerDesbloqueados(usuarioId) }
     }
 
     override suspend fun desbloquearLogro(usuarioId: UUID, logroId: Int) {

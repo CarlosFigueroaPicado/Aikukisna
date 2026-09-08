@@ -14,6 +14,7 @@ interface UsuarioRepository {
     suspend fun obtenerFavoritos(usuarioId: UUID): List<PalabraFavorita>
     suspend fun marcarFavorito(usuarioId: UUID, palabraId: Int)
     suspend fun quitarFavorito(usuarioId: UUID, palabraId: Int)
+    suspend fun sincronizarFavoritosPendientes(): Int
     suspend fun obtenerMemoriaTuki(usuarioId: UUID): List<MemoriaTuki>
     suspend fun guardarMemoriaTuki(memoria: MemoriaTuki)
 }
