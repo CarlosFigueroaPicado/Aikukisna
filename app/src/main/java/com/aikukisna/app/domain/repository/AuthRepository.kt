@@ -13,5 +13,6 @@ interface AuthRepository {
     suspend fun cerrarSesion()
     suspend fun usuarioActualId(): UUID?
     suspend fun iniciarSesionConGoogle(idTokenGoogle: String, nonce: String? = null): UUID
+    suspend fun solicitarRestablecimientoContrasena(correo: String)
     suspend fun obtenerCorreoPorNombreUsuario(nombreUsuario: String): String?
 }

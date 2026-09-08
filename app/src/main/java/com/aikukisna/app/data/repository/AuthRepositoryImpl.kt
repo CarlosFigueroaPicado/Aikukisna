@@ -50,6 +50,13 @@ class AuthRepositoryImpl @Inject constructor(
             ?: error("No se pudo obtener el usuario tras iniciar sesión con Google")
     }
 
+    override suspend fun solicitarRestablecimientoContrasena(correo: String) {
+        client.auth.resetPasswordForEmail(
+            email = correo,
+            redirectUrl = "aikukisna://auth-callback"
+        )
+    }
+
     override suspend fun cerrarSesion() {
         client.auth.signOut()
     }
