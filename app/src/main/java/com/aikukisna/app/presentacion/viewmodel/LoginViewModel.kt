@@ -7,8 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aikukisna.app.data.auth.ProveedorTokenGoogle
+import com.aikukisna.app.domain.model.Idioma
+import com.aikukisna.app.domain.repository.AuthRepository
+import com.aikukisna.app.domain.usecase.CambiarIdiomaMetaUseCase
 import com.aikukisna.app.domain.usecase.IniciarSesionConGoogleUseCase
 import com.aikukisna.app.domain.usecase.IniciarSesionUseCase
+import com.aikukisna.app.domain.usecase.ObtenerUsuarioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +21,10 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val iniciarSesionUseCase: IniciarSesionUseCase,
     private val iniciarSesionConGoogleUseCase: IniciarSesionConGoogleUseCase,
-    private val proveedorTokenGoogle: ProveedorTokenGoogle
+    private val proveedorTokenGoogle: ProveedorTokenGoogle,
+    private val authRepository: AuthRepository,
+    private val obtenerUsuarioUseCase: ObtenerUsuarioUseCase,
+    private val cambiarIdiomaMetaUseCase: CambiarIdiomaMetaUseCase
 ) : ViewModel() {
 
 
@@ -32,6 +39,8 @@ class LoginViewModel @Inject constructor(
     var errorMessage by mutableStateOf<String?>(null)
         private set
     var loginExitoso by mutableStateOf(false)
+        private set
+    var requiereSeleccionIdioma by mutableStateOf(false)
         private set
 
     fun onIdentificadorChange(valor: String) { identificador = valor }
@@ -48,7 +57,7 @@ class LoginViewModel @Inject constructor(
             errorMessage = null
             try {
                 iniciarSesionUseCase(identificador, password)
-                loginExitoso = true
+                continuarTrasAutenticacion()
             } catch (e: Exception) {
                 errorMessage = e.message ?: "Error al conectar con el servidor"
             } finally {
@@ -65,7 +74,7 @@ class LoginViewModel @Inject constructor(
             try {
                 val credencial = proveedorTokenGoogle.obtenerCredencial(context)
                 iniciarSesionConGoogleUseCase(credencial.idToken, credencial.nonce)
-                loginExitoso = true
+                continuarTrasAutenticacion()
             } catch (e: Exception) {
 
                 errorMessage = if (e.message?.contains("cancel", ignoreCase = true) == true) {
@@ -77,5 +86,33 @@ class LoginViewModel @Inject constructor(
                 isLoadingGoogle = false
             }
         }
+    }
+
+    private suspend fun continuarTrasAutenticacion() {
+        val userId = authRepository.usuarioActualId()
+        requiereSeleccionIdioma = userId?.let { obtenerUsuarioUseCase(it)?.idiomaMeta == null } == true
+        loginExitoso = !requiereSeleccionIdioma
+    }
+
+    fun confirmarIdiomaSeleccionado(idioma: Idioma) {
+        viewModelScope.launch {
+            isLoading = true
+            errorMessage = null
+            try {
+                val userId = authRepository.usuarioActualId() ?: error("Sesión no iniciada")
+                val usuario = obtenerUsuarioUseCase(userId) ?: error("No se encontró el perfil")
+                cambiarIdiomaMetaUseCase(usuario, idioma)
+                requiereSeleccionIdioma = false
+                loginExitoso = true
+            } catch (e: Exception) {
+                errorMessage = e.message ?: "No se pudo guardar el idioma elegido"
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
+    fun consumirSolicitudIdioma() {
+        requiereSeleccionIdioma = false
     }
 }

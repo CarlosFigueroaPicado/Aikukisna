@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -45,7 +46,9 @@ import com.aikukisna.app.ui.theme.MediumGray
 fun LoginScreen(
     viewModel: LoginViewModel,
     onLoginSuccess: () -> Unit,
+    onSeleccionarIdioma: () -> Unit = {},
     onIrARegistro: () -> Unit = {},
+    onRecuperarContrasena: () -> Unit = {},
     onEntrarComoInvitado: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -53,6 +56,12 @@ fun LoginScreen(
     LaunchedEffect(viewModel.loginExitoso, onLoginSuccess) {
         if (viewModel.loginExitoso) {
             onLoginSuccess()
+        }
+    }
+
+    LaunchedEffect(viewModel.requiereSeleccionIdioma) {
+        if (viewModel.requiereSeleccionIdioma) {
+            onSeleccionarIdioma()
         }
     }
 
@@ -66,6 +75,7 @@ fun LoginScreen(
         errorMessage = viewModel.errorMessage,
         onLoginClick = viewModel::intentarLogin,
         onIrARegistroClick = onIrARegistro,
+        onRecuperarContrasenaClick = onRecuperarContrasena,
         onEntrarComoInvitadoClick = onEntrarComoInvitado,
         onGoogleClick = { viewModel.iniciarSesionConGoogle(context) }
     )
@@ -82,12 +92,14 @@ private fun LoginScreenContenido(
     errorMessage: String?,
     onLoginClick: () -> Unit,
     onIrARegistroClick: () -> Unit,
+    onRecuperarContrasenaClick: () -> Unit,
     onEntrarComoInvitadoClick: () -> Unit,
     onGoogleClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .background(MaterialTheme.colorScheme.background)
             .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
@@ -144,7 +156,10 @@ private fun LoginScreenContenido(
             Text(
                 text = "¿Olvidaste tu contraseña?",
                 style = MaterialTheme.typography.bodySmall,
-                color = MediumGray
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .clickable(onClick = onRecuperarContrasenaClick)
             )
         }
 
@@ -244,6 +259,7 @@ private fun LoginScreenContenidoPreview() {
             errorMessage = null,
             onLoginClick = {},
             onIrARegistroClick = {},
+            onRecuperarContrasenaClick = {},
             onEntrarComoInvitadoClick = {},
             onGoogleClick = {}
         )
@@ -262,6 +278,7 @@ private fun LoginScreenContenidoConErrorPreview() {
             errorMessage = "Usuario o contraseña incorrectos",
             onLoginClick = {},
             onIrARegistroClick = {},
+            onRecuperarContrasenaClick = {},
             onEntrarComoInvitadoClick = {},
             onGoogleClick = {}
         )
