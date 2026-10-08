@@ -1,0 +1,19 @@
+# Ruta del Android SDK local
+sdk.dir=<RUTA_DEL_ANDROID_SDK>
+
+# Supabase
+SUPABASE_URL=https://<project-ref>.supabase.co
+SUPABASE_ANON_KEY=<CLAVE_PUBLICA_SUPABASE>
+
+# Servicios de IA
+GEMINI_API_KEY=<CLAVE_GEMINI>
+ELEVENLABS_API_KEY=<CLAVE_ELEVENLABS>
+
+# Inicio de sesión con Google
+GOOGLE_WEB_CLIENT_ID=<CLIENT_ID_WEB_GOOGLE>
+
+# Firma release, opcional para desarrollo y necesaria para publicar
+KEYSTORE_FILE=<RUTA_AL_KEYSTORE>
+KEYSTORE_PASSWORD=<PASSWORD_DEL_KEYSTORE>
+KEY_ALIAS=<ALIAS_DEL_KEYSTORE>
+KEY_PASSWORD=<PASSWORD_DE_LA_CLAVE>
