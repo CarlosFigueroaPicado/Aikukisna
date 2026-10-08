@@ -68,7 +68,10 @@ fun DictionaryScreen(
         resultados = viewModel.resultados,
         favoritosIds = viewModel.favoritosIds,
         onAlternarFavorito = viewModel::alternarFavorito,
-        onAbrirDetalle = onAbrirDetalle
+        onAbrirDetalle = onAbrirDetalle,
+        cargandoMas = viewModel.cargandoMas,
+        hayMasResultados = viewModel.hayMasResultados,
+        onCargarMas = viewModel::cargarMas
     )
 }
 
@@ -84,7 +87,10 @@ private fun DictionaryScreenContenido(
     resultados: List<PalabraConTraduccion>,
     favoritosIds: Set<Int>,
     onAlternarFavorito: (Int) -> Unit,
-    onAbrirDetalle: (Int) -> Unit
+    onAbrirDetalle: (Int) -> Unit,
+    cargandoMas: Boolean = false,
+    hayMasResultados: Boolean = false,
+    onCargarMas: () -> Unit = {}
 ) {
     var categoriaSeleccionada by remember { mutableStateOf<Int?>(null) }
     LaunchedEffect(idiomaAprendizaje, query) {
@@ -185,7 +191,7 @@ private fun DictionaryScreenContenido(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            query.isBlank() -> {
+            query.isBlank() && resultadosVisibles.isEmpty() -> {
                 Text(
                     text = t(R.string.dictionary_escribe_una_palabra_en_o, idiomaAprendizaje, idiomaContraparte),
                     style = MaterialTheme.typography.bodyMedium,
@@ -224,6 +230,18 @@ private fun DictionaryScreenContenido(
                                 Spacer(modifier = Modifier.height(10.dp))
                             }
                         }
+                    // Exploración paginada (buscador vacío): al llegar al final se pide la siguiente página.
+                    if (hayMasResultados) {
+                        item {
+                            if (cargandoMas) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                    CircularProgressIndicator()
+                                }
+                            } else {
+                                LaunchedEffect(resultados.size) { onCargarMas() }
+                            }
+                        }
+                    }
                 }
             }
         }
