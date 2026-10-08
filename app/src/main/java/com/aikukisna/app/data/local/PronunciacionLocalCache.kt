@@ -6,22 +6,44 @@ import java.io.File
 import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.aikukisna.app.domain.model.ResultadoPronunciacion
+import com.aikukisna.app.domain.model.SolicitudPronunciacion
+import com.aikukisna.app.domain.repository.PronunciationStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Singleton
 class PronunciacionLocalCache @Inject constructor(
-    @ApplicationContext context: Context
-) {
+    @ApplicationContext private val context: Context
+) : PronunciationStorage {
     private val directorio = File(context.filesDir, "pronunciaciones").apply { mkdirs() }
+    private val pronunciacionesIncluidas by lazy {
+        context.assets.list(DIRECTORIO_ASSETS).orEmpty().toSet()
+    }
 
-    fun leer(texto: String, voiceId: String?): ByteArray? = archivo(texto, voiceId)
-        .takeIf { it.isFile && it.length() > 0 }
-        ?.readBytes()
+    override suspend fun leer(solicitud: SolicitudPronunciacion): ResultadoPronunciacion? = withContext(Dispatchers.IO) {
+        clavesTexto(solicitud.texto).forEach { clave ->
+            archivo(clave, solicitud.idioma.codigo, solicitud.voiceId)
+                .takeIf { it.isFile && it.length() > 0 }
+                ?.readBytes()
+                ?.let { return@withContext ResultadoPronunciacion.AudioCacheado(it) }
 
-    fun contiene(texto: String, voiceId: String?): Boolean = archivo(texto, voiceId).let { it.isFile && it.length() > 0 }
+            val nombre = "${PronunciationCacheKey.crear(clave, solicitud.idioma.codigo, solicitud.voiceId)}.wav"
+            if (nombre in pronunciacionesIncluidas) {
+                return@withContext runCatching {
+                    context.assets.open("$DIRECTORIO_ASSETS/$nombre").use {
+                        ResultadoPronunciacion.AudioLocal(it.readBytes())
+                    }
+                }.getOrNull()
+            }
 
-    fun guardar(texto: String, voiceId: String?, audio: ByteArray) {
-        if (audio.isEmpty()) return
-        val destino = archivo(texto, voiceId)
+        }
+        null
+    }
+
+    override suspend fun guardar(solicitud: SolicitudPronunciacion, audio: ByteArray) = withContext(Dispatchers.IO) {
+        if (audio.isEmpty()) return@withContext
+        val destino = archivo(solicitud.texto, solicitud.idioma.codigo, solicitud.voiceId)
         val temporal = File(directorio, "${destino.name}.tmp")
         temporal.writeBytes(audio)
         if (!temporal.renameTo(destino)) {
@@ -30,11 +52,35 @@ class PronunciacionLocalCache @Inject constructor(
         }
     }
 
-    private fun archivo(texto: String, voiceId: String?): File {
-        val clave = "${voiceId.orEmpty()}|${texto.trim()}"
-        val hash = MessageDigest.getInstance("SHA-256")
+    private fun archivo(texto: String, idiomaCodigo: String, voiceId: String?): File {
+        return File(directorio, "${PronunciationCacheKey.crear(texto, idiomaCodigo, voiceId)}.mp3")
+    }
+
+    private fun clavesTexto(texto: String): List<String> {
+        val exacta = texto.trim()
+        val sinPuntuacion = exacta.trim { caracter ->
+            caracter.isWhitespace() || caracter in PUNTUACION_EXTERIOR
+        }
+        return listOf(
+            exacta,
+            sinPuntuacion,
+            sinPuntuacion.lowercase(),
+            sinPuntuacion.replaceFirstChar { it.titlecase() }
+        ).filter { it.isNotBlank() }.distinct()
+    }
+
+    private companion object {
+        const val DIRECTORIO_ASSETS = "pronunciaciones"
+        val PUNTUACION_EXTERIOR = setOf('¡', '!', '¿', '?', '.', ',', ';', ':', '…', '"', '\'', '“', '”')
+    }
+}
+
+object PronunciationCacheKey {
+    fun crear(texto: String, idiomaCodigo: String, voiceId: String?): String {
+        val clave = "${idiomaCodigo.trim().lowercase()}|${voiceId.orEmpty()}|${texto.trim()}"
+        return MessageDigest.getInstance("SHA-256")
             .digest(clave.toByteArray())
             .joinToString("") { "%02x".format(it) }
-        return File(directorio, "$hash.mp3")
     }
+
 }

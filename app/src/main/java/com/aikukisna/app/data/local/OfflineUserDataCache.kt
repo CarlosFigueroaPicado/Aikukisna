@@ -58,6 +58,22 @@ class OfflineUserDataCache @Inject constructor(
         guardar("progreso", datos)
     }
 
+    suspend fun guardarProgresoLocal(progreso: ProgresoLeccion) {
+        val usuarioId = progreso.usuarioId.toString()
+        val datos = leer<ProgresoCache>("progreso")
+            .filterNot { it.usuarioId == usuarioId && it.leccionId == progreso.leccion.id }
+            .plus(
+                ProgresoCache(
+                    usuarioId = usuarioId,
+                    leccionId = progreso.leccion.id,
+                    estado = progreso.estado,
+                    puntaje = progreso.puntaje,
+                    fecha = progreso.fechaCompletado?.toString()
+                )
+            )
+        guardar("progreso", datos)
+    }
+
     suspend fun leerProgreso(usuarioId: UUID): List<ProgresoLeccion> {
         val guardado = leer<ProgresoCache>("progreso")
             .filter { it.usuarioId == usuarioId.toString() }
@@ -66,9 +82,7 @@ class OfflineUserDataCache @Inject constructor(
                     ProgresoLeccion(usuarioId, leccion, item.estado, item.puntaje, item.fecha?.let(Instant::parse))
                 }
             }
-        val idsGuardados = guardado.map { it.leccion.id }.toSet()
         val pendientes = contenido.obtenerLeccionesPendientes()
-            .filter { it.leccionId !in idsGuardados }
             .mapNotNull { item -> contenido.leerLeccion(item.leccionId)?.let { leccion ->
                 ProgresoLeccion(
                     usuarioId = usuarioId,
@@ -78,7 +92,8 @@ class OfflineUserDataCache @Inject constructor(
                     fechaCompletado = java.time.Instant.ofEpochMilli(item.fechaCreadoEpochMs)
                 )
             } }
-        return guardado + pendientes
+        val idsPendientes = pendientes.map { it.leccion.id }.toSet()
+        return guardado.filterNot { it.leccion.id in idsPendientes } + pendientes
     }
 
     suspend fun guardarFavoritos(lista: List<PalabraFavorita>) {
@@ -133,6 +148,14 @@ class OfflineUserDataCache @Inject constructor(
     suspend fun guardarDesbloqueados(lista: List<LogroDesbloqueado>) = guardar("desbloqueados", lista.map {
         DesbloqueadoCache(it.usuarioId.toString(), it.logro.id, it.fecha.toString())
     })
+
+    fun agregarDesbloqueado(usuarioId: UUID, logroId: Int, fecha: Instant = Instant.now()) {
+        val id = usuarioId.toString()
+        val datos = leer<DesbloqueadoCache>("desbloqueados")
+            .filterNot { it.usuarioId == id && it.logroId == logroId }
+            .plus(DesbloqueadoCache(id, logroId, fecha.toString()))
+        guardar("desbloqueados", datos)
+    }
 
     fun leerDesbloqueados(usuarioId: UUID): List<LogroDesbloqueado> {
         val logros = leerLogros().associateBy { it.id }
