@@ -11,6 +11,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.functions.Functions
 import io.github.jan.supabase.postgrest.Postgrest
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.seconds
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -23,6 +24,7 @@ object NetworkModule {
             supabaseUrl = BuildConfig.SUPABASE_URL,
             supabaseKey = BuildConfig.SUPABASE_ANON_KEY
         ) {
+            requestTimeout = 30.seconds
             install(Postgrest)
             install(Auth) {
                 scheme = "aikukisna"

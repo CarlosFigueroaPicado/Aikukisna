@@ -11,3 +11,8 @@
 -keepclasseswithmembers,allowoptimization class com.aikukisna.app.data.remote.dto.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
+# MediaPipe LLM Inference (Tuki offline): el código nativo accede por JNI y reflexión.
+-keep class com.google.mediapipe.** { *; }
+-keep class com.google.protobuf.** { *; }
+-dontwarn com.google.mediapipe.**
+-dontwarn com.google.protobuf.**

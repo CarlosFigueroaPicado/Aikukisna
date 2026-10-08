@@ -6,13 +6,14 @@ import android.net.NetworkCapabilities
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.aikukisna.app.domain.repository.NetworkAvailability
 
 
 @Singleton
 class ConectividadHelper @Inject constructor(
     @ApplicationContext private val context: Context
-) {
-    fun hayConexion(): Boolean {
+) : NetworkAvailability {
+    override fun hayConexion(): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
             ?: return false
         val red = cm.activeNetwork ?: return false
