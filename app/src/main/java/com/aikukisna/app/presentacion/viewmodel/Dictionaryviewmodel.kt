@@ -12,7 +12,9 @@ import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.domain.repository.AuthRepository
 import com.aikukisna.app.domain.repository.PreferenciasAprendizaje
 import com.aikukisna.app.domain.repository.UsuarioRepository
+import com.aikukisna.app.domain.repository.DiccionarioRepository
 import com.aikukisna.app.domain.usecase.BuscarDiccionarioBidireccionalUseCase
+import com.aikukisna.app.domain.usecase.BuscarPalabrasUseCase
 import com.aikukisna.app.domain.usecase.ResultadoDiccionarioBidireccional
 import com.aikukisna.app.domain.usecase.limpiarEntradaDiccionario
 import com.aikukisna.app.data.local.SembradorReplicaSupabase
@@ -34,9 +36,13 @@ data class PalabraConTraduccion(
 
 private val IDIOMA_ESPANOL = Idioma.DISPONIBLES.first { it.codigo == "es" }
 
+private const val TAMANO_PAGINA = 50
+
 @HiltViewModel
 class DictionaryViewModel @Inject constructor(
     private val buscarDiccionario: BuscarDiccionarioBidireccionalUseCase,
+    private val buscarPalabrasUseCase: BuscarPalabrasUseCase,
+    private val diccionarioRepository: DiccionarioRepository,
     private val authRepository: AuthRepository,
     private val usuarioRepository: UsuarioRepository,
     private val sembradorReplica: SembradorReplicaSupabase,
@@ -54,6 +60,11 @@ class DictionaryViewModel @Inject constructor(
     var errorMessage by mutableStateOf<String?>(null)
         private set
     var favoritosIds by mutableStateOf<Set<Int>>(emptySet())
+        private set
+    /** Con el buscador vacío se exploran las palabras del idioma de 50 en 50 (búsqueda paginada, PR #56). */
+    var cargandoMas by mutableStateOf(false)
+        private set
+    var hayMasResultados by mutableStateOf(false)
         private set
 
     /** Quien aprende español busca entre el español y su lengua de apoyo, no "Español o Español". */
@@ -116,7 +127,7 @@ class DictionaryViewModel @Inject constructor(
                 usuarioId = userId
                 idiomaAprendizaje = usuarioRepository.obtenerUsuario(userId)?.idiomaMeta
                     ?: throw IllegalStateException(t(R.string.dictionary_todavia_no_elegiste_un_idioma))
-                if (query.isNotBlank()) buscar(query)
+                buscar(query)
                 // Los favoritos pueden venir de la red: no deben retrasar la búsqueda.
                 viewModelScope.launch {
                     runCatching { usuarioRepository.obtenerFavoritos(userId) }
@@ -139,7 +150,17 @@ class DictionaryViewModel @Inject constructor(
             isLoading = true
             errorMessage = null
             try {
-                val nuevosResultados = if (texto.isBlank()) emptyList() else when (
+                if (texto.isBlank()) {
+                    val pagina = paginaExploracion(idiomaMeta, offset = 0)
+                    if (busquedaActual == numeroBusqueda) {
+                        offsetExploracion = pagina.leidas
+                        resultados = pagina.palabras
+                        hayMasResultados = pagina.leidas == TAMANO_PAGINA
+                    }
+                    return@launch
+                }
+                if (busquedaActual == numeroBusqueda) hayMasResultados = false
+                val nuevosResultados = when (
                     val resultado = buscarDiccionario(texto, idiomaContraparte, idiomaMeta)
                 ) {
                     is ResultadoDiccionarioBidireccional.Exactas -> resultado.entradas.flatMap { entrada ->
@@ -175,6 +196,54 @@ class DictionaryViewModel @Inject constructor(
                 if (busquedaActual == numeroBusqueda) isLoading = false
             }
         }
+    }
+
+    /** Siguiente página de la exploración (buscador vacío). La pantalla la pide al llegar al final de la lista. */
+    fun cargarMas() {
+        val idiomaMeta = idiomaAprendizaje ?: return
+        if (query.isNotBlank() || isLoading || cargandoMas || !hayMasResultados) return
+        val busquedaActual = numeroBusqueda
+        cargandoMas = true
+        viewModelScope.launch {
+            try {
+                val pagina = paginaExploracion(idiomaMeta, offset = offsetExploracion)
+                if (busquedaActual == numeroBusqueda) {
+                    offsetExploracion += pagina.leidas
+                    resultados = (resultados + pagina.palabras)
+                        .distinctBy { claveDuplicado(it.texto) to it.traduccion?.let(::claveDuplicado) }
+                    hayMasResultados = pagina.leidas == TAMANO_PAGINA
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                errorMessage = e.message ?: t(R.string.dictionary_error_al_buscar)
+            } finally {
+                cargandoMas = false
+            }
+        }
+    }
+
+    private var offsetExploracion = 0
+
+    private class PaginaExploracion(val palabras: List<PalabraConTraduccion>, val leidas: Int)
+
+    private suspend fun paginaExploracion(idiomaMeta: Idioma, offset: Int): PaginaExploracion {
+        val palabras = buscarPalabrasUseCase(query = "", idiomaId = idiomaMeta.id, limite = TAMANO_PAGINA, offset = offset)
+        val contraparte = idiomaContraparte.id
+        val convertidas = palabras.map { palabra ->
+            // La traducción al idioma con que se busca (español o la lengua de apoyo), si existe.
+            val traducciones = diccionarioRepository.obtenerTraducciones(palabra.id)
+            val traduccion = (traducciones.firstOrNull { it.palabraDestino.idioma.id == contraparte }
+                ?: traducciones.firstOrNull())?.palabraDestino
+            PalabraConTraduccion(
+                palabraId = palabra.id,
+                texto = limpiarEntradaDiccionario(palabra.texto),
+                traduccion = traduccion?.texto?.let(::limpiarEntradaDiccionario),
+                categoriaId = palabra.categoria?.takeUnless(::esCategoriaGenerica)?.id,
+                categoriaNombre = palabra.categoria?.takeUnless(::esCategoriaGenerica)?.nombre
+            )
+        }.distinctBy { claveDuplicado(it.texto) to it.traduccion?.let(::claveDuplicado) }
+        return PaginaExploracion(convertidas, leidas = palabras.size)
     }
 
     private fun com.aikukisna.app.domain.conocimiento.EntradaConocimiento.aResultado(
