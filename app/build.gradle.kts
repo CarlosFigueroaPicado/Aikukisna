@@ -18,6 +18,12 @@ android {
     namespace = "com.aikukisna.app"
     compileSdk = 37
 
+    // ML Kit carga el clasificador de objetos directamente desde el APK: no debe comprimirse.
+    androidResources {
+        noCompress += "tflite"
+        noCompress += "onnx"
+    }
+
     defaultConfig {
         applicationId = "com.aikukisna.app"
         minSdk = 26
@@ -32,6 +38,12 @@ android {
         buildConfigField("String", "GEMINI_API_KEY", "\"${localProperties.getProperty("GEMINI_API_KEY", "")}\"")
         buildConfigField("String", "ELEVENLABS_API_KEY", "\"${localProperties.getProperty("ELEVENLABS_API_KEY", "")}\"")
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("GOOGLE_WEB_CLIENT_ID", "")}\"")
+        // Modelo Gemma para Tuki offline; por defecto se descarga del Release "modelo-tuki-v1" en GitHub.
+        buildConfigField("String", "TUKI_MODELO_URL", "\"${localProperties.getProperty("TUKI_MODELO_URL", "")}\"")
+        // true cuando el Release "modelo-tuki-v2" (Gemma ajustado con el corpus de Miskito y Kriol) está publicado.
+        buildConfigField("boolean", "TUKI_MODELO_AJUSTADO", localProperties.getProperty("TUKI_MODELO_AJUSTADO", "false"))
+        // Modelo ajustado también con diálogos de profesor (scripts/preparar_dataset_tuki_tutor.py): sabe conversar.
+        buildConfigField("boolean", "TUKI_MODELO_TUTOR", localProperties.getProperty("TUKI_MODELO_TUTOR", "false"))
 
 
     }
@@ -58,6 +70,18 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+            // Los teléfonos de las escuelas son ARM: las librerías x86/x86_64 (≈175 MB) solo sirven en emuladores.
+            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
+        }
+    }
+    // Con -PapkPorArquitectura=true se genera además un APK por tipo de procesador (más liviano para repartir
+    // por WhatsApp o memoria USB): arm64-v8a para teléfonos de 2017 en adelante, armeabi-v7a para los antiguos.
+    splits {
+        abi {
+            isEnable = providers.gradleProperty("apkPorArquitectura").orNull == "true"
+            reset()
+            include("arm64-v8a", "armeabi-v7a")
+            isUniversalApk = false
         }
     }
     compileOptions {
@@ -109,4 +133,18 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.mlkit.image.labeling)
+    implementation(libs.mlkit.image.labeling.custom)
+    implementation(libs.mlkit.objectdetector)
+    implementation(libs.onnxruntime.android)
+    implementation(libs.vosk.android)
+    implementation(libs.mediapipe.tasks.genai)
+    implementation(libs.androidx.work.runtime)
+    implementation("net.java.dev.jna:jna:${libs.versions.jna.get()}@aar")
+}
+
+// FormatoTextosInterfazTest lee los strings.xml del disco: sin esto Gradle daría la prueba por al día al cambiar textos.
+tasks.withType<Test>().configureEach {
+    inputs.dir("src/main/res").withPropertyName("recursosInterfaz")
 }
