@@ -1,0 +1,2329 @@
+{
+ "version": 61427839,
+ "fuentes": [
+  {
+   "fuente_id": 85,
+   "hablante": "El Miskito Hamilton",
+   "audios": [
+    {
+     "archivo": "hamilton_5d99f0d65650.wav",
+     "idioma": "mi",
+     "forma": "mit",
+     "palabra_ids": [
+      48248
+     ]
+    },
+    {
+     "archivo": "hamilton_80161144c51a.wav",
+     "idioma": "mi",
+     "forma": "lakula",
+     "palabra_ids": [
+      320,
+      45267
+     ]
+    },
+    {
+     "archivo": "hamilton_b4e4db1670a0.wav",
+     "idioma": "mi",
+     "forma": "naiwa",
+     "palabra_ids": [
+      19384
+     ]
+    },
+    {
+     "archivo": "hamilton_339e69ebc27c.wav",
+     "idioma": "mi",
+     "forma": "waia",
+     "palabra_ids": [
+      1207,
+      13962
+     ]
+    },
+    {
+     "archivo": "hamilton_6a82fab5397c.wav",
+     "idioma": "mi",
+     "forma": "kauhla",
+     "palabra_ids": [
+      10225,
+      17855
+     ]
+    },
+    {
+     "archivo": "hamilton_9fd0372549a0.wav",
+     "idioma": "mi",
+     "forma": "buaia",
+     "palabra_ids": [
+      14729,
+      26720
+     ]
+    },
+    {
+     "archivo": "hamilton_985590023d81.wav",
+     "idioma": "mi",
+     "forma": "siahka",
+     "palabra_ids": [
+      8216
+     ]
+    },
+    {
+     "archivo": "hamilton_b68ace03e79d.wav",
+     "idioma": "mi",
+     "forma": "rih",
+     "palabra_ids": [
+      7296,
+      52348
+     ]
+    },
+    {
+     "archivo": "hamilton_25ec9acd0929.wav",
+     "idioma": "mi",
+     "forma": "bla",
+     "palabra_ids": [
+      5998,
+      13264,
+      33701
+     ]
+    },
+    {
+     "archivo": "hamilton_497636c17a9b.wav",
+     "idioma": "mi",
+     "forma": "ai daukisa",
+     "palabra_ids": [
+      34763
+     ]
+    },
+    {
+     "archivo": "hamilton_d8d86e838808.wav",
+     "idioma": "mi",
+     "forma": "mapara",
+     "palabra_ids": [
+      10384
+     ]
+    },
+    {
+     "archivo": "hamilton_5953c839b30d.wav",
+     "idioma": "mi",
+     "forma": "kapi",
+     "palabra_ids": [
+      7167,
+      42152
+     ]
+    },
+    {
+     "archivo": "hamilton_ce2ca8565e5c.wav",
+     "idioma": "mi",
+     "forma": "titan pata",
+     "palabra_ids": [
+      12875
+     ]
+    },
+    {
+     "archivo": "hamilton_ddbccebbd406.wav",
+     "idioma": "mi",
+     "forma": "wark",
+     "palabra_ids": [
+      14989,
+      25694
+     ]
+    },
+    {
+     "archivo": "hamilton_e741fd9d89e6.wav",
+     "idioma": "mi",
+     "forma": "dinar pata",
+     "palabra_ids": [
+      2739
+     ]
+    },
+    {
+     "archivo": "hamilton_4cdd28777530.wav",
+     "idioma": "mi",
+     "forma": "piaia",
+     "palabra_ids": [
+      2661,
+      32489
+     ]
+    },
+    {
+     "archivo": "hamilton_4013c5cbf5e0.wav",
+     "idioma": "mi",
+     "forma": "naksa oih",
+     "palabra_ids": [
+      19253
+     ]
+    },
+    {
+     "archivo": "hamilton_84cdaf28c964.wav",
+     "idioma": "mi",
+     "forma": "wan panika",
+     "palabra_ids": [
+      3099
+     ]
+    },
+    {
+     "archivo": "hamilton_f0147ed71219.wav",
+     "idioma": "mi",
+     "forma": "wark takaia",
+     "palabra_ids": [
+      1681
+     ]
+    },
+    {
+     "archivo": "hamilton_e7d723827dd5.wav",
+     "idioma": "mi",
+     "forma": "aisaia",
+     "palabra_ids": [
+      4615,
+      12196
+     ]
+    },
+    {
+     "archivo": "hamilton_6b44451c6503.wav",
+     "idioma": "mi",
+     "forma": "tutni yamni",
+     "palabra_ids": [
+      81167
+     ]
+    },
+    {
+     "archivo": "hamilton_e39d5e3d6e50.wav",
+     "idioma": "mi",
+     "forma": "yu yamni",
+     "palabra_ids": [
+      6876
+     ]
+    },
+    {
+     "archivo": "hamilton_c227f5858e64.wav",
+     "idioma": "mi",
+     "forma": "titan yamni",
+     "palabra_ids": [
+      6877,
+      6883
+     ]
+    },
+    {
+     "archivo": "hamilton_7e4c91559a01.wav",
+     "idioma": "mi",
+     "forma": "karam",
+     "palabra_ids": [
+      42196
+     ]
+    },
+    {
+     "archivo": "hamilton_a3b47c951922.wav",
+     "idioma": "mi",
+     "forma": "tihmia yamni",
+     "palabra_ids": [
+      81168
+     ]
+    },
+    {
+     "archivo": "hamilton_a9b52b7492f0.wav",
+     "idioma": "mi",
+     "forma": "yapaia",
+     "palabra_ids": [
+      14376,
+      29025
+     ]
+    },
+    {
+     "archivo": "hamilton_b1e2834f1366.wav",
+     "idioma": "mi",
+     "forma": "bin",
+     "palabra_ids": [
+      6915,
+      19325,
+      29801,
+      38210
+     ]
+    },
+    {
+     "archivo": "hamilton_c0e23a5b4fcc.wav",
+     "idioma": "mi",
+     "forma": "yapan",
+     "palabra_ids": [
+      31332
+     ]
+    },
+    {
+     "archivo": "hamilton_646a19bd4a03.wav",
+     "idioma": "mi",
+     "forma": "lakra",
+     "palabra_ids": [
+      19087,
+      45256
+     ]
+    },
+    {
+     "archivo": "hamilton_11f1ef6ea783.wav",
+     "idioma": "mi",
+     "forma": "pulaia",
+     "palabra_ids": [
+      6790,
+      14169
+     ]
+    },
+    {
+     "archivo": "hamilton_1792d3237a15.wav",
+     "idioma": "mi",
+     "forma": "lilia",
+     "palabra_ids": [
+      2502,
+      18466
+     ]
+    },
+    {
+     "archivo": "hamilton_fce700688fe0.wav",
+     "idioma": "mi",
+     "forma": "sari man",
+     "palabra_ids": [
+      53047
+     ]
+    },
+    {
+     "archivo": "hamilton_7035d1b7acee.wav",
+     "idioma": "mi",
+     "forma": "almukka",
+     "palabra_ids": [
+      3259,
+      3491
+     ]
+    },
+    {
+     "archivo": "hamilton_44babb473131.wav",
+     "idioma": "mi",
+     "forma": "ani ba",
+     "palabra_ids": [
+      36185
+     ]
+    },
+    {
+     "archivo": "hamilton_deb697aa4065.wav",
+     "idioma": "mi",
+     "forma": "lukanka",
+     "palabra_ids": [
+      9689,
+      9704,
+      15537
+     ]
+    },
+    {
+     "archivo": "hamilton_8a70cd55a582.wav",
+     "idioma": "mi",
+     "forma": "aksidint",
+     "palabra_ids": [
+      759
+     ]
+    },
+    {
+     "archivo": "hamilton_005a3689d802.wav",
+     "idioma": "mi",
+     "forma": "saura ai daukisa",
+     "palabra_ids": [
+      34775
+     ]
+    },
+    {
+     "archivo": "hamilton_33b767e79a8c.wav",
+     "idioma": "mi",
+     "forma": "paih",
+     "palabra_ids": [
+      5663
+     ]
+    },
+    {
+     "archivo": "hamilton_1be785b5dddc.wav",
+     "idioma": "mi",
+     "forma": "ay",
+     "palabra_ids": [
+      37013
+     ]
+    },
+    {
+     "archivo": "hamilton_a38efa92c81b.wav",
+     "idioma": "mi",
+     "forma": "kumi",
+     "palabra_ids": [
+      2610,
+      33075
+     ]
+    },
+    {
+     "archivo": "hamilton_6d8a77ceb8b7.wav",
+     "idioma": "mi",
+     "forma": "polis",
+     "palabra_ids": [
+      26654,
+      51052
+     ]
+    },
+    {
+     "archivo": "hamilton_fe962b73091a.wav",
+     "idioma": "mi",
+     "forma": "dur",
+     "palabra_ids": [
+      27665,
+      40454
+     ]
+    },
+    {
+     "archivo": "hamilton_f6d6f2684861.wav",
+     "idioma": "mi",
+     "forma": "bilara",
+     "palabra_ids": [
+      14,
+      14489
+     ]
+    },
+    {
+     "archivo": "hamilton_dfec02dbb756.wav",
+     "idioma": "mi",
+     "forma": "yabal",
+     "palabra_ids": [
+      6413,
+      23312
+     ]
+    },
+    {
+     "archivo": "hamilton_6d06f9b8d371.wav",
+     "idioma": "mi",
+     "forma": "wan",
+     "palabra_ids": [
+      24117
+     ]
+    },
+    {
+     "archivo": "hamilton_d9b15dec36f9.wav",
+     "idioma": "mi",
+     "forma": "kakna",
+     "palabra_ids": [
+      13729
+     ]
+    },
+    {
+     "archivo": "hamilton_9d110235238e.wav",
+     "idioma": "mi",
+     "forma": "tihmia",
+     "palabra_ids": [
+      24065,
+      24322
+     ]
+    },
+    {
+     "archivo": "hamilton_6f3c6cfcbf1c.wav",
+     "idioma": "mi",
+     "forma": "li",
+     "palabra_ids": [
+      2089,
+      62484
+     ]
+    },
+    {
+     "archivo": "hamilton_5343bb7f901c.wav",
+     "idioma": "mi",
+     "forma": "kapu",
+     "palabra_ids": [
+      19,
+      42184
+     ]
+    },
+    {
+     "archivo": "hamilton_cb6b561b5122.wav",
+     "idioma": "mi",
+     "forma": "latara",
+     "palabra_ids": [
+      1833
+     ]
+    },
+    {
+     "archivo": "hamilton_c7526f308383.wav",
+     "idioma": "mi",
+     "forma": "munhtara",
+     "palabra_ids": [
+      25
+     ]
+    },
+    {
+     "archivo": "hamilton_1555823dce6b.wav",
+     "idioma": "mi",
+     "forma": "pawanka",
+     "palabra_ids": [
+      5325,
+      10989,
+      22092,
+      50160,
+      50163
+     ]
+    },
+    {
+     "archivo": "hamilton_fd26dc6b1c00.wav",
+     "idioma": "mi",
+     "forma": "nuhanka",
+     "palabra_ids": [
+      12842,
+      15366
+     ]
+    },
+    {
+     "archivo": "hamilton_2c88d18621c0.wav",
+     "idioma": "mi",
+     "forma": "mama",
+     "palabra_ids": [
+      22077,
+      47416,
+      63010
+     ]
+    },
+    {
+     "archivo": "hamilton_73e167e59ed9.wav",
+     "idioma": "mi",
+     "forma": "bahara",
+     "palabra_ids": [
+      2176,
+      2882,
+      37177
+     ]
+    },
+    {
+     "archivo": "hamilton_e624de106584.wav",
+     "idioma": "mi",
+     "forma": "man wal",
+     "palabra_ids": [
+      10354
+     ]
+    },
+    {
+     "archivo": "hamilton_2f64fe0ef70e.wav",
+     "idioma": "mi",
+     "forma": "lila",
+     "palabra_ids": [
+      2946,
+      8464
+     ]
+    },
+    {
+     "archivo": "hamilton_cebbcc57ef44.wav",
+     "idioma": "mi",
+     "forma": "bak",
+     "palabra_ids": [
+      13,
+      26746,
+      37352,
+      37357
+     ]
+    },
+    {
+     "archivo": "hamilton_c2ba01eb31e8.wav",
+     "idioma": "mi",
+     "forma": "las",
+     "palabra_ids": [
+      26878,
+      45857,
+      45860
+     ]
+    },
+    {
+     "archivo": "hamilton_9323485854eb.wav",
+     "idioma": "mi",
+     "forma": "pruan",
+     "palabra_ids": [
+      13875,
+      17109
+     ]
+    },
+    {
+     "archivo": "hamilton_bce0663bc9e9.wav",
+     "idioma": "mi",
+     "forma": "nina",
+     "palabra_ids": [
+      3806,
+      13527
+     ]
+    },
+    {
+     "archivo": "hamilton_e37d8fa6d6f3.wav",
+     "idioma": "mi",
+     "forma": "yauhka",
+     "palabra_ids": [
+      22453
+     ]
+    },
+    {
+     "archivo": "hamilton_bc036f651d53.wav",
+     "idioma": "mi",
+     "forma": "tawan",
+     "palabra_ids": [
+      8802,
+      9635,
+      23565,
+      28154
+     ]
+    },
+    {
+     "archivo": "hamilton_68cdf0a4855b.wav",
+     "idioma": "mi",
+     "forma": "sekan",
+     "palabra_ids": [
+      30389
+     ]
+    },
+    {
+     "archivo": "hamilton_772df0e33738.wav",
+     "idioma": "mi",
+     "forma": "yari",
+     "palabra_ids": [
+      2811,
+      60688
+     ]
+    },
+    {
+     "archivo": "hamilton_e5ce25dd4015.wav",
+     "idioma": "mi",
+     "forma": "natka",
+     "palabra_ids": [
+      8162,
+      9826
+     ]
+    },
+    {
+     "archivo": "hamilton_49d88ad53874.wav",
+     "idioma": "mi",
+     "forma": "saurka",
+     "palabra_ids": [
+      13174,
+      13679
+     ]
+    },
+    {
+     "archivo": "hamilton_2a9861189afd.wav",
+     "idioma": "mi",
+     "forma": "kum",
+     "palabra_ids": [
+      2608,
+      25601,
+      31620,
+      44201,
+      44205
+     ]
+    },
+    {
+     "archivo": "hamilton_17ad1df245ef.wav",
+     "idioma": "mi",
+     "forma": "wik",
+     "palabra_ids": [
+      22756,
+      30426
+     ]
+    },
+    {
+     "archivo": "hamilton_a581752be4a2.wav",
+     "idioma": "mi",
+     "forma": "markit",
+     "palabra_ids": [
+      22994
+     ]
+    },
+    {
+     "archivo": "hamilton_27dba861c8ea.wav",
+     "idioma": "mi",
+     "forma": "pihni",
+     "palabra_ids": [
+      6359,
+      7664
+     ]
+    },
+    {
+     "archivo": "hamilton_07fa5afc73d1.wav",
+     "idioma": "mi",
+     "forma": "pain",
+     "palabra_ids": [
+      851,
+      900
+     ]
+    },
+    {
+     "archivo": "hamilton_4e4bdc8d56e5.wav",
+     "idioma": "mi",
+     "forma": "program",
+     "palabra_ids": [
+      27381
+     ]
+    },
+    {
+     "archivo": "hamilton_bc7bd9960b0b.wav",
+     "idioma": "mi",
+     "forma": "kampani",
+     "palabra_ids": [
+      9399
+     ]
+    },
+    {
+     "archivo": "hamilton_cbbce1c01eeb.wav",
+     "idioma": "mi",
+     "forma": "waupasa kati",
+     "palabra_ids": [
+      24422
+     ]
+    },
+    {
+     "archivo": "hamilton_16f283322210.wav",
+     "idioma": "mi",
+     "forma": "siakwa kati",
+     "palabra_ids": [
+      15277
+     ]
+    },
+    {
+     "archivo": "hamilton_16de350dc238.wav",
+     "idioma": "mi",
+     "forma": "kuswa kati",
+     "palabra_ids": [
+      17248
+     ]
+    },
+    {
+     "archivo": "hamilton_abcdffef6611.wav",
+     "idioma": "mi",
+     "forma": "kuswa",
+     "palabra_ids": [
+      8501,
+      20969
+     ]
+    },
+    {
+     "archivo": "hamilton_5069bd9010cf.wav",
+     "idioma": "mi",
+     "forma": "kakamuk kati",
+     "palabra_ids": [
+      22607
+     ]
+    },
+    {
+     "archivo": "hamilton_15e05fccc9e3.wav",
+     "idioma": "mi",
+     "forma": "lih wainhka kati",
+     "palabra_ids": [
+      378,
+      46300
+     ]
+    },
+    {
+     "archivo": "hamilton_6b8268a1ec00.wav",
+     "idioma": "mi",
+     "forma": "lih mairin kati",
+     "palabra_ids": [
+      22708,
+      46293
+     ]
+    },
+    {
+     "archivo": "hamilton_841c3a1afeca.wav",
+     "idioma": "mi",
+     "forma": "uya",
+     "palabra_ids": [
+      3194,
+      6014
+     ]
+    },
+    {
+     "archivo": "hamilton_13107addd5d4.wav",
+     "idioma": "mi",
+     "forma": "aihwa",
+     "palabra_ids": [
+      555,
+      23626
+     ]
+    },
+    {
+     "archivo": "hamilton_ec9465b0af4f.wav",
+     "idioma": "mi",
+     "forma": "yahbra kati",
+     "palabra_ids": [
+      24169
+     ]
+    },
+    {
+     "archivo": "hamilton_7f9c80b3aef3.wav",
+     "idioma": "mi",
+     "forma": "yahbra",
+     "palabra_ids": [
+      6557,
+      30573
+     ]
+    },
+    {
+     "archivo": "hamilton_5fc769ed4df2.wav",
+     "idioma": "mi",
+     "forma": "trisu kati",
+     "palabra_ids": [
+      13789
+     ]
+    },
+    {
+     "archivo": "hamilton_5b8c121d1bae.wav",
+     "idioma": "mi",
+     "forma": "trisu",
+     "palabra_ids": [
+      25030,
+      57519
+     ]
+    },
+    {
+     "archivo": "hamilton_e95654e547b2.wav",
+     "idioma": "mi",
+     "forma": "sikla kati",
+     "palabra_ids": [
+      1956
+     ]
+    },
+    {
+     "archivo": "hamilton_cda6668cbbc2.wav",
+     "idioma": "mi",
+     "forma": "upla",
+     "palabra_ids": [
+      11086,
+      19265
+     ]
+    },
+    {
+     "archivo": "hamilton_6b287b2d85cf.wav",
+     "idioma": "mi",
+     "forma": "tiara",
+     "palabra_ids": [
+      21004,
+      23613,
+      56821
+     ]
+    },
+    {
+     "archivo": "hamilton_f185c7e366c0.wav",
+     "idioma": "mi",
+     "forma": "dama",
+     "palabra_ids": [
+      526,
+      33809,
+      39662
+     ]
+    },
+    {
+     "archivo": "hamilton_fe9289e072e7.wav",
+     "idioma": "mi",
+     "forma": "kuka",
+     "palabra_ids": [
+      522,
+      29500
+     ]
+    },
+    {
+     "archivo": "hamilton_64404c4fb4df.wav",
+     "idioma": "mi",
+     "forma": "maya waitna",
+     "palabra_ids": [
+      9397,
+      16265
+     ]
+    },
+    {
+     "archivo": "hamilton_0a2d9e24eaa2.wav",
+     "idioma": "mi",
+     "forma": "maya",
+     "palabra_ids": [
+      27,
+      10570,
+      47896
+     ]
+    },
+    {
+     "archivo": "hamilton_9d03cb1b0b83.wav",
+     "idioma": "mi",
+     "forma": "waitna",
+     "palabra_ids": [
+      19263,
+      30675,
+      59082
+     ]
+    },
+    {
+     "archivo": "hamilton_e361bfa91188.wav",
+     "idioma": "mi",
+     "forma": "lila waitna",
+     "palabra_ids": [
+      27869
+     ]
+    },
+    {
+     "archivo": "hamilton_d3ff6f505118.wav",
+     "idioma": "mi",
+     "forma": "painkira lupia",
+     "palabra_ids": [
+      6521
+     ]
+    },
+    {
+     "archivo": "hamilton_b2671181eccd.wav",
+     "idioma": "mi",
+     "forma": "mairin",
+     "palabra_ids": [
+      12046,
+      23669
+     ]
+    },
+    {
+     "archivo": "hamilton_b4e589f3b525.wav",
+     "idioma": "mi",
+     "forma": "maya mairin",
+     "palabra_ids": [
+      16258
+     ]
+    },
+    {
+     "archivo": "hamilton_f1b7dea1e866.wav",
+     "idioma": "mi",
+     "forma": "tuktan",
+     "palabra_ids": [
+      8732,
+      11693
+     ]
+    },
+    {
+     "archivo": "hamilton_4ba78eca9f54.wav",
+     "idioma": "mi",
+     "forma": "yamni",
+     "palabra_ids": [
+      852,
+      1985,
+      60520
+     ]
+    },
+    {
+     "archivo": "hamilton_e98f992ee681.wav",
+     "idioma": "mi",
+     "forma": "markit tara",
+     "palabra_ids": [
+      31446
+     ]
+    },
+    {
+     "archivo": "hamilton_0d709a901423.wav",
+     "idioma": "mi",
+     "forma": "ban sakuna",
+     "palabra_ids": [
+      5332,
+      6252
+     ]
+    },
+    {
+     "archivo": "hamilton_c84bf22da7b6.wav",
+     "idioma": "mi",
+     "forma": "lama",
+     "palabra_ids": [
+      19296,
+      25531
+     ]
+    },
+    {
+     "archivo": "hamilton_9d9da86664c4.wav",
+     "idioma": "mi",
+     "forma": "wan nina",
+     "palabra_ids": [
+      16105
+     ]
+    },
+    {
+     "archivo": "hamilton_6a3658b65ac7.wav",
+     "idioma": "mi",
+     "forma": "maisa",
+     "palabra_ids": [
+      8726,
+      31653,
+      47227
+     ]
+    },
+    {
+     "archivo": "hamilton_37d685e8ced8.wav",
+     "idioma": "mi",
+     "forma": "dia takisa",
+     "palabra_ids": [
+      25363
+     ]
+    },
+    {
+     "archivo": "hamilton_6a2557e83bb0.wav",
+     "idioma": "mi",
+     "forma": "mana",
+     "palabra_ids": [
+      8039,
+      10920,
+      47494
+     ]
+    },
+    {
+     "archivo": "hamilton_2c9c271cbee8.wav",
+     "idioma": "mi",
+     "forma": "lalah",
+     "palabra_ids": [
+      8256,
+      26514,
+      45363
+     ]
+    },
+    {
+     "archivo": "hamilton_274f41a529a7.wav",
+     "idioma": "mi",
+     "forma": "diara apia ba",
+     "palabra_ids": [
+      23797
+     ]
+    },
+    {
+     "archivo": "hamilton_aa0a08eaf72d.wav",
+     "idioma": "mi",
+     "forma": "dia mita",
+     "palabra_ids": [
+      48254
+     ]
+    },
+    {
+     "archivo": "hamilton_9f458aa79268.wav",
+     "idioma": "mi",
+     "forma": "yauhka kat",
+     "palabra_ids": [
+      18936
+     ]
+    },
+    {
+     "archivo": "hamilton_73a508aa4028.wav",
+     "idioma": "mi",
+     "forma": "wan tawa",
+     "palabra_ids": [
+      63137
+     ]
+    },
+    {
+     "archivo": "hamilton_b37716c41586.wav",
+     "idioma": "mi",
+     "forma": "wal",
+     "palabra_ids": [
+      15,
+      3026,
+      14385,
+      14512
+     ]
+    },
+    {
+     "archivo": "hamilton_b4d98cd15f45.wav",
+     "idioma": "mi",
+     "forma": "nakra pura tamaya",
+     "palabra_ids": [
+      8364,
+      61805
+     ]
+    },
+    {
+     "archivo": "hamilton_118eaa43d70a.wav",
+     "idioma": "mi",
+     "forma": "tuisa",
+     "palabra_ids": [
+      62965
+     ]
+    },
+    {
+     "archivo": "hamilton_cdb93a1ec1c7.wav",
+     "idioma": "mi",
+     "forma": "unmaya",
+     "palabra_ids": [
+      5898,
+      6287,
+      58488,
+      63532
+     ]
+    },
+    {
+     "archivo": "hamilton_0fda8700285b.wav",
+     "idioma": "mi",
+     "forma": "ban",
+     "palabra_ids": [
+      5331,
+      10206
+     ]
+    },
+    {
+     "archivo": "hamilton_30699dd3865d.wav",
+     "idioma": "mi",
+     "forma": "bas",
+     "palabra_ids": [
+      20931,
+      22297,
+      37630
+     ]
+    },
+    {
+     "archivo": "hamilton_cd1687ecb383.wav",
+     "idioma": "mi",
+     "forma": "baha",
+     "palabra_ids": [
+      4120,
+      16061
+     ]
+    },
+    {
+     "archivo": "hamilton_5a09599d34d0.wav",
+     "idioma": "mi",
+     "forma": "talia",
+     "palabra_ids": [
+      9368,
+      17411,
+      56039
+     ]
+    },
+    {
+     "archivo": "hamilton_0c38a0a8b6fd.wav",
+     "idioma": "mi",
+     "forma": "baha sat",
+     "palabra_ids": [
+      31619
+     ]
+    },
+    {
+     "archivo": "hamilton_74496857d79b.wav",
+     "idioma": "mi",
+     "forma": "miusik",
+     "palabra_ids": [
+      23756,
+      48264
+     ]
+    },
+    {
+     "archivo": "hamilton_f483416166ec.wav",
+     "idioma": "mi",
+     "forma": "purara",
+     "palabra_ids": [
+      16,
+      14898
+     ]
+    },
+    {
+     "archivo": "hamilton_2a45e3180cd3.wav",
+     "idioma": "mi",
+     "forma": "park",
+     "palabra_ids": [
+      25266,
+      31924
+     ]
+    },
+    {
+     "archivo": "hamilton_21be85152e95.wav",
+     "idioma": "mi",
+     "forma": "rais",
+     "palabra_ids": [
+      4547,
+      52012
+     ]
+    },
+    {
+     "archivo": "hamilton_45fecdae5712.wav",
+     "idioma": "mi",
+     "forma": "sugar",
+     "palabra_ids": [
+      5584,
+      55021
+     ]
+    },
+    {
+     "archivo": "hamilton_9b8a644b97cd.wav",
+     "idioma": "mi",
+     "forma": "bred",
+     "palabra_ids": [
+      25059
+     ]
+    },
+    {
+     "archivo": "hamilton_20cf8acf7d39.wav",
+     "idioma": "mi",
+     "forma": "sup",
+     "palabra_ids": [
+      20865,
+      55270,
+      62919
+     ]
+    },
+    {
+     "archivo": "hamilton_0ebb1e23c037.wav",
+     "idioma": "mi",
+     "forma": "inglis",
+     "palabra_ids": [
+      20270
+     ]
+    },
+    {
+     "archivo": "hamilton_c372090e6eb7.wav",
+     "idioma": "mi",
+     "forma": "kulkaia",
+     "palabra_ids": [
+      710,
+      19752
+     ]
+    },
+    {
+     "archivo": "hamilton_5cba36a89d6a.wav",
+     "idioma": "mi",
+     "forma": "ahkia",
+     "palabra_ids": [
+      11282,
+      34529
+     ]
+    },
+    {
+     "archivo": "hamilton_e6a4f524ac56.wav",
+     "idioma": "mi",
+     "forma": "apia",
+     "palabra_ids": [
+      24046,
+      24232
+     ]
+    },
+    {
+     "archivo": "hamilton_98ddb2e05da2.wav",
+     "idioma": "mi",
+     "forma": "naika kat",
+     "palabra_ids": [
+      21877
+     ]
+    },
+    {
+     "archivo": "hamilton_07654ab04de1.wav",
+     "idioma": "mi",
+     "forma": "wina",
+     "palabra_ids": [
+      8016,
+      12096,
+      27268
+     ]
+    },
+    {
+     "archivo": "hamilton_84791c0149eb.wav",
+     "idioma": "mi",
+     "forma": "sip sa",
+     "palabra_ids": [
+      53915
+     ]
+    },
+    {
+     "archivo": "hamilton_9c1fdcbe5b86.wav",
+     "idioma": "mi",
+     "forma": "alsut",
+     "palabra_ids": [
+      36003
+     ]
+    },
+    {
+     "archivo": "hamilton_7f97f4b812ad.wav",
+     "idioma": "mi",
+     "forma": "baku",
+     "palabra_ids": [
+      4789,
+      31696
+     ]
+    },
+    {
+     "archivo": "hamilton_dca5eea3df11.wav",
+     "idioma": "mi",
+     "forma": "daukaia",
+     "palabra_ids": [
+      774
+     ]
+    },
+    {
+     "archivo": "hamilton_bbdcfe8eba92.wav",
+     "idioma": "mi",
+     "forma": "gabamint",
+     "palabra_ids": [
+      18396
+     ]
+    },
+    {
+     "archivo": "hamilton_9c93a0170756.wav",
+     "idioma": "mi",
+     "forma": "gabament",
+     "palabra_ids": [
+      40649
+     ]
+    },
+    {
+     "archivo": "hamilton_10fb1e4dc48e.wav",
+     "idioma": "mi",
+     "forma": "ailal",
+     "palabra_ids": [
+      531,
+      23628
+     ]
+    },
+    {
+     "archivo": "hamilton_d2ec9ce1de8a.wav",
+     "idioma": "mi",
+     "forma": "ba baku",
+     "palabra_ids": [
+      9367
+     ]
+    },
+    {
+     "archivo": "hamilton_f2d73d491a2b.wav",
+     "idioma": "mi",
+     "forma": "apia kaka",
+     "palabra_ids": [
+      24258,
+      36292
+     ]
+    },
+    {
+     "archivo": "hamilton_d99fee707dbc.wav",
+     "idioma": "mi",
+     "forma": "trabil",
+     "palabra_ids": [
+      1772,
+      19869,
+      57381
+     ]
+    },
+    {
+     "archivo": "hamilton_abe242143951.wav",
+     "idioma": "mi",
+     "forma": "apu",
+     "palabra_ids": [
+      5355,
+      18638,
+      18943,
+      36308
+     ]
+    },
+    {
+     "archivo": "hamilton_6b26ac018622.wav",
+     "idioma": "mi",
+     "forma": "wiria",
+     "palabra_ids": [
+      2593,
+      26627,
+      60170
+     ]
+    },
+    {
+     "archivo": "hamilton_341d3731c171.wav",
+     "idioma": "mi",
+     "forma": "diara kum",
+     "palabra_ids": [
+      2592,
+      4598
+     ]
+    },
+    {
+     "archivo": "hamilton_2c066a62112d.wav",
+     "idioma": "mi",
+     "forma": "tani",
+     "palabra_ids": [
+      6356,
+      18870,
+      25060,
+      28544,
+      45547,
+      56177
+     ]
+    },
+    {
+     "archivo": "hamilton_689d5cf55c5e.wav",
+     "idioma": "mi",
+     "forma": "tani ra",
+     "palabra_ids": [
+      27238
+     ]
+    },
+    {
+     "archivo": "hamilton_3713fccb98b3.wav",
+     "idioma": "mi",
+     "forma": "utla",
+     "palabra_ids": [
+      8110,
+      14311
+     ]
+    },
+    {
+     "archivo": "hamilton_920045bb2c7d.wav",
+     "idioma": "mi",
+     "forma": "nahwala",
+     "palabra_ids": [
+      5537,
+      48571
+     ]
+    },
+    {
+     "archivo": "hamilton_7a9a99ea9db1.wav",
+     "idioma": "mi",
+     "forma": "daukan",
+     "palabra_ids": [
+      18970
+     ]
+    },
+    {
+     "archivo": "hamilton_73d724cbceb9.wav",
+     "idioma": "mi",
+     "forma": "dia dukiara",
+     "palabra_ids": [
+      25164
+     ]
+    },
+    {
+     "archivo": "hamilton_313ac4ff3ae9.wav",
+     "idioma": "mi",
+     "forma": "ya",
+     "palabra_ids": [
+      27892,
+      27897,
+      44720
+     ]
+    },
+    {
+     "archivo": "hamilton_ad4375f31886.wav",
+     "idioma": "mi",
+     "forma": "kau pain",
+     "palabra_ids": [
+      24664
+     ]
+    },
+    {
+     "archivo": "hamilton_8ee6f4de16ca.wav",
+     "idioma": "mi",
+     "forma": "raya",
+     "palabra_ids": [
+      11183,
+      17848,
+      29548,
+      52316
+     ]
+    },
+    {
+     "archivo": "hamilton_d9ca0e9715f5.wav",
+     "idioma": "mi",
+     "forma": "ba ra",
+     "palabra_ids": [
+      2319,
+      15565
+     ]
+    },
+    {
+     "archivo": "hamilton_44d87f61cfcc.wav",
+     "idioma": "mi",
+     "forma": "walya",
+     "palabra_ids": [
+      59318
+     ]
+    },
+    {
+     "archivo": "hamilton_879f853fe846.wav",
+     "idioma": "mi",
+     "forma": "lilan",
+     "palabra_ids": [
+      22806,
+      46363
+     ]
+    },
+    {
+     "archivo": "hamilton_96a9e77ef0bc.wav",
+     "idioma": "mi",
+     "forma": "kuna",
+     "palabra_ids": [
+      14793,
+      22610,
+      32754,
+      44242,
+      44244
+     ]
+    },
+    {
+     "archivo": "hamilton_286b1ab3a65e.wav",
+     "idioma": "mi",
+     "forma": "nara",
+     "palabra_ids": [
+      609,
+      48903
+     ]
+    },
+    {
+     "archivo": "hamilton_f03e75967887.wav",
+     "idioma": "mi",
+     "forma": "kaikaia",
+     "palabra_ids": [
+      3826,
+      5484
+     ]
+    },
+    {
+     "archivo": "hamilton_6d116917af0f.wav",
+     "idioma": "mi",
+     "forma": "kaisa",
+     "palabra_ids": [
+      41647
+     ]
+    },
+    {
+     "archivo": "hamilton_a0fdf2ba11bb.wav",
+     "idioma": "mi",
+     "forma": "trabil apu",
+     "palabra_ids": [
+      25689,
+      32541
+     ]
+    },
+    {
+     "archivo": "hamilton_d5eed19bdfe0.wav",
+     "idioma": "mi",
+     "forma": "nahara sa",
+     "palabra_ids": [
+      48545
+     ]
+    },
+    {
+     "archivo": "hamilton_e1925f2a32d6.wav",
+     "idioma": "mi",
+     "forma": "praiska",
+     "palabra_ids": [
+      7708,
+      18488
+     ]
+    },
+    {
+     "archivo": "hamilton_6b19bd7331ca.wav",
+     "idioma": "mi",
+     "forma": "krismis",
+     "palabra_ids": [
+      23899
+     ]
+    },
+    {
+     "archivo": "hamilton_d8717c9c40f1.wav",
+     "idioma": "mi",
+     "forma": "titan pata piaia",
+     "palabra_ids": [
+      12872
+     ]
+    },
+    {
+     "archivo": "hamilton_f18d2c004c79.wav",
+     "idioma": "mi",
+     "forma": "kanal",
+     "palabra_ids": [
+      7571
+     ]
+    },
+    {
+     "archivo": "hamilton_c417f0787b5d.wav",
+     "idioma": "mi",
+     "forma": "dinar pata piaia",
+     "palabra_ids": [
+      2737
+     ]
+    },
+    {
+     "archivo": "hamilton_09cf0f54f0b3.wav",
+     "idioma": "mi",
+     "forma": "lan takaia",
+     "palabra_ids": [
+      3995,
+      45710
+     ]
+    },
+    {
+     "archivo": "hamilton_4d30bd0c42ce.wav",
+     "idioma": "mi",
+     "forma": "uya apia",
+     "palabra_ids": [
+      22614
+     ]
+    },
+    {
+     "archivo": "hamilton_af74253b3342.wav",
+     "idioma": "mi",
+     "forma": "tingki",
+     "palabra_ids": [
+      18475,
+      57006
+     ]
+    },
+    {
+     "archivo": "hamilton_b858b0fc9552.wav",
+     "idioma": "mi",
+     "forma": "manna",
+     "palabra_ids": [
+      22261
+     ]
+    },
+    {
+     "archivo": "hamilton_37b86d10a950.wav",
+     "idioma": "mi",
+     "forma": "sipar",
+     "palabra_ids": [
+      5892
+     ]
+    },
+    {
+     "archivo": "hamilton_16d3a626d583.wav",
+     "idioma": "mi",
+     "forma": "taki waia",
+     "palabra_ids": [
+      2521,
+      20792
+     ]
+    },
+    {
+     "archivo": "hamilton_a5d6ecc25953.wav",
+     "idioma": "mi",
+     "forma": "ani wina",
+     "palabra_ids": [
+      14354
+     ]
+    },
+    {
+     "archivo": "hamilton_6b4c884c1add.wav",
+     "idioma": "mi",
+     "forma": "aras",
+     "palabra_ids": [
+      7013,
+      36337,
+      36339
+     ]
+    },
+    {
+     "archivo": "hamilton_455baf2fb421.wav",
+     "idioma": "mi",
+     "forma": "walka",
+     "palabra_ids": [
+      30392,
+      33414,
+      59246
+     ]
+    },
+    {
+     "archivo": "hamilton_d11bfefb1a75.wav",
+     "idioma": "mi",
+     "forma": "kwirku",
+     "palabra_ids": [
+      8515,
+      22583,
+      44911
+     ]
+    },
+    {
+     "archivo": "hamilton_9cac964b0dfe.wav",
+     "idioma": "mi",
+     "forma": "yul",
+     "palabra_ids": [
+      7565,
+      25970,
+      61035
+     ]
+    },
+    {
+     "archivo": "hamilton_9cd73ed09105.wav",
+     "idioma": "mi",
+     "forma": "mini",
+     "palabra_ids": [
+      18206
+     ]
+    },
+    {
+     "archivo": "hamilton_5a84b4856774.wav",
+     "idioma": "mi",
+     "forma": "kalila",
+     "palabra_ids": [
+      18059,
+      18070,
+      41891,
+      61470
+     ]
+    },
+    {
+     "archivo": "hamilton_e1e96340b8d7.wav",
+     "idioma": "mi",
+     "forma": "rahwa",
+     "palabra_ids": [
+      21840,
+      51987,
+      51989
+     ]
+    },
+    {
+     "archivo": "hamilton_68920313c9e7.wav",
+     "idioma": "mi",
+     "forma": "yul mairin",
+     "palabra_ids": [
+      25971
+     ]
+    },
+    {
+     "archivo": "hamilton_30ccb2a147de.wav",
+     "idioma": "mi",
+     "forma": "aisabi",
+     "palabra_ids": [
+      1395
+     ]
+    },
+    {
+     "archivo": "hamilton_0edae3dec03a.wav",
+     "idioma": "mi",
+     "forma": "au",
+     "palabra_ids": [
+      8665,
+      26254,
+      36611,
+      36613
+     ]
+    },
+    {
+     "archivo": "hamilton_5492eeba5300.wav",
+     "idioma": "mi",
+     "forma": "prias watla",
+     "palabra_ids": [
+      19543,
+      51376
+     ]
+    },
+    {
+     "archivo": "hamilton_1b2c839e6145.wav",
+     "idioma": "mi",
+     "forma": "truk",
+     "palabra_ids": [
+      5372,
+      8082
+     ]
+    },
+    {
+     "archivo": "hamilton_08d0edd0d8d3.wav",
+     "idioma": "mi",
+     "forma": "anira",
+     "palabra_ids": [
+      1493
+     ]
+    },
+    {
+     "archivo": "hamilton_05b46072c9c9.wav",
+     "idioma": "mi",
+     "forma": "prak",
+     "palabra_ids": [
+      7508,
+      20083,
+      51132
+     ]
+    },
+    {
+     "archivo": "hamilton_304d7991c233.wav",
+     "idioma": "mi",
+     "forma": "yang ra",
+     "palabra_ids": [
+      22733
+     ]
+    },
+    {
+     "archivo": "hamilton_61466b7a4f4d.wav",
+     "idioma": "mi",
+     "forma": "kiaput",
+     "palabra_ids": [
+      18449,
+      42828
+     ]
+    },
+    {
+     "archivo": "hamilton_b08afc32627f.wav",
+     "idioma": "mi",
+     "forma": "trausis",
+     "palabra_ids": [
+      25100
+     ]
+    },
+    {
+     "archivo": "hamilton_7b29a1f02ea4.wav",
+     "idioma": "mi",
+     "forma": "yang duki",
+     "palabra_ids": [
+      23083,
+      23193
+     ]
+    },
+    {
+     "archivo": "hamilton_fb98c70ae248.wav",
+     "idioma": "mi",
+     "forma": "numba",
+     "palabra_ids": [
+      24223,
+      49244
+     ]
+    },
+    {
+     "archivo": "hamilton_5cd73d4d9d2e.wav",
+     "idioma": "mi",
+     "forma": "witin nani",
+     "palabra_ids": [
+      14745
+     ]
+    },
+    {
+     "archivo": "hamilton_7debe0e8d9cc.wav",
+     "idioma": "mi",
+     "forma": "bila",
+     "palabra_ids": [
+      6411,
+      7500,
+      38012
+     ]
+    },
+    {
+     "archivo": "hamilton_d9f54e95276a.wav",
+     "idioma": "mi",
+     "forma": "una nani",
+     "palabra_ids": [
+      62206
+     ]
+    },
+    {
+     "archivo": "hamilton_3c310b4be3de.wav",
+     "idioma": "mi",
+     "forma": "kunhku",
+     "palabra_ids": [
+      6726,
+      44266
+     ]
+    },
+    {
+     "archivo": "hamilton_861d8175c616.wav",
+     "idioma": "mi",
+     "forma": "suwapni",
+     "palabra_ids": [
+      63265
+     ]
+    },
+    {
+     "archivo": "hamilton_7a6e53bcddd7.wav",
+     "idioma": "mi",
+     "forma": "yahpa",
+     "palabra_ids": [
+      3191
+     ]
+    },
+    {
+     "archivo": "hamilton_13e0f995d857.wav",
+     "idioma": "mi",
+     "forma": "sirpi",
+     "palabra_ids": [
+      11910,
+      25331,
+      63386
+     ]
+    },
+    {
+     "archivo": "hamilton_38210c0b5417.wav",
+     "idioma": "mi",
+     "forma": "heven",
+     "palabra_ids": [
+      8630,
+      63505
+     ]
+    },
+    {
+     "archivo": "hamilton_50b8f0f91df0.wav",
+     "idioma": "mi",
+     "forma": "tasba",
+     "palabra_ids": [
+      18356,
+      23710
+     ]
+    },
+    {
+     "archivo": "hamilton_87b7fc54df3a.wav",
+     "idioma": "mi",
+     "forma": "yakan",
+     "palabra_ids": [
+      2286,
+      30982
+     ]
+    },
+    {
+     "archivo": "hamilton_894f98a41b5e.wav",
+     "idioma": "mi",
+     "forma": "kati",
+     "palabra_ids": [
+      21901,
+      42396,
+      61518
+     ]
+    },
+    {
+     "archivo": "hamilton_f6d9f927cacb.wav",
+     "idioma": "mi",
+     "forma": "slilma",
+     "palabra_ids": [
+      4941,
+      16489
+     ]
+    },
+    {
+     "archivo": "hamilton_d317b37897c7.wav",
+     "idioma": "mi",
+     "forma": "bal",
+     "palabra_ids": [
+      5781,
+      6456,
+      37418
+     ]
+    },
+    {
+     "archivo": "hamilton_cbe818b5a063.wav",
+     "idioma": "mi",
+     "forma": "subil",
+     "palabra_ids": [
+      24976
+     ]
+    },
+    {
+     "archivo": "hamilton_0b5c7db4d480.wav",
+     "idioma": "mi",
+     "forma": "ispara",
+     "palabra_ids": [
+      16100,
+      22049
+     ]
+    },
+    {
+     "archivo": "hamilton_139eacbfd760.wav",
+     "idioma": "mi",
+     "forma": "sisar",
+     "palabra_ids": [
+      32139
+     ]
+    },
+    {
+     "archivo": "hamilton_62586f9eeee7.wav",
+     "idioma": "mi",
+     "forma": "ispun",
+     "palabra_ids": [
+      11349
+     ]
+    },
+    {
+     "archivo": "hamilton_7d3ee3a70c9a.wav",
+     "idioma": "mi",
+     "forma": "bukit",
+     "palabra_ids": [
+      5762,
+      6242,
+      39054
+     ]
+    },
+    {
+     "archivo": "hamilton_5fb625b84eb5.wav",
+     "idioma": "mi",
+     "forma": "glas",
+     "palabra_ids": [
+      11118,
+      33806
+     ]
+    },
+    {
+     "archivo": "hamilton_2501d3174a2d.wav",
+     "idioma": "mi",
+     "forma": "diaia",
+     "palabra_ids": [
+      461,
+      6098
+     ]
+    },
+    {
+     "archivo": "hamilton_44619225f49b.wav",
+     "idioma": "mi",
+     "forma": "painkira",
+     "palabra_ids": [
+      1436,
+      6138
+     ]
+    },
+    {
+     "archivo": "hamilton_676dd38dfa2b.wav",
+     "idioma": "mi",
+     "forma": "titan",
+     "palabra_ids": [
+      22454,
+      22699
+     ]
+    },
+    {
+     "archivo": "hamilton_df7e28e52976.wav",
+     "idioma": "mi",
+     "forma": "tutni",
+     "palabra_ids": [
+      31730
+     ]
+    },
+    {
+     "archivo": "hamilton_630cfc9c7654.wav",
+     "idioma": "mi",
+     "forma": "aisabe",
+     "palabra_ids": [
+      1394,
+      35388
+     ]
+    },
+    {
+     "archivo": "hamilton_4a505984f7b9.wav",
+     "idioma": "mi",
+     "forma": "man",
+     "palabra_ids": [
+      3812,
+      31784,
+      32081
+     ]
+    },
+    {
+     "archivo": "hamilton_6d445ea3729a.wav",
+     "idioma": "mi",
+     "forma": "baman",
+     "palabra_ids": [
+      16710,
+      31033
+     ]
+    },
+    {
+     "archivo": "hamilton_649eabfb82ac.wav",
+     "idioma": "mi",
+     "forma": "kat",
+     "palabra_ids": [
+      12,
+      8245
+     ]
+    },
+    {
+     "archivo": "hamilton_ae11fab33f31.wav",
+     "idioma": "mi",
+     "forma": "mai",
+     "palabra_ids": [
+      31783
+     ]
+    },
+    {
+     "archivo": "hamilton_698b9224fde2.wav",
+     "idioma": "mi",
+     "forma": "uba",
+     "palabra_ids": [
+      12492,
+      58174
+     ]
+    },
+    {
+     "archivo": "hamilton_3e98ee72d163.wav",
+     "idioma": "mi",
+     "forma": "aih",
+     "palabra_ids": [
+      5533,
+      34821
+     ]
+    },
+    {
+     "archivo": "hamilton_d92388fd13f4.wav",
+     "idioma": "mi",
+     "forma": "ai",
+     "palabra_ids": [
+      10155,
+      22731
+     ]
+    },
+    {
+     "archivo": "hamilton_0ba71e6d7238.wav",
+     "idioma": "mi",
+     "forma": "man nani",
+     "palabra_ids": [
+      34051,
+      47478
+     ]
+    },
+    {
+     "archivo": "hamilton_4a632b883452.wav",
+     "idioma": "mi",
+     "forma": "yang",
+     "palabra_ids": [
+      22732,
+      34148
+     ]
+    },
+    {
+     "archivo": "hamilton_3f23334b6f86.wav",
+     "idioma": "mi",
+     "forma": "witin",
+     "palabra_ids": [
+      14670,
+      14743,
+      60231
+     ]
+    },
+    {
+     "archivo": "hamilton_b8bf776f31ea.wav",
+     "idioma": "mi",
+     "forma": "upla aihwa",
+     "palabra_ids": [
+      19438
+     ]
+    },
+    {
+     "archivo": "hamilton_baaed74b46d8.wav",
+     "idioma": "mi",
+     "forma": "lal",
+     "palabra_ids": [
+      1290,
+      7032,
+      7045
+     ]
+    },
+    {
+     "archivo": "hamilton_c6487c1fead1.wav",
+     "idioma": "mi",
+     "forma": "tawa",
+     "palabra_ids": [
+      3670,
+      6043,
+      7036,
+      21507,
+      25133,
+      56588,
+      62128
+     ]
+    },
+    {
+     "archivo": "hamilton_e6be12ea34b9.wav",
+     "idioma": "mi",
+     "forma": "mawan",
+     "palabra_ids": [
+      7850,
+      12386,
+      61784
+     ]
+    },
+    {
+     "archivo": "hamilton_95668fe3c826.wav",
+     "idioma": "mi",
+     "forma": "kiama",
+     "palabra_ids": [
+      4637,
+      8476,
+      24512
+     ]
+    },
+    {
+     "archivo": "hamilton_a8d1a353c949.wav",
+     "idioma": "mi",
+     "forma": "wan lal pura",
+     "palabra_ids": [
+      17843
+     ]
+    },
+    {
+     "archivo": "hamilton_e64bdd56dcbd.wav",
+     "idioma": "mi",
+     "forma": "wan nakra tamaya",
+     "palabra_ids": [
+      8363,
+      63535
+     ]
+    },
+    {
+     "archivo": "hamilton_49d1f5f697fc.wav",
+     "idioma": "mi",
+     "forma": "kakma",
+     "palabra_ids": [
+      19239,
+      23831,
+      24557,
+      26207,
+      41800
+     ]
+    },
+    {
+     "archivo": "hamilton_10042b0a69eb.wav",
+     "idioma": "mi",
+     "forma": "twisa",
+     "palabra_ids": [
+      21494
+     ]
+    },
+    {
+     "archivo": "hamilton_1f143ccab877.wav",
+     "idioma": "mi",
+     "forma": "krusa tamaya",
+     "palabra_ids": [
+      5897
+     ]
+    },
+    {
+     "archivo": "hamilton_de21a2e81b79.wav",
+     "idioma": "mi",
+     "forma": "nana",
+     "palabra_ids": [
+      11375,
+      26092
+     ]
+    },
+    {
+     "archivo": "hamilton_3c79e7f84288.wav",
+     "idioma": "mi",
+     "forma": "karma",
+     "palabra_ids": [
+      17171,
+      18144,
+      42236
+     ]
+    },
+    {
+     "archivo": "hamilton_fbcd56858abc.wav",
+     "idioma": "mi",
+     "forma": "pahpaya",
+     "palabra_ids": [
+      19267,
+      49341
+     ]
+    },
+    {
+     "archivo": "hamilton_4d6bc7307a91.wav",
+     "idioma": "mi",
+     "forma": "klukia",
+     "palabra_ids": [
+      5524,
+      7304,
+      30873,
+      43583
+     ]
+    },
+    {
+     "archivo": "hamilton_fdb76aaa74ad.wav",
+     "idioma": "mi",
+     "forma": "klahkla",
+     "palabra_ids": [
+      3485,
+      6706
+     ]
+    },
+    {
+     "archivo": "hamilton_f0b1b03b990f.wav",
+     "idioma": "mi",
+     "forma": "tinhtingka",
+     "palabra_ids": [
+      9043
+     ]
+    },
+    {
+     "archivo": "hamilton_879711527b46.wav",
+     "idioma": "mi",
+     "forma": "mihta",
+     "palabra_ids": [
+      1849,
+      7064,
+      22386
+     ]
+    },
+    {
+     "archivo": "hamilton_583ad683ce33.wav",
+     "idioma": "mi",
+     "forma": "lama dusa",
+     "palabra_ids": [
+      16398,
+      32308
+     ]
+    },
+    {
+     "archivo": "hamilton_77b1f07a0a5a.wav",
+     "idioma": "mi",
+     "forma": "tialka",
+     "palabra_ids": [
+      22241,
+      25532
+     ]
+    },
+    {
+     "archivo": "hamilton_350e606135b5.wav",
+     "idioma": "mi",
+     "forma": "nina dusa",
+     "palabra_ids": [
+      14382,
+      27947
+     ]
+    },
+    {
+     "archivo": "hamilton_77296cb177f3.wav",
+     "idioma": "mi",
+     "forma": "biara",
+     "palabra_ids": [
+      111,
+      5977,
+      23401
+     ]
+    },
+    {
+     "archivo": "hamilton_0d0052336d13.wav",
+     "idioma": "mi",
+     "forma": "klua",
+     "palabra_ids": [
+      9752,
+      24582
+     ]
+    },
+    {
+     "archivo": "hamilton_bd45fbac0a2f.wav",
+     "idioma": "mi",
+     "forma": "maihsa",
+     "palabra_ids": [
+      28913,
+      47125
+     ]
+    },
+    {
+     "archivo": "hamilton_1c4231092b34.wav",
+     "idioma": "mi",
+     "forma": "ai dukia",
+     "palabra_ids": [
+      11673,
+      26029,
+      63451
+     ]
+    },
+    {
+     "archivo": "hamilton_647de1eb5450.wav",
+     "idioma": "mi",
+     "forma": "kuhma",
+     "palabra_ids": [
+      23761
+     ]
+    },
+    {
+     "archivo": "hamilton_53c345d7e45a.wav",
+     "idioma": "mi",
+     "forma": "lula",
+     "palabra_ids": [
+      29648,
+      29760
+     ]
+    },
+    {
+     "archivo": "hamilton_cd0249d2e4dd.wav",
+     "idioma": "mi",
+     "forma": "braka",
+     "palabra_ids": [
+      7646,
+      32088
+     ]
+    },
+    {
+     "archivo": "hamilton_bdb66b824313.wav",
+     "idioma": "mi",
+     "forma": "mina",
+     "palabra_ids": [
+      7065,
+      22355,
+      26241
+     ]
+    }
+   ]
+  }
+ ]
+}
