@@ -8,6 +8,9 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Singleton
 class PerfilLocalCache @Inject constructor(
@@ -15,8 +18,27 @@ class PerfilLocalCache @Inject constructor(
 ) {
     private val preferencias = context.getSharedPreferences("perfil_offline", Context.MODE_PRIVATE)
 
-    fun guardar(usuario: Usuario) {
+    // Fuente única del perfil activo: las pantallas la observan para reaccionar
+    // al cambio de idioma sin depender de la red.
+    private val _perfil = MutableStateFlow(leerGuardado())
+    val perfil: StateFlow<Usuario?> = _perfil.asStateFlow()
+
+    fun hayCambiosPendientes(id: UUID): Boolean =
+        preferencias.getString("id", null) == id.toString() &&
+            preferencias.getBoolean("pendienteSincronizar", false)
+
+    fun marcarSincronizado(id: UUID) {
+        if (preferencias.getString("id", null) == id.toString()) {
+            preferencias.edit().putBoolean("pendienteSincronizar", false).apply()
+        }
+    }
+
+    fun guardar(usuario: Usuario, pendienteSincronizar: Boolean = false) {
+        val mismoUsuario = preferencias.getString("id", null) == usuario.id.toString()
+        val pendiente = pendienteSincronizar ||
+            (mismoUsuario && preferencias.getBoolean("pendienteSincronizar", false))
         preferencias.edit()
+            .putBoolean("pendienteSincronizar", pendiente)
             .putString("id", usuario.id.toString())
             .putString("nombre", usuario.nombre)
             .putString("apellido", usuario.apellido)
@@ -34,10 +56,18 @@ class PerfilLocalCache @Inject constructor(
             .putString("ultimaActividad", usuario.ultimaActividad?.toString())
             .putString("fotoPerfilUri", usuario.fotoPerfilUri)
             .apply()
+        _perfil.value = usuario
     }
 
     fun leer(id: UUID): Usuario? {
         if (preferencias.getString("id", null) != id.toString()) return null
+        return leerGuardado()
+    }
+
+    private fun leerGuardado(): Usuario? {
+        val id = preferencias.getString("id", null)
+            ?.let { runCatching { UUID.fromString(it) }.getOrNull() }
+            ?: return null
         val idiomaId = preferencias.getInt("idiomaId", -1)
         return Usuario(
             id = id,

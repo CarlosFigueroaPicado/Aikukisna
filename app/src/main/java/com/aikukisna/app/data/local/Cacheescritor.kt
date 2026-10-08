@@ -1,5 +1,6 @@
 package com.aikukisna.app.data.local
 
+import android.content.Context
 import com.aikukisna.app.data.local.dao.CategoriaDao
 import com.aikukisna.app.data.local.dao.CompletarLeccionPendienteDao
 import com.aikukisna.app.data.local.dao.FuenteDocumentoDao
@@ -25,12 +26,16 @@ import com.aikukisna.app.domain.model.Leccion
 import com.aikukisna.app.domain.model.OracionEjemplo
 import com.aikukisna.app.domain.model.Palabra
 import com.aikukisna.app.domain.model.Traduccion
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.text.Normalizer
+import com.aikukisna.app.domain.conocimiento.NormalizadorLinguistico
 
 
 @Singleton
 class CacheEscritor @Inject constructor(
+    @ApplicationContext context: Context,
     private val idiomaDao: IdiomaDao,
     private val categoriaDao: CategoriaDao,
     private val fuenteDocumentoDao: FuenteDocumentoDao,
@@ -41,6 +46,7 @@ class CacheEscritor @Inject constructor(
     private val leccionPalabraDao: LeccionPalabraDao,
     private val completarLeccionPendienteDao: CompletarLeccionPendienteDao
 ) {
+    private val preferencias = context.getSharedPreferences("contenido_offline", Context.MODE_PRIVATE)
 
 
     suspend fun cachearIdiomas(idiomas: List<Idioma>) {
@@ -63,7 +69,7 @@ class CacheEscritor @Inject constructor(
         cachearIdiomas(palabras.map { it.idioma })
         cachearCategorias(palabras.mapNotNull { it.categoria })
         cachearFuentes(palabras.map { it.fuente })
-        palabraDao.guardarTodas(palabras.map { it.aEntity() })
+        palabraDao.guardarTodas(palabras.map { it.aPalabraEntity() })
     }
 
     suspend fun cachearTraducciones(traducciones: List<Traduccion>) {
@@ -86,7 +92,7 @@ class CacheEscritor @Inject constructor(
         })
     }
 
-    suspend fun cachearOraciones(leccionId: Int, oraciones: List<OracionEjemplo>) {
+    suspend fun cachearOraciones(leccionId: Int?, oraciones: List<OracionEjemplo>) {
         if (oraciones.isEmpty()) return
         cachearFuentes(oraciones.map { it.fuente })
         oracionEjemploDao.guardarTodas(oraciones.map { it.aEntity(leccionId) })
@@ -100,7 +106,9 @@ class CacheEscritor @Inject constructor(
     }
 
     suspend fun buscarPalabrasCacheadas(query: String, idiomaId: Int, limite: Int, offset: Int): List<Palabra> {
-        return palabraDao.buscar(query, idiomaId, limite, offset).mapNotNull { it.aPalabraCacheada() }
+        val normalizada = NormalizadorLinguistico.normalizar(query)
+        if (normalizada.isBlank()) return emptyList()
+        return palabraDao.buscar(normalizada, idiomaId, limite, offset).mapNotNull { it.aPalabraCacheada() }
     }
 
     suspend fun leerTraducciones(palabraId: Int): List<Traduccion> {
@@ -124,7 +132,43 @@ class CacheEscritor @Inject constructor(
         return oracionEjemploDao.obtenerPorLeccion(leccionId).mapNotNull { it.aOracionCacheada() }
     }
 
-    suspend fun hayAlgoDescargado(): Boolean = palabraDao.contarTodas() > 0
+    suspend fun hayAlgoDescargado(idiomaId: Int? = null): Boolean {
+        if (idiomaId == null) return palabraDao.contarTodas() > 0
+        return preferencias.getBoolean("idioma_$idiomaId", false)
+    }
+
+    suspend fun buscarOracionExacta(
+        texto: String,
+        idiomaOrigenId: Int,
+        idiomaDestinoId: Int
+    ): String? {
+        val buscado = normalizarOracion(texto)
+        return oracionEjemploDao.obtenerPorIdiomas(idiomaOrigenId, idiomaDestinoId)
+            .firstNotNullOfOrNull { oracion ->
+                when {
+                    oracion.idiomaOrigenId == idiomaOrigenId &&
+                        normalizarOracion(oracion.textoOrigen) == buscado -> oracion.textoDestino
+                    oracion.idiomaDestinoId == idiomaOrigenId &&
+                        normalizarOracion(oracion.textoDestino) == buscado -> oracion.textoOrigen
+                    else -> null
+                }
+            }
+    }
+
+    suspend fun obtenerOracionesPorIdiomas(
+        idiomaOrigenId: Int,
+        idiomaDestinoId: Int
+    ): List<OracionEjemplo> = oracionEjemploDao
+        .obtenerPorIdiomas(idiomaOrigenId, idiomaDestinoId)
+        .mapNotNull { it.aOracionCacheada() }
+
+    fun marcarDescargaEnProgreso(idiomaId: Int?) {
+        if (idiomaId != null) preferencias.edit().remove("idioma_$idiomaId").apply()
+    }
+
+    fun marcarDescargaCompleta(idiomaId: Int?) {
+        if (idiomaId != null) preferencias.edit().putBoolean("idioma_$idiomaId", true).apply()
+    }
 
     // --- Cola de lecciones completadas sin conexión ---
 
@@ -141,6 +185,8 @@ class CacheEscritor @Inject constructor(
     suspend fun obtenerLeccionesPendientes(): List<CompletarLeccionPendienteEntity> =
         completarLeccionPendienteDao.obtenerTodas()
 
+    suspend fun contarLeccionesPendientes(): Int = completarLeccionPendienteDao.contarPendientes()
+
     suspend fun borrarLeccionPendiente(id: Int) = completarLeccionPendienteDao.borrar(id)
 
     // --- Mapeos privados ---
@@ -149,13 +195,23 @@ class CacheEscritor @Inject constructor(
         val idioma = idiomaDao.obtenerPorId(idiomaId)?.aDomain() ?: return null
         val fuente = fuenteDocumentoDao.obtenerPorId(fuenteId)?.aDomain() ?: return null
         val categoria = categoriaId?.let { categoriaDao.obtenerPorId(it)?.aDomain() }
-        return Palabra(id = id, idioma = idioma, texto = texto, categoria = categoria, fuente = fuente)
+        return aPalabraDomain(idioma, categoria, fuente)
     }
 
     private suspend fun TraduccionEntity.aTraduccionCacheada(): Traduccion? {
         val origen = palabraDao.obtenerPorId(palabraOrigenId)?.aPalabraCacheada() ?: return null
         val destino = palabraDao.obtenerPorId(palabraDestinoId)?.aPalabraCacheada() ?: return null
-        return Traduccion(id = id, palabraOrigen = origen, palabraDestino = destino, nota = nota)
+        return Traduccion(
+            id = id,
+            palabraOrigen = origen,
+            palabraDestino = destino,
+            nota = nota,
+            estadoValidacion = estadoValidacion,
+            fuenteId = fuenteId,
+            nivelConfianza = nivelConfianza,
+            esPreferida = esPreferida,
+            updatedAtEpochMs = updatedAtEpochMs
+        )
     }
 
     private suspend fun LeccionEntity.aLeccionCacheada(): Leccion? {
@@ -171,7 +227,10 @@ class CacheEscritor @Inject constructor(
         val fuente = fuenteDocumentoDao.obtenerPorId(fuenteId)?.aDomain() ?: return null
         return OracionEjemplo(
             id = id, textoOrigen = textoOrigen, textoDestino = textoDestino,
-            leccion = null, fuente = fuente
+            idiomaOrigenId = idiomaOrigenId, idiomaDestinoId = idiomaDestinoId,
+            leccion = null, fuente = fuente,
+            estadoValidacion = estadoValidacion,
+            updatedAtEpochMs = updatedAtEpochMs
         )
     }
 }
@@ -191,12 +250,50 @@ private fun FuenteDocumentoEntity.aDomain() = FuenteDocumento(
     id = id, titulo = titulo, autor = autor, anio = anio, institucion = institucion
 )
 
-private fun Palabra.aEntity() = PalabraEntity(
-    id = id, idiomaId = idioma.id, texto = texto, categoriaId = categoria?.id, fuenteId = fuente.id
+internal fun Palabra.aPalabraEntity() = PalabraEntity(
+    id = id,
+    idiomaId = idioma.id,
+    texto = texto,
+    categoriaId = categoria?.id,
+    fuenteId = fuente.id,
+    pronunciacion = pronunciacion,
+    pronunciacionFonetica = pronunciacionFonetica,
+    pronunciacionVerificada = pronunciacionVerificada,
+    textoNormalizado = textoNormalizado.takeIf { it.isNotBlank() } ?: NormalizadorLinguistico.normalizar(texto),
+    estadoValidacion = estadoValidacion,
+    createdAtEpochMs = createdAtEpochMs,
+    updatedAtEpochMs = updatedAtEpochMs
+)
+
+internal fun PalabraEntity.aPalabraDomain(
+    idioma: Idioma,
+    categoria: Categoria?,
+    fuente: FuenteDocumento
+) = Palabra(
+    id = id,
+    idioma = idioma,
+    texto = texto,
+    categoria = categoria,
+    fuente = fuente,
+    pronunciacion = pronunciacion,
+    pronunciacionFonetica = pronunciacionFonetica,
+    pronunciacionVerificada = pronunciacionVerificada,
+    textoNormalizado = textoNormalizado,
+    estadoValidacion = estadoValidacion,
+    createdAtEpochMs = createdAtEpochMs,
+    updatedAtEpochMs = updatedAtEpochMs
 )
 
 private fun Traduccion.aEntity() = TraduccionEntity(
-    id = id, palabraOrigenId = palabraOrigen.id, palabraDestinoId = palabraDestino.id, nota = nota
+    id = id,
+    palabraOrigenId = palabraOrigen.id,
+    palabraDestinoId = palabraDestino.id,
+    nota = nota,
+    estadoValidacion = estadoValidacion,
+    fuenteId = fuenteId,
+    nivelConfianza = nivelConfianza,
+    esPreferida = esPreferida,
+    updatedAtEpochMs = updatedAtEpochMs
 )
 
 private fun Leccion.aEntity() = LeccionEntity(
@@ -204,7 +301,21 @@ private fun Leccion.aEntity() = LeccionEntity(
     nivel = nivel, categoriaId = categoria?.id, idiomaMetaId = idiomaMeta.id
 )
 
-private fun OracionEjemplo.aEntity(leccionId: Int) = OracionEjemploEntity(
+private fun OracionEjemplo.aEntity(leccionId: Int?) = OracionEjemploEntity(
     id = id, textoOrigen = textoOrigen, textoDestino = textoDestino,
-    fuenteId = fuente.id, leccionId = leccionId
+    idiomaOrigenId = idiomaOrigenId, idiomaDestinoId = idiomaDestinoId,
+    fuenteId = fuente.id, leccionId = leccionId ?: 0,
+    estadoValidacion = estadoValidacion,
+    updatedAtEpochMs = updatedAtEpochMs
 )
+
+// Las variantes entre paréntesis ("Tingki (tengki) pali.") no deben impedir encontrar "tingki pali".
+private fun normalizarOracion(texto: String): String = texto
+    .replace(Regex("\\([^)]*\\)"), " ")
+    .trim()
+    .lowercase()
+    .let { Normalizer.normalize(it, Normalizer.Form.NFD) }
+    .replace(Regex("\\p{M}+"), "")
+    .replace(Regex("[\\p{P}\\p{S}]"), " ")
+    .replace(Regex("\\s+"), " ")
+    .trim()
