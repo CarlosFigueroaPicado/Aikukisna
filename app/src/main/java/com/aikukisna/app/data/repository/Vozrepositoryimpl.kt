@@ -2,6 +2,7 @@ package com.aikukisna.app.data.repository
 
 import com.aikukisna.app.domain.repository.VozRepository
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.functions.functions
 import io.ktor.client.call.body
 import io.ktor.client.request.setBody
@@ -16,6 +17,10 @@ class VozRepositoryImpl @Inject constructor(
 ) : VozRepository {
 
     override suspend fun sintetizarVoz(texto: String, voiceId: String?): ByteArray {
+        client.auth.awaitInitialization()
+        check(client.auth.currentSessionOrNull() != null) {
+            "Necesitas iniciar sesión en línea para descargar esta pronunciación"
+        }
 
         val response = client.functions.invoke("sintetizar-voz") {
             contentType(ContentType.Application.Json)

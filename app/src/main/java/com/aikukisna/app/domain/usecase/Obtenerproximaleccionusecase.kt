@@ -19,12 +19,15 @@ class ObtenerProximaLeccionUseCase @Inject constructor(
     suspend operator fun invoke(usuarioId: UUID, idiomaMetaId: Int): ProximaLeccion? {
         val leccionesDelIdioma = obtenerLeccionesUseCase()
             .filter { it.idiomaMeta.id == idiomaMetaId }
-            .sortedWith(compareBy({ it.nivel }, { it.capituloNumero ?: 0 }, { it.id }))
+            .sortedWith(compareBy({ it.nivel }, { it.capituloNumero ?: Int.MAX_VALUE }, { it.id }))
 
         if (leccionesDelIdioma.isEmpty()) return null
 
         val completadasIds = obtenerProgresoUseCase(usuarioId)
-            .filter { it.estado == "completada" }
+            .filter {
+                it.estado == "completada" &&
+                    (it.puntaje ?: 0) >= ObtenerMapaLeccionesUseCase.PORCENTAJE_APROBACION
+            }
             .map { it.leccion.id }
             .toSet()
 
