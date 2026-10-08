@@ -68,17 +68,17 @@ val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = Nunito,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp
+        fontSize = 17.sp
     ),
     labelLarge = TextStyle(
         fontFamily = Nunito,
         fontWeight = FontWeight.Bold,
-        fontSize = 14.sp
+        fontSize = 17.sp
     ),
 
     labelMedium = TextStyle(
         fontFamily = JetBrainsMono,
         fontWeight = FontWeight.Medium,
-        fontSize = 13.sp
+        fontSize = 16.sp
     )
 )
