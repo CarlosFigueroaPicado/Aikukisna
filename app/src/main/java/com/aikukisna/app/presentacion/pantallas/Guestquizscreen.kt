@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
@@ -19,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,6 +37,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -51,10 +57,7 @@ import com.aikukisna.app.domain.model.PreguntaQuiz
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.presentacion.componentes.acentoPara
 import com.aikukisna.app.presentacion.viewmodel.GuestLeccionViewModel
-import com.aikukisna.app.ui.theme.BrandSubtle
 import com.aikukisna.app.ui.theme.GreenSecondary
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
 import com.aikukisna.app.ui.theme.RedSecondary
 
 @Composable
@@ -72,6 +75,7 @@ fun GuestQuizScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
         Column {
@@ -85,7 +89,7 @@ fun GuestQuizScreen(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = "Volver",
+                    contentDescription = t(R.string.guestquiz_volver),
                     modifier = Modifier
                         .size(20.dp)
                         .clickable(onClick = onVolver)
@@ -96,7 +100,7 @@ fun GuestQuizScreen(
                     color = acento.color
                 )
             }
-            HorizontalDivider(color = LightGray)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
 
         BannerRegistrate()
@@ -131,12 +135,12 @@ fun GuestQuizScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Quiz",
+                    text = t(R.string.guestquiz_quiz),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "${viewModel.indicePregunta + 1}/$total",
+                    text = t(R.string.guestquiz_texto, viewModel.indicePregunta + 1, total),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -147,7 +151,7 @@ fun GuestQuizScreen(
                     .fillMaxWidth()
                     .height(11.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(BrandSubtle)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Box(
                     modifier = Modifier
@@ -165,7 +169,7 @@ fun GuestQuizScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Selecciona la opción correcta",
+                text = t(R.string.guestquiz_selecciona_la_opcion_correcta),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -173,9 +177,13 @@ fun GuestQuizScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
+
+                // El texto con estilos no llegaba a los lectores de pantalla: se declara completo.
+
+                modifier = Modifier.semantics { contentDescription = pregunta.textoPregunta; heading() },
                 text = preguntaAnotada(pregunta, MaterialTheme.colorScheme.primary),
                 style = MaterialTheme.typography.bodySmall,
-                color = MediumGray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -206,7 +214,7 @@ fun GuestQuizScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "SALTAR",
+                text = t(R.string.guestquiz_saltar),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.clickable {
@@ -217,7 +225,7 @@ fun GuestQuizScreen(
             )
             Box(modifier = Modifier.width(160.dp)) {
                 AikukisnaButton(
-                    text = "Siguiente",
+                    text = t(R.string.guestquiz_siguiente),
                     onClick = {
                         if (viewModel.siguientePregunta()) {
                             onCompletado(viewModel.respuestasCorrectas, total)
@@ -275,12 +283,12 @@ private fun BannerRegistrate() {
             .fillMaxWidth()
             .padding(horizontal = 26.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(20.dp))
-            .background(BrandSubtle)
+            .background(MaterialTheme.colorScheme.primaryContainer)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "MODO INVITADO · Regístrate para guardar tu progreso",
+            text = t(R.string.guestquiz_modo_invitado_registrate_para_guardar),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
@@ -300,12 +308,12 @@ private fun OpcionQuiz(
     val colorBorde = when (estado) {
         EstadoOpcion.Correcta -> GreenSecondary
         EstadoOpcion.Incorrecta -> RedSecondary
-        EstadoOpcion.Neutral -> LightGray
+        EstadoOpcion.Neutral -> MaterialTheme.colorScheme.outlineVariant
     }
     val colorTexto = when (estado) {
         EstadoOpcion.Correcta -> GreenSecondary
         EstadoOpcion.Incorrecta -> RedSecondary
-        EstadoOpcion.Neutral -> MediumGray
+        EstadoOpcion.Neutral -> MaterialTheme.colorScheme.onSurfaceVariant
     }
     val colorFondo = when (estado) {
         EstadoOpcion.Correcta -> GreenSecondary.copy(alpha = 0.1f)

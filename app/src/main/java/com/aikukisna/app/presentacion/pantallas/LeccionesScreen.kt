@@ -1,5 +1,14 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,23 +24,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,16 +56,17 @@ import com.aikukisna.app.domain.usecase.LeccionConEstado
 import com.aikukisna.app.presentacion.viewmodel.LeccionesViewModel
 import com.aikukisna.app.presentacion.viewmodel.NIVELES_CEFR
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
 
 @Composable
 fun LeccionesScreen(
     viewModel: LeccionesViewModel = hiltViewModel(),
     onAbrirLeccion: (Int) -> Unit = {}
 ) {
+    LaunchedEffect(Unit) { viewModel.recargar() }
     LeccionesScreenContenido(
+        idioma = viewModel.idiomaMetaNombre,
         nivelSeleccionado = viewModel.nivelSeleccionado,
+        nivelesDesbloqueados = viewModel.nivelesDesbloqueados,
         onNivelSeleccionado = viewModel::seleccionarNivel,
         lecciones = viewModel.lecciones,
         isLoading = viewModel.isLoading,
@@ -65,7 +77,9 @@ fun LeccionesScreen(
 
 @Composable
 private fun LeccionesScreenContenido(
+    idioma: String,
     nivelSeleccionado: Int,
+    nivelesDesbloqueados: Set<Int>,
     onNivelSeleccionado: (Int) -> Unit,
     lecciones: List<LeccionConEstado>,
     isLoading: Boolean,
@@ -80,11 +94,21 @@ private fun LeccionesScreenContenido(
             .padding(horizontal = 24.dp)
     ) {
         Text(
-            text = "Lecciones",
+            text = t(R.string.lecciones_lecciones),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(top = 20.dp, bottom = 16.dp)
+            modifier = Modifier.padding(top = 20.dp, bottom = 12.dp)
         )
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+        if (idioma.isNotBlank()) {
+            Text(
+                text = idioma,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(top = 14.dp, bottom = 8.dp)
+            )
+        }
 
         Row(
             modifier = Modifier
@@ -96,43 +120,36 @@ private fun LeccionesScreenContenido(
                 ChipNivel(
                     etiqueta = etiqueta,
                     seleccionado = nivel == nivelSeleccionado,
-                    onClick = { onNivelSeleccionado(nivel) }
-                )
+                    habilitado = nivel in nivelesDesbloqueados
+                ) { onNivelSeleccionado(nivel) }
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         when {
-            isLoading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                }
+            isLoading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
-            errorMessage != null -> {
-                Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            lecciones.isEmpty() -> {
-                Text(
-                    text = "Todavía no hay lecciones en este nivel.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MediumGray
-                )
-            }
+            errorMessage != null -> Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            lecciones.isEmpty() -> Text(
+                text = t(R.string.lecciones_todavia_no_hay_lecciones_en),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             else -> {
-                LazyColumn {
+                val etiquetaNivel = NIVELES_CEFR.first { it.first == nivelSeleccionado }.second
+                val completadas = lecciones.count { it.estado == EstadoLeccion.COMPLETADA }
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    item { ResumenNivel(etiquetaNivel, completadas, lecciones.size) }
                     itemsIndexed(lecciones) { index, item ->
-                        NodoLeccionRow(
-                            item = item,
-                            esPrimero = index == 0,
-                            esUltimo = index == lecciones.lastIndex,
-                            onClick = { onAbrirLeccion(item.leccion.id) }
-                        )
+                        NodoMapaLeccion(item, index) { onAbrirLeccion(item.leccion.id) }
                     }
+                    item { Spacer(modifier = Modifier.height(20.dp)) }
                 }
             }
         }
@@ -140,177 +157,172 @@ private fun LeccionesScreenContenido(
 }
 
 @Composable
-private fun ChipNivel(
-    etiqueta: String,
-    seleccionado: Boolean,
-    onClick: () -> Unit
-) {
+private fun ResumenNivel(etiqueta: String, completadas: Int, total: Int) {
+    val descriptor = when (etiqueta) {
+        "A0" -> t(R.string.lecciones_superviviente)
+        "A1" -> t(R.string.lecciones_principiante)
+        else -> null
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        HorizontalDivider(Modifier.weight(1f), color = MaterialTheme.colorScheme.primary)
+        Column(
+            modifier = Modifier
+                .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
+                .padding(horizontal = 18.dp, vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = if (descriptor == null) etiqueta else t(R.string.lecciones_texto, etiqueta, descriptor),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = "$completadas/$total",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        HorizontalDivider(Modifier.weight(1f), color = MaterialTheme.colorScheme.primary)
+    }
+}
+
+@Composable
+private fun ChipNivel(etiqueta: String, seleccionado: Boolean, habilitado: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(50))
+            .clip(CircleShape)
             .background(if (seleccionado) MaterialTheme.colorScheme.primary else Color.Transparent)
             .border(
-                width = 1.dp,
-                color = if (seleccionado) Color.Transparent else LightGray,
-                shape = RoundedCornerShape(50)
+                1.dp,
+                if (seleccionado) Color.Transparent else MaterialTheme.colorScheme.outlineVariant,
+                CircleShape
             )
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable(enabled = habilitado, onClick = onClick)
+            .padding(horizontal = 14.dp, vertical = 10.dp)
     ) {
         Text(
             text = etiqueta,
             style = MaterialTheme.typography.labelLarge,
-            color = if (seleccionado) Color.White else MediumGray
+            color = when {
+                seleccionado -> MaterialTheme.colorScheme.onPrimary
+                habilitado -> MaterialTheme.colorScheme.onSurfaceVariant
+                else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
+            }
         )
     }
 }
 
-@Composable
-private fun NodoLeccionRow(
-    item: LeccionConEstado,
-    esPrimero: Boolean,
-    esUltimo: Boolean,
-    onClick: () -> Unit
-) {
-    val habilitado = item.estado != EstadoLeccion.BLOQUEADA
+private val posicionesNodo = listOf(0.50f, 0.67f, 0.33f)
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = habilitado, onClick = onClick)
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            LineaConectora(visible = !esPrimero)
-            NodoIcono(estado = item.estado)
-            LineaConectora(visible = !esUltimo)
-        }
-        Spacer(modifier = Modifier.width(14.dp))
-        Column {
-            Text(
-                text = item.leccion.titulo,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = if (habilitado) MaterialTheme.colorScheme.onBackground else MediumGray
-            )
-            Text(
-                text = when (item.estado) {
-                    EstadoLeccion.COMPLETADA -> "Completada · ${item.puntaje ?: 0} pts"
-                    EstadoLeccion.ACTUAL -> "Lección actual"
-                    EstadoLeccion.BLOQUEADA -> "Bloqueada"
-                },
-                style = MaterialTheme.typography.bodySmall,
-                color = MediumGray
-            )
-        }
+@Composable
+private fun NodoMapaLeccion(item: LeccionConEstado, index: Int, onClick: () -> Unit) {
+    val posicion = posicionesNodo[index % posicionesNodo.size]
+    val posicionAnterior = posicionesNodo[(index - 1).mod(posicionesNodo.size)]
+    val habilitada = item.estado != EstadoLeccion.BLOQUEADA
+    val alineacionNodo = when (index % posicionesNodo.size) {
+        1 -> Alignment.CenterEnd
+        2 -> Alignment.CenterStart
+        else -> Alignment.Center
     }
-}
-
-@Composable
-private fun LineaConectora(visible: Boolean) {
-    Box(
-        modifier = Modifier
-            .width(2.dp)
-            .height(14.dp)
-            .background(if (visible) LightGray else Color.Transparent)
+    val transicion = rememberInfiniteTransition(label = "leccionActual")
+    val escalaActual by transicion.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.08f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 700),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulsoLeccionActual"
     )
-}
 
-@Composable
-private fun NodoIcono(estado: EstadoLeccion) {
-    val colorFondo = when (estado) {
-        EstadoLeccion.COMPLETADA, EstadoLeccion.ACTUAL -> MaterialTheme.colorScheme.primary
-        EstadoLeccion.BLOQUEADA -> LightGray
-    }
-    Box(
-        modifier = Modifier
-            .size(44.dp)
-            .clip(CircleShape)
-            .background(colorFondo),
-        contentAlignment = Alignment.Center
-    ) {
-        when (estado) {
-            EstadoLeccion.COMPLETADA -> Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = "Completada",
-                tint = Color.White,
-                modifier = Modifier.size(20.dp)
-            )
-            EstadoLeccion.ACTUAL -> Icon(
-                painter = painterResource(id = R.drawable.play),
-                contentDescription = "Lección actual",
-                tint = Color.White,
-                modifier = Modifier.size(18.dp)
-            )
-            EstadoLeccion.BLOQUEADA -> Icon(
-                painter = painterResource(id = R.drawable.lock),
-                contentDescription = "Bloqueada",
-                tint = MediumGray,
-                modifier = Modifier.size(16.dp)
-            )
+    Box(modifier = Modifier.fillMaxWidth().height(132.dp)) {
+        if (index > 0) {
+            val colorConector = MaterialTheme.colorScheme.outlineVariant
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                drawLine(
+                    color = colorConector,
+                    start = androidx.compose.ui.geometry.Offset(size.width * posicionAnterior, 0f),
+                    end = androidx.compose.ui.geometry.Offset(size.width * posicion, size.height / 2f),
+                    strokeWidth = 4f,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(5f, 11f))
+                )
+            }
+        }
+
+        val escena = when (index % 3) {
+            0 -> R.drawable.scene_mountain
+            1 -> R.drawable.scenes_bush
+            else -> R.drawable.scenes_lake
+        }
+        Image(
+            painter = painterResource(escena),
+            contentDescription = null,
+            modifier = Modifier
+                .align(if (posicion > 0.5f) Alignment.CenterStart else Alignment.CenterEnd)
+                .padding(horizontal = 8.dp)
+                .size(width = if (index % 3 == 2) 116.dp else 90.dp, height = 68.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .align(alineacionNodo)
+                .padding(horizontal = 84.dp)
+                .size(68.dp)
+                .graphicsLayer {
+                    if (item.estado == EstadoLeccion.ACTUAL) {
+                        scaleX = escalaActual
+                        scaleY = escalaActual
+                    }
+                }
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surface)
+                .border(
+                    2.dp,
+                    if (item.estado == EstadoLeccion.ACTUAL) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
+                    CircleShape
+                )
+                .clickable(enabled = habilitada, onClick = onClick),
+            contentAlignment = Alignment.Center
+        ) {
+            if (item.estado == EstadoLeccion.BLOQUEADA) {
+                Icon(
+                    painter = painterResource(R.drawable.lock),
+                    contentDescription = t(R.string.lecciones_bloqueada, item.leccion.titulo),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(22.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.leccion_book),
+                    contentDescription = item.leccion.titulo,
+                    modifier = Modifier.size(42.dp)
+                )
+            }
         }
     }
 }
 
 private val idiomaDeMuestra = Idioma.DISPONIBLES.first { it.codigo == "mi" }
-
 private val leccionesDeMuestra = listOf(
-    LeccionConEstado(
-        leccion = Leccion(id = 1, titulo = "Saludos y Despedidas", capituloNumero = 1, nivel = 1, categoria = null, idiomaMeta = idiomaDeMuestra),
-        estado = EstadoLeccion.COMPLETADA,
-        puntaje = 90
-    ),
-    LeccionConEstado(
-        leccion = Leccion(id = 2, titulo = "Familia", capituloNumero = 2, nivel = 1, categoria = null, idiomaMeta = idiomaDeMuestra),
-        estado = EstadoLeccion.ACTUAL,
-        puntaje = null
-    ),
-    LeccionConEstado(
-        leccion = Leccion(id = 3, titulo = "Números", capituloNumero = 3, nivel = 1, categoria = null, idiomaMeta = idiomaDeMuestra),
-        estado = EstadoLeccion.BLOQUEADA,
-        puntaje = null
-    )
+    LeccionConEstado(Leccion(1, "Saludos y Despedidas", 1, 1, null, idiomaDeMuestra), EstadoLeccion.COMPLETADA, 90),
+    LeccionConEstado(Leccion(2, "Familia", 2, 1, null, idiomaDeMuestra), EstadoLeccion.ACTUAL, null),
+    LeccionConEstado(Leccion(3, "Números", 3, 1, null, idiomaDeMuestra), EstadoLeccion.BLOQUEADA, null)
 )
 
-@Preview(showBackground = true, name = "Con lecciones")
+@Preview(showBackground = true)
 @Composable
 private fun LeccionesScreenContenidoPreview() {
     AikukisnaTheme {
         LeccionesScreenContenido(
+            idioma = "Miskito",
             nivelSeleccionado = 1,
+            nivelesDesbloqueados = setOf(1),
             onNivelSeleccionado = {},
             lecciones = leccionesDeMuestra,
-            isLoading = false,
-            errorMessage = null,
-            onAbrirLeccion = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Cargando")
-@Composable
-private fun LeccionesScreenContenidoCargandoPreview() {
-    AikukisnaTheme {
-        LeccionesScreenContenido(
-            nivelSeleccionado = 1,
-            onNivelSeleccionado = {},
-            lecciones = emptyList(),
-            isLoading = true,
-            errorMessage = null,
-            onAbrirLeccion = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Sin lecciones en el nivel")
-@Composable
-private fun LeccionesScreenContenidoVacioPreview() {
-    AikukisnaTheme {
-        LeccionesScreenContenido(
-            nivelSeleccionado = 7,
-            onNivelSeleccionado = {},
-            lecciones = emptyList(),
             isLoading = false,
             errorMessage = null,
             onAbrirLeccion = {}

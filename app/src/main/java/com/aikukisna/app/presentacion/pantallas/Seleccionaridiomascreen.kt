@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -22,7 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,17 +48,13 @@ import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.presentacion.componentes.acentoPara
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import com.aikukisna.app.ui.theme.BorderStrong
-import com.aikukisna.app.ui.theme.CardSurface
-import com.aikukisna.app.ui.theme.DarkNeutral
-import com.aikukisna.app.ui.theme.MediumGray
-import com.aikukisna.app.ui.theme.YellowPrimary
 
 @Composable
 fun SeleccionarIdiomaScreen(
     onContinuar: (Idioma) -> Unit,
     isLoading: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    subtitulo: String = t(R.string.seleccionaridioma_elige_el_idioma_con_el)
 ) {
     var seleccionado by remember { mutableStateOf<Idioma?>(null) }
 
@@ -81,7 +77,7 @@ fun SeleccionarIdiomaScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "¿Qué idioma querés aprender?",
+            text = t(R.string.seleccionaridioma_que_idioma_quieres_aprender),
             style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
@@ -90,9 +86,9 @@ fun SeleccionarIdiomaScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Elegí uno para tu lección de muestra",
+            text = subtitulo,
             style = MaterialTheme.typography.bodySmall,
-            color = MediumGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
 
@@ -123,7 +119,7 @@ fun SeleccionarIdiomaScreen(
 
         Box(modifier = Modifier.width(240.dp)) {
             AikukisnaButton(
-                text = "Continuar",
+                text = t(R.string.seleccionaridioma_continuar),
                 onClick = { seleccionado?.let(onContinuar) },
                 enabled = seleccionado != null && !isLoading,
                 isLoading = isLoading,
@@ -170,11 +166,11 @@ private fun TarjetaIdioma(
             .clip(RoundedCornerShape(12.dp))
             .border(
                 width = if (seleccionado) 2.dp else 1.dp,
-                color = if (seleccionado) acento.color else BorderStrong,
+                color = if (seleccionado) acento.color else MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(12.dp)
             )
             .background(
-                color = if (seleccionado) acento.color.copy(alpha = 0.1f) else CardSurface,
+                color = if (seleccionado) acento.color.copy(alpha = 0.1f) else MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable(
@@ -186,21 +182,20 @@ private fun TarjetaIdioma(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .background(acento.color),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = acento.inicial,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-
-                color = if (acento.color == YellowPrimary) DarkNeutral else Color.White
-            )
+        val bandera = when (idioma.codigo) {
+            "mi" -> R.drawable.bandera_miskito
+            "es" -> R.drawable.bandera_espanol
+            Idioma.CODIGO_KRIOL, "jam" -> R.drawable.bandera_kriol
+            "en" -> R.drawable.bandera_ingles
+            else -> error(t(R.string.seleccionaridioma_no_hay_una_bandera_configurada, idioma.codigo))
         }
+        Image(
+            painter = painterResource(bandera),
+            contentDescription = t(R.string.seleccionaridioma_referencia_visual_de, idioma.nombre),
+            modifier = Modifier
+                .size(width = 48.dp, height = 32.dp)
+                .clip(RoundedCornerShape(4.dp))
+        )
 
         Text(
             text = idioma.nombre,

@@ -1,14 +1,15 @@
 package com.aikukisna.app.presentacion.viewmodel
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.domain.repository.AuthRepository
-import com.aikukisna.app.domain.repository.EstadoSincronizacion
 import com.aikukisna.app.domain.repository.UsuarioRepository
 import com.aikukisna.app.domain.usecase.CambiarIdiomaMetaUseCase
 import com.aikukisna.app.domain.usecase.ObtenerProximaLeccionUseCase
-import com.aikukisna.app.domain.usecase.SincronizarDatosOfflineUseCase
 import com.aikukisna.app.domain.usecase.SincronizarLeccionesPendientesUseCase
 import com.aikukisna.app.presentacion.pantallas.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,6 @@ class HomeViewModel @Inject constructor(
     private val usuarioRepository: UsuarioRepository,
     private val authRepository: AuthRepository,
     private val obtenerProximaLeccionUseCase: ObtenerProximaLeccionUseCase,
-    private val sincronizarDatosOfflineUseCase: SincronizarDatosOfflineUseCase,
     private val sincronizarLeccionesPendientesUseCase: SincronizarLeccionesPendientesUseCase,
     private val cambiarIdiomaMetaUseCase: CambiarIdiomaMetaUseCase
 ) : ViewModel() {
@@ -32,14 +32,14 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Cargando)
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-
-    private val _estadoSincronizacion = MutableStateFlow<EstadoSincronizacion?>(null)
-    val estadoSincronizacion: StateFlow<EstadoSincronizacion?> = _estadoSincronizacion.asStateFlow()
-
     init {
-        cargarDatos()
-        iniciarSincronizacionSiHaceFalta()
         reintentarLeccionesPendientes()
+        viewModelScope.launch {
+            usuarioRepository.observarIdiomaMeta().collect { idioma ->
+                val actual = (_uiState.value as? HomeUiState.Exito)?.usuario?.idiomaMeta
+                if (idioma == null || idioma.id != actual?.id) cargarDatos()
+            }
+        }
     }
 
     fun cargarDatos() {
@@ -55,13 +55,13 @@ class HomeViewModel @Inject constructor(
                         }
                         _uiState.value = HomeUiState.Exito(usuario, proximaLeccion)
                     } else {
-                        _uiState.value = HomeUiState.Error("No se encontró el perfil")
+                        _uiState.value = HomeUiState.Error(t(R.string.home_no_se_encontro_el_perfil))
                     }
                 } else {
-                    _uiState.value = HomeUiState.Error("Sesión no iniciada")
+                    _uiState.value = HomeUiState.Error(t(R.string.home_sesion_no_iniciada))
                 }
             } catch (e: Exception) {
-                _uiState.value = HomeUiState.Error("Error de conexión: ${e.message}")
+                _uiState.value = HomeUiState.Error(t(R.string.home_error_de_conexion, e.message.orEmpty()))
             }
         }
     }
@@ -71,23 +71,19 @@ class HomeViewModel @Inject constructor(
         if (estadoActual !is HomeUiState.Exito) return
         viewModelScope.launch {
             try {
+                // El perfil local emite el idioma nuevo y cada pantalla se recarga sola.
                 cambiarIdiomaMetaUseCase(estadoActual.usuario, nuevoIdioma)
-                cargarDatos()
             } catch (e: Exception) {
-                _uiState.value = HomeUiState.Error(e.message ?: "No se pudo cambiar el idioma")
+                _uiState.value = HomeUiState.Error(e.message ?: t(R.string.home_no_se_pudo_cambiar_el))
             }
         }
     }
 
-    private fun iniciarSincronizacionSiHaceFalta() {
+    fun cerrarSesion(onCompletado: () -> Unit) {
         viewModelScope.launch {
-            if (sincronizarDatosOfflineUseCase.yaHayDatos()) return@launch
-            sincronizarDatosOfflineUseCase.invoke().collect { estado ->
-                _estadoSincronizacion.value = estado
-                if (estado is EstadoSincronizacion.Completado) {
-                    _estadoSincronizacion.value = null
-                }
-            }
+            // La sesión local se limpia siempre: el estudiante debe poder salir aunque no haya red.
+            runCatching { authRepository.cerrarSesion() }
+            onCompletado()
         }
     }
 
