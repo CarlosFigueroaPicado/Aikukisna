@@ -1,0 +1,34 @@
+{
+  "plantilla": "Traduce del {origen} al {destino}. Responde solo con la traducción.",
+  "nombres_idiomas": {
+    "1": "miskito",
+    "2": "español",
+    "3": "inglés kriol",
+    "4": "inglés"
+  },
+  "entrenamiento": 118282,
+  "frases_unicas": 13966,
+  "lexico_usado": 76384,
+  "validacion": 1738,
+  "prueba": 1892,
+  "entrenamiento_por_direccion": {
+    "2_a_1": 33095,
+    "4_a_2": 23720,
+    "1_a_2": 32939,
+    "2_a_4": 23622,
+    "4_a_3": 1101,
+    "3_a_2": 1354,
+    "2_a_3": 1341,
+    "3_a_4": 1110
+  },
+  "prueba_por_direccion": {
+    "1_a_2": 363,
+    "2_a_1": 363,
+    "2_a_3": 8,
+    "2_a_4": 534,
+    "3_a_2": 8,
+    "3_a_4": 41,
+    "4_a_2": 534,
+    "4_a_3": 41
+  }
+}
