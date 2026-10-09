@@ -217,7 +217,7 @@ private fun DetalleLeccion(emoji: String, valor: String, etiqueta: String) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(64.dp)
     ) {
-        Text(text = emoji, fontSize = 24.sp)
+        Text(text = emoji, fontSize = 25.sp)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = valor,

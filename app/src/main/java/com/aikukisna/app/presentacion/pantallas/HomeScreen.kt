@@ -317,7 +317,7 @@ private fun HomeScreenContenido(
 private fun TituloSeccion(texto: String) {
     Text(
         text = texto,
-        style = MaterialTheme.typography.labelLarge.copy(fontSize = 18.sp),
+        style = MaterialTheme.typography.labelLarge.copy(fontSize = 19.sp),
         color = MaterialTheme.colorScheme.secondary
     )
 }
@@ -342,13 +342,13 @@ private fun TarjetaContinuarLeccion(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = leccion.titulo,
-                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp),
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 19.sp),
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = t(R.string.home_palabras_desde_20_xp, numPalabras),
-                style = MaterialTheme.typography.labelMedium.copy(fontSize = 15.sp),
+                style = MaterialTheme.typography.labelMedium.copy(fontSize = 16.sp),
                 color = MaterialTheme.colorScheme.primary
             )
         }
