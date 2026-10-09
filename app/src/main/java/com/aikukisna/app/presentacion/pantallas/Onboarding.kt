@@ -137,7 +137,7 @@ fun OnboardingScreen(
                     AikukisnaButton(
                         text = t(R.string.onboarding_empieza_a_aprender),
                         onClick = onOnboardingTerminado,
-                        fontSize = 16.sp
+                        fontSize = 17.sp
                     )
                 }
             } else {
@@ -168,7 +168,7 @@ fun OnboardingScreen(
                                 }
                             },
                             trailingIcon = R.drawable.arrow_right,
-                            fontSize = 16.sp
+                            fontSize = 17.sp
                         )
                     }
                 }

@@ -61,12 +61,24 @@ class CompletarLeccionUseCaseTest {
         assertEquals(leccion.id to 85, lecciones.completada)
         assertEquals("completada", usuarios.progreso.single().estado)
         assertEquals(85, usuarios.progreso.single().puntaje)
-        assertEquals(455, usuarios.usuario.xp)
+        // 10 que ya tenía + 20 de la primera aprobación (85 % no llega al bono).
+        assertEquals(30, usuarios.usuario.xp)
         assertEquals(3, usuarios.usuario.rachaActual)
         assertEquals(3, usuarios.usuario.rachaMaxima)
         assertEquals(LocalDate.now(), usuarios.usuario.ultimaActividad)
         assertEquals(listOf(1), logros.desbloqueados)
         assertTrue(usuarios.actualizacionesRemotas.isEmpty())
+    }
+
+    @Test
+    fun `xp de una leccion se da una vez y al repetir solo cuenta la mejora del bono`() {
+        assertEquals(20, CompletarLeccionUseCase.xpGanado(null, 85))
+        assertEquals(25, CompletarLeccionUseCase.xpGanado(null, 90))
+        assertEquals(30, CompletarLeccionUseCase.xpGanado(null, 100))
+        assertEquals(0, CompletarLeccionUseCase.xpGanado(100, 100))
+        assertEquals(0, CompletarLeccionUseCase.xpGanado(90, 85))
+        assertEquals(5, CompletarLeccionUseCase.xpGanado(90, 100))
+        assertEquals(10, CompletarLeccionUseCase.xpGanado(85, 100))
     }
 
     @Test

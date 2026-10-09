@@ -17,6 +17,7 @@ import com.aikukisna.app.domain.usecase.IniciarSesionConGoogleUseCase
 import com.aikukisna.app.domain.usecase.ObtenerUsuarioUseCase
 import com.aikukisna.app.domain.usecase.RegistrarUsuarioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -137,12 +138,10 @@ class RegisterViewModel @Inject constructor(
                 registroGoogle = true
                 requiereSeleccionIdioma = usuario?.idiomaMeta == null
                 registroExitoso = !requiereSeleccionIdioma
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-                errorMessage = if (e.message?.contains("cancel", ignoreCase = true) == true) {
-                    t(R.string.register_registro_cancelado)
-                } else {
-                    e.message ?: t(R.string.register_error_al_continuar_con_google)
-                }
+                errorMessage = mensajeErrorGoogle(e, t(R.string.register_registro_cancelado))
             } finally {
                 isLoadingGoogle = false
             }

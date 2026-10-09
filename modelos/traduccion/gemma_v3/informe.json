@@ -1,0 +1,17 @@
+{
+ "base": "modelo v2 (gemma_aikukisna)",
+ "entrenamiento": 30000,
+ "por_direccion": {
+  "tutoria": 6000,
+  "1_a_2": 5770,
+  "2_a_1": 5735,
+  "4_a_2": 4141,
+  "2_a_4": 4095,
+  "2_a_3": 1180,
+  "3_a_2": 1178,
+  "3_a_4": 970,
+  "4_a_3": 931
+ },
+ "validacion": 400,
+ "muestras_tutoria": 40
+}

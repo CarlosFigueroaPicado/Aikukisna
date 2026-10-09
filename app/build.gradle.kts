@@ -22,14 +22,17 @@ android {
     androidResources {
         noCompress += "tflite"
         noCompress += "onnx"
+        // El modelo de Tuki (assets/modelos_llm) va dentro del APK sin comprimir: ya está comprimido y así
+        // se copia más rápido al almacenamiento interno en el primer arranque, sin conexión.
+        noCompress += "task"
     }
 
     defaultConfig {
         applicationId = "com.aikukisna.app"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -48,6 +51,8 @@ android {
 
     }
 
+
+    val apkPorArquitectura = providers.gradleProperty("apkPorArquitectura").orNull == "true"
 
     signingConfigs {
         create("release") {
@@ -71,14 +76,15 @@ android {
             )
             signingConfig = signingConfigs.getByName("release")
             // Los teléfonos de las escuelas son ARM: las librerías x86/x86_64 (≈175 MB) solo sirven en emuladores.
-            ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
+            // Con -PapkPorArquitectura=true los filtros los pone splits.abi (Gradle no admite ambos a la vez).
+            if (!apkPorArquitectura) ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
         }
     }
     // Con -PapkPorArquitectura=true se genera además un APK por tipo de procesador (más liviano para repartir
     // por WhatsApp o memoria USB): arm64-v8a para teléfonos de 2017 en adelante, armeabi-v7a para los antiguos.
     splits {
         abi {
-            isEnable = providers.gradleProperty("apkPorArquitectura").orNull == "true"
+            isEnable = apkPorArquitectura
             reset()
             include("arm64-v8a", "armeabi-v7a")
             isUniversalApk = false

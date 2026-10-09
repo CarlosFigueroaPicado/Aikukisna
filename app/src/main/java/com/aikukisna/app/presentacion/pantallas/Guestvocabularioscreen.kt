@@ -365,7 +365,7 @@ private fun TukiConPregunta(reaccionar: Boolean) {
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "\u2753", fontSize = 16.sp)
+        Text(text = "\u2753", fontSize = 17.sp)
         Image(
             painter = painterResource(id = R.drawable.ic_ave_login),
             contentDescription = null,
@@ -400,7 +400,7 @@ private fun BotonAutoevaluacion(
             style = MaterialTheme.typography.bodySmall,
             color = if (relleno) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Text(text = emoji, fontSize = 14.sp)
+        Text(text = emoji, fontSize = 15.sp)
     }
 }
 

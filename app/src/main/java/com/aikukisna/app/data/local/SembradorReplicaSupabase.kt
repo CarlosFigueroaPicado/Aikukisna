@@ -345,7 +345,7 @@ class SembradorReplicaSupabase @Inject constructor(
         private const val CLAVE_VERSION = "version"
         private const val CLAVE_EVIDENCIA = "evidencia_instalacion"
         // 2: añade Wiktionary (palabras Español–Inglés) y frases de Tatoeba; Kriol pasa a "bzk".
-        private const val VERSION_REPLICA = 17
+        private const val VERSION_REPLICA = 19
         private const val TAMANO_LOTE = 500
         private const val IDIOMA_KRIOL = 3L
         private const val TOTAL_REGLAS_KRIOL_APROBADAS = 32

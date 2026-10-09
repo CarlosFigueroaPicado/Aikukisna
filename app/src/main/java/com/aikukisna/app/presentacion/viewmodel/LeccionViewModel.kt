@@ -164,12 +164,12 @@ class LeccionViewModel @Inject constructor(
         return false
     }
 
-    fun completarLeccion(puntajePorcentaje: Int, onCompletada: () -> Unit) {
+    fun completarLeccion(puntajePorcentaje: Int, onCompletada: (xpGanado: Int) -> Unit) {
         val leccionId = leccionIdCargado ?: return
         viewModelScope.launch {
             try {
-                completarLeccionUseCase(leccionId, puntajePorcentaje)
-                onCompletada()
+                val xp = completarLeccionUseCase(leccionId, puntajePorcentaje)
+                onCompletada(xp)
             } catch (e: Exception) {
                 errorMessage = e.message ?: t(R.string.leccion_no_se_pudo_guardar_tu)
             }

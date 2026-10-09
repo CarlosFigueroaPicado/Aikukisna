@@ -14,6 +14,10 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import java.time.Instant
@@ -29,6 +33,8 @@ class LogroRepositoryImpl @Inject constructor(
 ) : LogroRepository {
 
     override suspend fun obtenerLogros(): List<Logro> {
+        // El catálogo de logros casi no cambia: si ya está guardado no se espera a la red.
+        obtenerLogrosLocales().takeIf { it.isNotEmpty() }?.let { return it }
         if (!conectividad.hayConexion()) return obtenerLogrosLocales()
         return try {
             client.from("logro")
@@ -40,7 +46,17 @@ class LogroRepositoryImpl @Inject constructor(
     }
 
     override suspend fun obtenerLogrosDesbloqueados(usuarioId: UUID): List<LogroDesbloqueado> {
-        if (!conectividad.hayConexion()) return obtenerDesbloqueadosLocales(usuarioId)
+        val locales = obtenerDesbloqueadosLocales(usuarioId)
+        if (!conectividad.hayConexion()) return locales
+        // Perfil se abría esperando a Supabase: con copia local se muestra al instante y se reconcilia detrás.
+        if (locales.isNotEmpty()) {
+            segundoPlano.launch { descargarDesbloqueados(usuarioId) }
+            return locales
+        }
+        return descargarDesbloqueados(usuarioId)
+    }
+
+    private suspend fun descargarDesbloqueados(usuarioId: UUID): List<LogroDesbloqueado> {
         return try {
             val remotos = client.from("logro_desbloqueado")
                 .select(Columns.raw("*, logro(*, categoria(*))")) {
@@ -73,6 +89,10 @@ class LogroRepositoryImpl @Inject constructor(
             })
             reconciliados
         } catch (_: Exception) { obtenerDesbloqueadosLocales(usuarioId) }
+    }
+
+    private companion object {
+        val segundoPlano = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
 
     override suspend fun desbloquearLogro(usuarioId: UUID, logroId: Int) {

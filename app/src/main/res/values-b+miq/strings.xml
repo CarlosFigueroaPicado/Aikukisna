@@ -80,7 +80,7 @@
     <string name="cultura_conoce_la_cultura_de_los">Aikukisna ra wilin yabi upla nani sinska lâka nu taks.</string>
     <string name="cultura_fuente">Dîa wina: %1$s</string>
     <string name="descargamodelo_actualizacion_de_tuki">Tuki raya daukanka</string>
-    <string name="descargamodelo_vamos_a_descargar_en_tu">Man telepong ra Tuki model ba daunlod munamna (%1$s MB baku). </string>
+    <string name="descargamodelo_vamos_a_descargar_en_tu">"Man telepong ra Tuki model ba daunlod munamna (%1$s MB baku). "</string>
     <string name="descargamodelo_con_el_tuki_conversa_contigo">Baha wal, Tuki ba man wal aisisa bara bîla lakra ba intanet âpu wark takisa.</string>
     <string name="descargamodelo_empezar">Tâ kriks</string>
     <string name="descargamodelo_seguir_en_segundo_plano">Nina ra dauki ban was</string>
@@ -135,9 +135,9 @@
     <string name="guestinicioquiz_volver">Kli was</string>
     <string name="guestinicioquiz_modo_invitado">PRIS DIMANKA</string>
     <string name="guestinicioquiz_listo_terminaste_tu_leccion_de">Ridi sa! Sampla lisin ba danh munram</string>
-    <string name="guestinicioquiz_ahora">Naha minit </string>
+    <string name="guestinicioquiz_ahora">"Naha minit "</string>
     <string name="guestinicioquiz_prueba_tu_conocimiento">man nu takanka trai muns</string>
-    <string name="guestinicioquiz_con_preguntas"> makabi walanka %1$s wal</string>
+    <string name="guestinicioquiz_con_preguntas">" makabi walanka %1$s wal"</string>
     <string name="guestinicioquiz_empezar_quiz">Quiz tâ kriks</string>
     <string name="guestmodeintro_volver">Kli was</string>
     <string name="guestmodeintro_modo_invitado">PRIS DIMANKA</string>
@@ -145,7 +145,7 @@
     <string name="guestmodeintro_aprende">%1$s lan taks</string>
     <string name="guestmodeintro_leccion_de_prueba">Sampla lisin: %1$s</string>
     <string name="guestmodeintro_esta_es_una_muestra_de">Naha ba Aikukisna ra man piakbia dukia sampla kum. Lisin kum ba naku sa:</string>
-    <string name="guestmodeintro_aprende_palabras_con_tarjetas">Wauhtaya sâtka nani wal bîla %1$s lan taks: </string>
+    <string name="guestmodeintro_aprende_palabras_con_tarjetas">"Wauhtaya sâtka nani wal bîla %1$s lan taks: "</string>
     <string name="guestmodeintro_ves_la_palabra_en_piensas">bîla ba %1$s ra kaikisma, dîa tânka ba lukisma bara wauhtaya sâtka ba lakisma, kaikaia dukiara.</string>
     <string name="guestmodeintro_prueba_tu_conocimiento_con_un">Makabi walanka %1$s quiz kum wal man nu takanka trai muns.</string>
     <string name="guestmodeintro_mira_tu_resultado_y_todo">Man ansika kaiks bara man akaunt paskisma kaka dîa dîa kwâkbia ba sut kaiks.</string>
@@ -204,7 +204,7 @@
     <string name="leccioninicioquiz_volver">Kli was</string>
     <string name="leccioninicioquiz_leccion">LISIN</string>
     <string name="leccioninicioquiz_vocabulario">Bîla nani</string>
-    <string name="leccioninicioquiz_preparate_para_empezar_el">Ridi takaia, </string>
+    <string name="leccioninicioquiz_preparate_para_empezar_el">"Ridi takaia, "</string>
     <string name="leccionquiz_volver">Kli was</string>
     <string name="leccionquiz_leccion">LISIN</string>
     <string name="leccionquiz_no_se_pudo_generar_el">Quiz ba sip paskras kapri.</string>
@@ -266,7 +266,7 @@
     <string name="onboarding_empieza_a_aprender">Lan takaia tâ kriks!</string>
     <string name="onboarding_saltar">Pali was</string>
     <string name="onboarding_siguiente">Ninara</string>
-    <string name="onboarding_hola_soy">Naksa! Yang nini </string>
+    <string name="onboarding_hola_soy">"Naksa! Yang nini "</string>
     <string name="onboarding_tuki">Tuki</string>
     <string name="onboarding_juntos_aprenderemos_el_fabuloso_mundo">Asla bîla aisanka nani lan takbia!</string>
     <string name="perfil_perfil">Yang dukia</string>
@@ -433,4 +433,8 @@
     <string name="configuracion_idioma_app_explicacion">Menu bara batan nani bîla aisanka laks. Bîla aisanka man lan takisma ba lakras.</string>
     <string name="configuracion_borrador_revision_nativos">Kau kat ulbanka: miskitu upla nani kaikisa kaina</string>
     <string name="leccionresultados_correctas">aitani</string>
+    <string name="lecciones_mundo">Mundo %1$s</string>
+    <string name="leccionresultados_excelente_superada">¡Pain pali! Lección superada</string>
+    <string name="login_google_sin_cuenta">No hay una cuenta de Google en este teléfono. Agrégala en Ajustes &gt; Cuentas o usa tu correo y contraseña.</string>
+    <string name="login_google_no_se_pudo">No se pudo continuar con Google. Revisa tu conexión a internet e inténtalo de nuevo.</string>
 </resources>

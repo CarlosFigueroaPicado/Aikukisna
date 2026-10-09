@@ -51,9 +51,12 @@ object MlKitOfflineHelper {
     }
 
     suspend fun reconocerTexto(recognizer: TextRecognizer, image: InputImage): String =
+        procesarTexto(recognizer, image).text
+
+    suspend fun procesarTexto(recognizer: TextRecognizer, image: InputImage): com.google.mlkit.vision.text.Text =
         suspendCancellableCoroutine { continuation ->
             recognizer.process(image)
-                .addOnSuccessListener { if (continuation.isActive) continuation.resume(it.text) }
+                .addOnSuccessListener { if (continuation.isActive) continuation.resume(it) }
                 .addOnFailureListener { if (continuation.isActive) continuation.resumeWithException(it) }
         }
 

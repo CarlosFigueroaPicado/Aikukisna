@@ -19,6 +19,10 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import kotlinx.serialization.json.JsonObject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -52,6 +56,8 @@ class UsuarioRepositoryImpl @Inject constructor(
         // El repositorio no es singleton; las marcas viven mientras viva el proceso.
         val perfilDescargado = java.util.concurrent.ConcurrentHashMap<UUID, Long>()
         val progresoDescargado = java.util.concurrent.ConcurrentHashMap<UUID, Long>()
+        // Actualizaciones que no deben frenar la pantalla: viven con el proceso, no con un ViewModel.
+        val segundoPlano = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
 
     override suspend fun obtenerUsuario(id: UUID): Usuario? {
@@ -60,6 +66,18 @@ class UsuarioRepositoryImpl @Inject constructor(
         // Cada pantalla y cada mensaje a Tuki piden el perfil: esperar a la red cada vez hacía
         // sentir lenta toda la app. Los cambios locales se guardan antes, así que la copia es fiable.
         if (perfilGuardado != null && esReciente(perfilDescargado[id])) return perfilGuardado
+        // Con copia local se responde al instante y se actualiza detrás: con señal débil la consulta
+        // tardaba hasta el tiempo límite (12 s) y la pantalla quedaba "cargando".
+        if (perfilGuardado != null) {
+            perfilDescargado[id] = System.currentTimeMillis()
+            segundoPlano.launch { if (descargarPerfil(id, perfilGuardado) == null) perfilDescargado.remove(id) }
+            return perfilGuardado
+        }
+        return descargarPerfil(id, null)
+    }
+
+    /** Baja el perfil de Supabase y lo guarda; null si no se pudo (sin red, error o cambios sin subir). */
+    private suspend fun descargarPerfil(id: UUID, perfilGuardado: Usuario?): Usuario? {
         // Un cambio hecho sin conexión manda sobre el perfil remoto hasta subirse.
         if (perfilLocalCache.hayCambiosPendientes(id) && !sincronizarPerfilPendiente(id)) {
             return perfilGuardado
@@ -77,9 +95,8 @@ class UsuarioRepositoryImpl @Inject constructor(
                     perfilLocalCache.guardar(it)
                     perfilDescargado[id] = System.currentTimeMillis()
                 }
-                ?: perfilGuardado
         } catch (_: Exception) {
-            perfilLocalCache.leer(id)
+            null
         }
     }
 
@@ -111,6 +128,16 @@ class UsuarioRepositoryImpl @Inject constructor(
     override suspend fun obtenerProgreso(usuarioId: UUID): List<ProgresoLeccion> {
         if (!conectividad.hayConexion()) return offlineUserDataCache.leerProgreso(usuarioId)
         if (esReciente(progresoDescargado[usuarioId])) return offlineUserDataCache.leerProgreso(usuarioId)
+        val local = offlineUserDataCache.leerProgreso(usuarioId)
+        if (local.isNotEmpty()) {
+            progresoDescargado[usuarioId] = System.currentTimeMillis()
+            segundoPlano.launch { if (descargarProgreso(usuarioId) == null) progresoDescargado.remove(usuarioId) }
+            return local
+        }
+        return descargarProgreso(usuarioId) ?: local
+    }
+
+    private suspend fun descargarProgreso(usuarioId: UUID): List<ProgresoLeccion>? {
         return try {
             client.from("progreso_leccion")
                 .select(Columns.raw("*, leccion(*, categoria(*), idioma_meta:idioma_meta_id(*))")) {
@@ -123,7 +150,7 @@ class UsuarioRepositoryImpl @Inject constructor(
                     progresoDescargado[usuarioId] = System.currentTimeMillis()
                 }
         } catch (_: Exception) {
-            offlineUserDataCache.leerProgreso(usuarioId)
+            null
         }
     }
 
@@ -146,7 +173,16 @@ class UsuarioRepositoryImpl @Inject constructor(
     }
 
     override suspend fun obtenerFavoritos(usuarioId: UUID): List<PalabraFavorita> {
-        if (!conectividad.hayConexion()) return offlineUserDataCache.leerFavoritos(usuarioId)
+        val locales = offlineUserDataCache.leerFavoritos(usuarioId)
+        if (!conectividad.hayConexion()) return locales
+        if (locales.isNotEmpty()) {
+            segundoPlano.launch { descargarFavoritos(usuarioId) }
+            return locales
+        }
+        return descargarFavoritos(usuarioId)
+    }
+
+    private suspend fun descargarFavoritos(usuarioId: UUID): List<PalabraFavorita> {
         return try {
             client.from("palabra_favorita")
                 .select(Columns.raw("*, palabra(*, idioma(*), categoria(*), fuente_documento(*))")) {

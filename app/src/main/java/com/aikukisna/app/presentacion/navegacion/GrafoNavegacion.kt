@@ -103,9 +103,9 @@ sealed class Destinos(val ruta: String) {
     object LeccionInicioQuiz : Destinos("leccion_inicio_quiz_screen/{leccionId}") {
         fun crearRuta(leccionId: Int) = "leccion_inicio_quiz_screen/${leccionId}"
     }
-    object LeccionResultados : Destinos("leccion_resultados_screen/{correctas}/{total}/{palabras}/{aprobado}") {
-        fun crearRuta(correctas: Int, total: Int, palabras: Int, aprobado: Boolean) =
-            "leccion_resultados_screen/$correctas/$total/$palabras/$aprobado"
+    object LeccionResultados : Destinos("leccion_resultados_screen/{correctas}/{total}/{palabras}/{aprobado}/{xp}") {
+        fun crearRuta(correctas: Int, total: Int, palabras: Int, aprobado: Boolean, xp: Int) =
+            "leccion_resultados_screen/$correctas/$total/$palabras/$aprobado/$xp"
     }
 }
 
@@ -579,8 +579,8 @@ fun GrafoNavegacion(
             val leccionId = backStackEntry.arguments?.getInt("leccionId") ?: return@composable
             LeccionQuizScreen(
                 leccionId = leccionId,
-                onCompletado = { correctas, total, palabras, aprobado ->
-                    navController.navigate(Destinos.LeccionResultados.crearRuta(correctas, total, palabras, aprobado)) {
+                onCompletado = { correctas, total, palabras, aprobado, xp ->
+                    navController.navigate(Destinos.LeccionResultados.crearRuta(correctas, total, palabras, aprobado, xp)) {
                         popUpTo(Destinos.Main.ruta)
                     }
                 },
@@ -594,7 +594,8 @@ fun GrafoNavegacion(
                 navArgument("correctas") { type = NavType.IntType },
                 navArgument("total") { type = NavType.IntType },
                 navArgument("palabras") { type = NavType.IntType },
-                navArgument("aprobado") { type = NavType.BoolType }
+                navArgument("aprobado") { type = NavType.BoolType },
+                navArgument("xp") { type = NavType.IntType }
             )
         ) { backStackEntry ->
             val correctas = backStackEntry.arguments?.getInt("correctas") ?: 0
@@ -614,6 +615,7 @@ fun GrafoNavegacion(
                 totalPreguntas = total,
                 palabrasAprendidas = palabras,
                 aprobado = aprobado,
+                xpGanado = backStackEntry.arguments?.getInt("xp") ?: 0,
                 onVolver = { navController.volverSeguro() },
                 idiomaId = idiomaId
             )

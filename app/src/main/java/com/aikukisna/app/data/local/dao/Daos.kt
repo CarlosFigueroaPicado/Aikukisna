@@ -261,6 +261,9 @@ interface AudioPronunciacionDao {
         idiomaCodigo: String
     ): List<AudioPronunciacionEntity>
 
+    @Query("SELECT COUNT(*) FROM audio_pronunciacion_cache WHERE origen = 'HUMANO'")
+    suspend fun contarHumanos(): Int
+
     @Query("SELECT id FROM palabra_cache WHERE id IN (:ids)")
     suspend fun palabrasExistentes(ids: List<Int>): List<Int>
 

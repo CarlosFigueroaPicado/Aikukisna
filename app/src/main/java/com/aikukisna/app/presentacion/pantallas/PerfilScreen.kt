@@ -295,7 +295,7 @@ private fun EstadisticaPerfil(icono: Int, valor: String, etiqueta: String) {
         )
         Text(
             text = valor,
-            style = MaterialTheme.typography.labelMedium.copy(fontSize = 18.sp),
+            style = MaterialTheme.typography.labelMedium.copy(fontSize = 19.sp),
             color = MaterialTheme.colorScheme.onBackground
         )
         Text(text = etiqueta, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
@@ -316,7 +316,7 @@ private fun EstadisticaPerfilVector(icono: ImageVector, valor: String, etiqueta:
         )
         Text(
             text = valor,
-            style = MaterialTheme.typography.labelMedium.copy(fontSize = 18.sp),
+            style = MaterialTheme.typography.labelMedium.copy(fontSize = 19.sp),
             color = MaterialTheme.colorScheme.onBackground
         )
         Text(text = etiqueta, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)

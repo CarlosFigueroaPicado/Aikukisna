@@ -168,7 +168,7 @@ private fun DetalleResultado(emoji: String, valor: String, etiqueta: String) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(80.dp)
     ) {
-        Text(text = emoji, fontSize = 24.sp)
+        Text(text = emoji, fontSize = 25.sp)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = valor,
@@ -200,7 +200,7 @@ private fun BeneficioIcono(icono: Int?, emoji: String?, texto: String) {
                     modifier = Modifier.size(24.dp)
                 )
             } else if (emoji != null) {
-                Text(text = emoji, fontSize = 22.sp)
+                Text(text = emoji, fontSize = 23.sp)
             }
         }
         Text(

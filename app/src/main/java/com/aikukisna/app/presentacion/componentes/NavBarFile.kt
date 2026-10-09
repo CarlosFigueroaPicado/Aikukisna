@@ -86,7 +86,7 @@ fun NavBar(
                     Text(
                         text = item.etiqueta,
                         color = color,
-                        fontSize = 14.sp,
+                        fontSize = 15.sp,
                         fontWeight = if (seleccionado) FontWeight.Bold else FontWeight.Normal
                     )
                 }
