@@ -54,7 +54,7 @@ import androidx.compose.runtime.getValue
 fun LeccionQuizScreen(
     viewModel: LeccionViewModel = hiltViewModel(),
     leccionId: Int,
-    onCompletado: (correctas: Int, total: Int, palabras: Int, aprobado: Boolean) -> Unit,
+    onCompletado: (correctas: Int, total: Int, palabras: Int, aprobado: Boolean, xp: Int) -> Unit,
     onVolver: () -> Unit
 ) {
     LaunchedEffect(leccionId) {
@@ -76,12 +76,12 @@ fun LeccionQuizScreen(
                 val porcentaje = if (total == 0) 0 else (viewModel.respuestasCorrectas * 100) / total
                 val aprobado = porcentaje >= ObtenerMapaLeccionesUseCase.PORCENTAJE_APROBACION
                 if (aprobado) {
-                    viewModel.completarLeccion(porcentaje) {
-                        onCompletado(viewModel.respuestasCorrectas, total, viewModel.vocabulario.size, true)
+                    viewModel.completarLeccion(porcentaje) { xp ->
+                        onCompletado(viewModel.respuestasCorrectas, total, viewModel.vocabulario.size, true, xp)
                     }
                 } else {
                     viewModel.registrarIntento(porcentaje) {
-                        onCompletado(viewModel.respuestasCorrectas, total, viewModel.vocabulario.size, false)
+                        onCompletado(viewModel.respuestasCorrectas, total, viewModel.vocabulario.size, false, 0)
                     }
                 }
             }
