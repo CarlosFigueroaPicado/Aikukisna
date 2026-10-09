@@ -21,6 +21,10 @@ class RepositorioConocimientoImpl @Inject constructor(
     private val conocimiento: ConocimientoLinguisticoDao
 ) : RepositorioConocimiento {
 
+    override suspend fun contarPalabrasConocidas(palabras: List<String>, idiomaId: Int): Int =
+        palabras.map(NormalizadorLinguistico::normalizar).filter(String::isNotBlank).distinct()
+            .count { words.buscarExactas(it, idiomaId).isNotEmpty() }
+
     override suspend fun buscarPalabra(texto: String, idiomaId: Int): ResultadoBusquedaConocimiento {
         val normalized = NormalizadorLinguistico.normalizar(texto)
         if (normalized.isBlank()) return ResultadoBusquedaConocimiento.NoEncontrada
@@ -42,14 +46,15 @@ class RepositorioConocimientoImpl @Inject constructor(
             .firstOrNull { quitarTildes(it.textoNormalizado) == sinTildes }
             ?.let { dictionary.obtenerPalabraPorId(it.id) }
             ?.let { return ResultadoBusquedaConocimiento.Exacta(it) }
+        // Se compara con el texto normalizado ya guardado y solo se cargan las 5 mejores: cargar cada
+        // candidata completa (hasta ~800 consultas) hacía tardar 3–4 s cada fragmento sin traducción.
         val suggestions = iniciales.flatMap { words.candidatas(it.toString(), idiomaId, 200) }
-            .mapNotNull { dictionary.obtenerPalabraPorId(it.id) }
-            .map { it to levenshtein(normalized, NormalizadorLinguistico.normalizar(it.texto)) }
-            .filter { (_, distance) -> distance <= maxOf(2, normalized.length / 3) }
-            .sortedWith(compareBy<Pair<Palabra, Int>> { it.second }.thenBy { it.first.texto })
-            .map { it.first }
             .distinctBy { it.id }
+            .map { it to levenshtein(normalized, it.textoNormalizado) }
+            .filter { (_, distance) -> distance <= maxOf(2, normalized.length / 3) }
+            .sortedWith(compareBy({ it.second }, { it.first.textoNormalizado }))
             .take(5)
+            .mapNotNull { (candidata, _) -> dictionary.obtenerPalabraPorId(candidata.id) }
         return if (suggestions.isEmpty()) ResultadoBusquedaConocimiento.NoEncontrada
         else ResultadoBusquedaConocimiento.Sugerencias(suggestions)
     }

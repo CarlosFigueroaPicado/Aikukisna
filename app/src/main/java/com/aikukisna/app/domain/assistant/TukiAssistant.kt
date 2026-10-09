@@ -154,11 +154,18 @@ class TukiAssistant @Inject constructor(
         profesor.explicar(message, languageId)?.let { return it }
         profesor.frasesDeLecciones(message, languageId)?.let { return it }
 
+        // Fuera de tema ("¿quién ganó el mundial?"): buscar cada palabra en el diccionario de los cuatro
+        // idiomas tardaba 5-10 s para terminar en la misma respuesta honesta; se responde de inmediato.
+        if (!pareceDeIdiomas(message)) return sinMaterial(languageId, sinRed = !network.hayConexion())
+
         val local = localEngine.answer(localRequest)
         if (local.conclusive && !local.conversational) return local.text
 
         // El modelo ajustado del teléfono solo traduce; para charlar se usa el base o Gemini.
+        // Una pregunta ajena a los idiomas ("¿cuál es la capital de Francia?") no se manda al modelo: Gemini
+        // inventaba una traducción ("tâ tawanka France"). Tuki responde con honestidad que ese no es su tema.
         val generative: AssistantEngine? = when {
+            !pareceDeIdiomas(message) -> null
             onDeviceEngine.available() && onDeviceEngine.conversational() -> onDeviceEngine
             network.hayConexion() -> remoteEngine
             else -> null
@@ -193,7 +200,11 @@ class TukiAssistant @Inject constructor(
                 ?.let { return it }
         }
         if (local.conclusive) return local.text
+        return sinMaterial(languageId, sinRed = generative == null && !network.hayConexion())
+    }
 
+    /** Respuesta honesta cuando no hay material que respalde la pregunta. */
+    private suspend fun sinMaterial(languageId: Int, sinRed: Boolean): String {
         val idioma = IdiomasTuki.nombre(languageId)
         val temas = profesor.temasSugeridos(languageId)
         return buildString {
@@ -202,11 +213,18 @@ class TukiAssistant @Inject constructor(
                 append(" Sí puedo explicarte, por ejemplo: ").append(temas.joinToString(", ") { "«$it»" }).append('.')
             }
             append(" También puedo decirte cómo se dice una palabra, darte frases para practicar o contarte de la cultura.")
-            if (generative == null && !network.hayConexion()) {
-                append(" Cuando tengas Internet podré responderte más temas.")
-            }
+            if (sinRed) append(" Cuando tengas Internet podré responderte más temas.")
         }
     }
+
+    /** La pregunta trata de idiomas, de aprenderlos o de la cultura de la Costa Caribe. */
+    private fun pareceDeIdiomas(message: String): Boolean = normalize(message).containsAny(
+        "se dice", "significa", "traduc", "palabra", "frase", "oracion", "expresion", "gramatic", "verbo", "plural",
+        "pronunc", "conjug", "idioma", "lengua", "miskit", "kriol", "creol", "ingles", "espanol", "english", "spanish",
+        "cultura", "costumbr", "tradicion", "leccion", "vocabul", "escrib", "decir", "hablar", "saludar", "practic",
+        "ejemplo", "pasado", "futuro", "presente", "articulo", "pronombre", "sustantivo", "adjetivo", "aprend",
+        "ensen", "explica", "sumu", "caribe", "mosquitia", "sikro", "how do", "what does", "mean", "grammar", "word"
+    )
 
     private fun asksForGreetings(message: String): Boolean {
         val texto = normalize(message)
@@ -494,7 +512,7 @@ class TukiAssistant @Inject constructor(
                 "Así se diría en $idioma: “${result.texto}”.\n" +
                     "(Traducción automática sin conexión; úsala para entender, todavía no está validada por el equipo lingüístico.)"
             TipoTraduccion.LITERAL -> buildString {
-                append("No tengo esa frase completa registrada, así que la armé palabra por palabra en $idioma: “${result.texto}”.")
+                append("No tengo esa frase completa registrada; con mi material en $idioma queda: “${result.texto}”.")
                 result.nota?.let { append("\n").append(it) }
             }
         }

@@ -20,4 +20,7 @@ interface RepositorioConocimiento {
         palabra: String? = null,
         limite: Int = 3
     ): List<FraseVerificada> = emptyList()
+
+    /** Cuántas de [palabras] existen tal cual en el diccionario de [idiomaId]: sirve para saber en qué idioma está un texto. */
+    suspend fun contarPalabrasConocidas(palabras: List<String>, idiomaId: Int): Int = 0
 }
