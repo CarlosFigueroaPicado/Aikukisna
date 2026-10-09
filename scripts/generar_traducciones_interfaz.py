@@ -6,7 +6,8 @@ import csv, json, os, re, sys
 
 RES, S, HOJA = sys.argv[1], sys.argv[2], sys.argv[3]
 base = open(os.path.join(RES, 'values', 'strings.xml'), encoding='utf-8').read()
-es = {k: v for k, v in re.findall(r'<string name="([^"]+)"[^>]*>(.*?)</string>', base)}
+es = {k: (v[1:-1] if len(v) >= 2 and v[0] == v[-1] == '"' else v)
+      for k, v in re.findall(r'<string name="([^"]+)"[^>]*>(.*?)</string>', base)}
 
 
 def desescapar(v):
@@ -15,6 +16,10 @@ def desescapar(v):
 
 def escapar(v):
     v = v.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace("'", "\\'").replace('"', '\\"')
+    # Android recorta los espacios al inicio y al final salvo que el texto vaya entre comillas
+    # ("empezar el " + "quiz" se mostraba "empezar elquiz").
+    if v[:1] == ' ' or v[-1:] == ' ':
+        return '"' + v + '"'
     return '\\' + v if v[:1] in '@?' else v
 
 

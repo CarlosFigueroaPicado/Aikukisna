@@ -226,7 +226,7 @@
 "leccionvocabulario_vocabulario": "Vocabulary",
 "leccionvocabulario_como_se_dice": "How do you say it?",
 "leccionvocabulario_siguiente": "Next",
-"leccionvocabulario_revelar_traduccion": "Reveal translation",
+"leccionvocabulario_revelar_traduccion": "Tap here to reveal the answer",
 "leccionvocabulario_toca_para_voltear": "Tap to flip",
 "lecciones_lecciones": "Lessons",
 "lecciones_todavia_no_hay_lecciones_en": "There are no lessons at this level yet.",
@@ -462,5 +462,9 @@
 "configuracion_idioma_de_la_app": "App language",
 "configuracion_traduccion_en_revision": "translation under review",
 "configuracion_idioma_app_explicacion": "Changes the language of menus and buttons. It does not change the language you are learning.",
-"configuracion_borrador_revision_nativos": "Draft: native speakers are reviewing it"
+"configuracion_borrador_revision_nativos": "Draft: native speakers are reviewing it",
+"lecciones_mundo": "World %1$s",
+"leccionresultados_excelente_superada": "Excellent, lesson passed!",
+"login_google_sin_cuenta": "There is no Google account on this phone. Add one in Settings > Accounts or use your email and password.",
+"login_google_no_se_pudo": "Could not continue with Google. Check your internet connection and try again."
 }

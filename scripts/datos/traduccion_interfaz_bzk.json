@@ -461,5 +461,9 @@
 "configuracion_idioma_de_la_app": "Ap langwij",
 "configuracion_traduccion_en_revision": "chranslieshan de get chek",
 "configuracion_idioma_app_explicacion": "Chienj di langwij a di menyu an batn dem. It no chienj di langwij weh yu laanin.",
-"configuracion_borrador_revision_nativos": "Draf: Kriol piipl de chek it"
+"configuracion_borrador_revision_nativos": "Draf: Kriol piipl de chek it",
+"lecciones_mundo": "Worl %1$s",
+"leccionresultados_excelente_superada": "Exselent, yu paas di lesn!",
+"login_google_sin_cuenta": "No Google akount no de pan dis fuon. Ad wan iina Setinz > Akount ar yuuz yu iimeel an paaswaad.",
+"login_google_no_se_pudo": "Wi kudn kantinyu wid Google. Chek yu intanet an chrai agen."
 }
