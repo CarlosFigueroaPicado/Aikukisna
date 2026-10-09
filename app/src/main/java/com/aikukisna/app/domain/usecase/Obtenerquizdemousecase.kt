@@ -9,7 +9,7 @@ class ObtenerQuizDemoUseCase @Inject constructor(
 ) {
     companion object {
 
-        const val PREGUNTAS_DEMO = 2
+        const val PREGUNTAS_DEMO = 3
     }
 
     suspend operator fun invoke(idiomaId: Int): List<PreguntaQuiz> {

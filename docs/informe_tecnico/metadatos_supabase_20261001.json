@@ -1,0 +1,4622 @@
+{
+  "fecha": "2026-10-01",
+  "alcance": "Metadatos públicos y conteos agregados. Sin filas de usuarios ni secretos.",
+  "proyecto": "Aikukisna",
+  "tablas": [
+    {
+      "tabla": "acepcion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "palabra_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "numero_acepcion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "definicion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "contexto",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "categoria_gramatical",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "acepcion_estado_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "c",
+          "nombre": "acepcion_numero_check",
+          "definicion": "CHECK ((numero_acepcion > 0))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "acepcion_palabra_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "u",
+          "nombre": "acepcion_palabra_id_numero_acepcion_key",
+          "definicion": "UNIQUE (palabra_id, numero_acepcion)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "acepcion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "actividad_leccion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "smallint",
+          "columna": "orden",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "codigo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "habilidad_curricular",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "mecanica_gamificada",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "descripcion_estudiante",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "evidencia_aprendizaje",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "xp",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "obligatoria",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "activa",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "u",
+          "nombre": "actividad_leccion_leccion_id_codigo_key",
+          "definicion": "UNIQUE (leccion_id, codigo)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "actividad_leccion_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "actividad_leccion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "actividad_leccion_tipo_check",
+          "definicion": "CHECK ((tipo = ANY (ARRAY['enganche'::text, 'vocabulario_contexto'::text, 'comprension_escucha'::text, 'comprension_lectora'::text, 'pronunciacion'::text, 'gramatica_aplicada'::text, 'produccion_oral'::text, 'produccion_escrita'::text, 'interaccion_tuki'::text, 'reto_final'::text, 'retroalimentacion'::text])))"
+        },
+        {
+          "tipo": "c",
+          "nombre": "actividad_leccion_xp_check",
+          "definicion": "CHECK ((xp >= 0))"
+        }
+      ]
+    },
+    {
+      "tabla": "actividad_recurso",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "actividad_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_recurso",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "recurso_id",
+          "not_null": true
+        },
+        {
+          "tipo": "smallint",
+          "columna": "orden",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "rol",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "actividad_recurso_actividad_id_fkey",
+          "definicion": "FOREIGN KEY (actividad_id) REFERENCES actividad_leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "actividad_recurso_pkey",
+          "definicion": "PRIMARY KEY (actividad_id, tipo_recurso, recurso_id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "actividad_recurso_rol_check",
+          "definicion": "CHECK ((rol = ANY (ARRAY['principal'::text, 'apoyo'::text, 'distractor'::text, 'contexto'::text])))"
+        },
+        {
+          "tipo": "c",
+          "nombre": "actividad_recurso_tipo_recurso_check",
+          "definicion": "CHECK ((tipo_recurso = ANY (ARRAY['palabra'::text, 'expresion'::text, 'oracion'::text, 'regla_gramatical'::text, 'regla_pronunciacion'::text, 'cultura'::text])))"
+        }
+      ]
+    },
+    {
+      "tabla": "alineacion_curricular",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "unidad",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "tema",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nivel_referencia",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "evidencia",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_alineacion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "grado_referencia",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "area_curricular",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "competencia",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "indicador_logro",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "contenido_curricular",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "eje_sear",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "referencia_documental",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "pagina_referencia",
+          "not_null": false
+        },
+        {
+          "tipo": "boolean",
+          "columna": "apta_revision_formal",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "alineacion_curricular_estado_validacion_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "alineacion_curricular_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "alineacion_curricular_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "u",
+          "nombre": "alineacion_curricular_leccion_id_fuente_id_tema_key",
+          "definicion": "UNIQUE (leccion_id, fuente_id, tema)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "alineacion_curricular_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "categoria",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nombre",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "u",
+          "nombre": "categoria_nombre_key",
+          "definicion": "UNIQUE (nombre)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "categoria_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "cultura_contenido",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "titulo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "contenido",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "rango_pagina_inicio",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "rango_pagina_fin",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "cultura_contenido_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "cultura_contenido_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "ejemplo_regla_gramatical",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "regla_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_idioma",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "traduccion_espanol",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_traduccion_id",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "ejemplo_regla_gramatical_estado_validacion_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "ejemplo_regla_gramatical_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL"
+        },
+        {
+          "tipo": "f",
+          "nombre": "ejemplo_regla_gramatical_idioma_traduccion_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_traduccion_id) REFERENCES idioma(id) ON DELETE SET NULL"
+        },
+        {
+          "tipo": "p",
+          "nombre": "ejemplo_regla_gramatical_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "ejemplo_regla_gramatical_regla_id_fkey",
+          "definicion": "FOREIGN KEY (regla_id) REFERENCES regla_gramatical(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "u",
+          "nombre": "ejemplo_regla_gramatical_regla_id_texto_idioma_key",
+          "definicion": "UNIQUE (regla_id, texto_idioma)"
+        }
+      ]
+    },
+    {
+      "tabla": "etapa_ruta_curricular",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "text",
+          "columna": "codigo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nombre",
+          "not_null": true
+        },
+        {
+          "tipo": "smallint",
+          "columna": "orden",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "modalidad",
+          "not_null": true
+        },
+        {
+          "tipo": "smallint",
+          "columna": "grado_origen",
+          "not_null": false
+        },
+        {
+          "tipo": "smallint",
+          "columna": "grado_destino",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "unidad_pedagogica_ciclo",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "descripcion",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "activa",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "u",
+          "nombre": "etapa_ruta_curricular_orden_key",
+          "definicion": "UNIQUE (orden)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "etapa_ruta_curricular_pkey",
+          "definicion": "PRIMARY KEY (codigo)"
+        }
+      ]
+    },
+    {
+      "tabla": "evidencia_curricular_leccion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "etapa_codigo",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": true
+        },
+        {
+          "tipo": "smallint",
+          "columna": "grado",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "asignatura_area",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "unidad_oficial",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "competencia_eje_transversal",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "competencia_grado",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "indicador_logro",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "contenido_oficial",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "criterio_evaluacion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "actividad_aikukisna",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "evidencia_aprendizaje",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "pagina_seccion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_correspondencia",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "aplica_sear",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "eje_sear",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "adecuacion_intercultural",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "observacion",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "lengua_aplicacion_id",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "naturaleza_aplicacion",
+          "not_null": false
+        },
+        {
+          "tipo": "boolean",
+          "columna": "es_texto_oficial_literal",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "evidencia_curricular_leccion_estado_validacion_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "evidencia_curricular_leccion_etapa_codigo_fkey",
+          "definicion": "FOREIGN KEY (etapa_codigo) REFERENCES etapa_ruta_curricular(codigo)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "evidencia_curricular_leccion_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "evidencia_curricular_leccion_grado_check",
+          "definicion": "CHECK (((grado >= 1) AND (grado <= 11)))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "evidencia_curricular_leccion_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "evidencia_curricular_leccion_lengua_aplicacion_id_fkey",
+          "definicion": "FOREIGN KEY (lengua_aplicacion_id) REFERENCES idioma(id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "evidencia_curricular_leccion_naturaleza_aplicacion_check",
+          "definicion": "CHECK ((naturaleza_aplicacion = ANY (ARRAY['curriculo_nacional'::text, 'adaptacion_linguistica'::text, 'eib_sear'::text, 'puente_transicion'::text])))"
+        },
+        {
+          "tipo": "p",
+          "nombre": "evidencia_curricular_leccion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "evidencia_curricular_leccion_tipo_correspondencia_check",
+          "definicion": "CHECK ((tipo_correspondencia = ANY (ARRAY['literal'::text, 'directa'::text, 'tematica'::text, 'prerrequisito'::text, 'puente'::text])))"
+        },
+        {
+          "tipo": "c",
+          "nombre": "evidencia_documentada_completa_chk",
+          "definicion": "CHECK (((estado_validacion <> ALL (ARRAY['documentada'::text, 'validada'::text])) OR ((NULLIF(btrim(COALESCE(competencia_grado, ''::text)), ''::text) IS NOT NULL) AND (NULLIF(btrim(COALESCE(indicador_logro, ''::text)), ''::text) IS NOT NULL) AND (NULLIF(btrim(COALESCE(contenido_oficial, ''::text)), ''::text) IS NOT NULL) AND (NULLIF(btrim(COALESCE(criterio_evaluacion, ''::text)), ''::text) IS NOT NULL))))"
+        },
+        {
+          "tipo": "c",
+          "nombre": "evidencia_sear_completa_chk",
+          "definicion": "CHECK (((NOT aplica_sear) OR ((NULLIF(btrim(COALESCE(eje_sear, ''::text)), ''::text) IS NOT NULL) AND (NULLIF(btrim(COALESCE(adecuacion_intercultural, ''::text)), ''::text) IS NOT NULL))))"
+        }
+      ]
+    },
+    {
+      "tabla": "expresion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_normalizado",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_busqueda",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "expresion_estado_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "expresion_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "expresion_idioma_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_id) REFERENCES idioma(id)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "expresion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "expresion_contexto_cultural",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "expresion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "cultura_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_relacion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "expresion_contexto_cultural_cultura_id_fkey",
+          "definicion": "FOREIGN KEY (cultura_id) REFERENCES cultura_contenido(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "expresion_contexto_cultural_expresion_id_fkey",
+          "definicion": "FOREIGN KEY (expresion_id) REFERENCES expresion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "expresion_contexto_cultural_pkey",
+          "definicion": "PRIMARY KEY (expresion_id)"
+        }
+      ]
+    },
+    {
+      "tabla": "fuente_documento",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "titulo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "autor",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "anio",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "institucion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "url",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "licencia",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "nota_uso",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "p",
+          "nombre": "fuente_documento_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "idioma",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "codigo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nombre",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "u",
+          "nombre": "idioma_codigo_key",
+          "definicion": "UNIQUE (codigo)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "idioma_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "titulo",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "capitulo_numero",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "nivel",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "categoria_id",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_meta_id",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "leccion_categoria_id_fkey",
+          "definicion": "FOREIGN KEY (categoria_id) REFERENCES categoria(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_idioma_meta_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_meta_id) REFERENCES idioma(id)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_cultura",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "cultura_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_vinculo",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "leccion_cultura_cultura_id_fkey",
+          "definicion": "FOREIGN KEY (cultura_id) REFERENCES cultura_contenido(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_cultura_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_cultura_pkey",
+          "definicion": "PRIMARY KEY (leccion_id, cultura_id, tipo_vinculo)"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_experiencia_gamificada",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "titulo_visible",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "subtitulo_visible",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "formato_principal",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "xp_base",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "usa_tuki",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "usa_audio",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "usa_lectura",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "usa_escritura",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "usa_oralidad",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "tiene_reto_final",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "mostrar_info_curricular",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "activa",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "mundo_codigo",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "orden_en_mundo",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "recompensa_visible",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "mensaje_inicio_tuki",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "mensaje_fin_tuki",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "leccion_experiencia_gamificada_formato_principal_check",
+          "definicion": "CHECK ((formato_principal = ANY (ARRAY['mision'::text, 'historia'::text, 'reto'::text, 'dialogo'::text, 'exploracion'::text, 'jefe'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_experiencia_gamificada_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_experiencia_gamificada_mundo_codigo_fkey",
+          "definicion": "FOREIGN KEY (mundo_codigo) REFERENCES mundo_gamificado(codigo)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_experiencia_gamificada_pkey",
+          "definicion": "PRIMARY KEY (leccion_id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "leccion_experiencia_gamificada_xp_base_check",
+          "definicion": "CHECK ((xp_base >= 0))"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_expresion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "expresion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_vinculo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "leccion_expresion_expresion_id_fkey",
+          "definicion": "FOREIGN KEY (expresion_id) REFERENCES expresion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_expresion_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_expresion_pkey",
+          "definicion": "PRIMARY KEY (leccion_id, expresion_id, tipo_vinculo)"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_fuente",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_vinculo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "leccion_fuente_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_fuente_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_fuente_pkey",
+          "definicion": "PRIMARY KEY (leccion_id, fuente_id, tipo_vinculo)"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_oracion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "oracion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_vinculo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "leccion_oracion_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_oracion_oracion_id_fkey",
+          "definicion": "FOREIGN KEY (oracion_id) REFERENCES oracion_ejemplo(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_oracion_pkey",
+          "definicion": "PRIMARY KEY (leccion_id, oracion_id, tipo_vinculo)"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_palabra",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "palabra_id",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "leccion_palabra_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_palabra_palabra_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_palabra_pkey",
+          "definicion": "PRIMARY KEY (leccion_id, palabra_id)"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_regla_gramatical",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "regla_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "orden",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "leccion_regla_gramatical_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_regla_gramatical_pkey",
+          "definicion": "PRIMARY KEY (leccion_id, regla_id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_regla_gramatical_regla_id_fkey",
+          "definicion": "FOREIGN KEY (regla_id) REFERENCES regla_gramatical(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_regla_pronunciacion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "regla_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "orden",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "leccion_regla_pronunciacion_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_regla_pronunciacion_pkey",
+          "definicion": "PRIMARY KEY (leccion_id, regla_id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_regla_pronunciacion_regla_id_fkey",
+          "definicion": "FOREIGN KEY (regla_id) REFERENCES regla_pronunciacion(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "tabla": "leccion_ruta_curricular",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "etapa_codigo",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_mapeo",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "es_refuerzo",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "es_transicion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "prerrequisito_descripcion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "proposito_transicion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "justificacion",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_primaria_id",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "leccion_ruta_curricular_estado_mapeo_check",
+          "definicion": "CHECK ((estado_mapeo = ANY (ARRAY['pendiente_evidencia'::text, 'propuesta'::text, 'documentada'::text, 'validada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_ruta_curricular_etapa_codigo_fkey",
+          "definicion": "FOREIGN KEY (etapa_codigo) REFERENCES etapa_ruta_curricular(codigo)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_ruta_curricular_fuente_primaria_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_primaria_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "leccion_ruta_curricular_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "leccion_ruta_curricular_pkey",
+          "definicion": "PRIMARY KEY (leccion_id)"
+        }
+      ]
+    },
+    {
+      "tabla": "logro",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nombre",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "descripcion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "condicion_tipo",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "condicion_valor",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "categoria_id",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "chk_condicion_tipo_valido",
+          "definicion": "CHECK ((condicion_tipo = ANY (ARRAY['lecciones_completadas'::text, 'racha_maxima'::text, 'palabras_favoritas'::text, 'memorias_tuki'::text, 'leccion_categoria_completada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "logro_categoria_id_fkey",
+          "definicion": "FOREIGN KEY (categoria_id) REFERENCES categoria(id)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "logro_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "logro_desbloqueado",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "uuid",
+          "columna": "usuario_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "logro_id",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "fecha",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "logro_desbloqueado_logro_id_fkey",
+          "definicion": "FOREIGN KEY (logro_id) REFERENCES logro(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "logro_desbloqueado_pkey",
+          "definicion": "PRIMARY KEY (usuario_id, logro_id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "logro_desbloqueado_usuario_id_fkey",
+          "definicion": "FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "tabla": "memoria_tuki",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "uuid",
+          "columna": "usuario_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "resumen",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "fecha",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "chk_tipo_valido",
+          "definicion": "CHECK ((tipo = ANY (ARRAY['aprendizaje'::text, 'conversacion'::text, 'preferencia'::text, 'recomendacion'::text])))"
+        },
+        {
+          "tipo": "p",
+          "nombre": "memoria_tuki_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "memoria_tuki_usuario_id_fkey",
+          "definicion": "FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "tabla": "mundo_gamificado",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "text",
+          "columna": "codigo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nombre_visible",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "descripcion_visible",
+          "not_null": true
+        },
+        {
+          "tipo": "smallint",
+          "columna": "orden",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "icono_clave",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "xp_desbloqueo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "recompensa_final",
+          "not_null": false
+        },
+        {
+          "tipo": "boolean",
+          "columna": "activo",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "u",
+          "nombre": "mundo_gamificado_orden_key",
+          "definicion": "UNIQUE (orden)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "mundo_gamificado_pkey",
+          "definicion": "PRIMARY KEY (codigo)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "mundo_gamificado_xp_desbloqueo_check",
+          "definicion": "CHECK ((xp_desbloqueo >= 0))"
+        }
+      ]
+    },
+    {
+      "tabla": "oracion_ejemplo",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_origen",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_destino",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_origen_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_destino_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota_validacion",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "oracion_ejemplo_estado_validacion_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "oracion_ejemplo_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "oracion_ejemplo_idioma_destino_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_destino_id) REFERENCES idioma(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "oracion_ejemplo_idioma_origen_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_origen_id) REFERENCES idioma(id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "oracion_ejemplo_idiomas_distintos",
+          "definicion": "CHECK ((idioma_origen_id <> idioma_destino_id))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "oracion_ejemplo_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE SET NULL"
+        },
+        {
+          "tipo": "p",
+          "nombre": "oracion_ejemplo_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "palabra",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "categoria_id",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "pronunciacion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "pronunciacion_fonetica",
+          "not_null": false
+        },
+        {
+          "tipo": "boolean",
+          "columna": "pronunciacion_verificada",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_normalizado",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "palabra_canonica_id",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_busqueda",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_entrada",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "palabra_categoria_id_fkey",
+          "definicion": "FOREIGN KEY (categoria_id) REFERENCES categoria(id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "palabra_estado_validacion_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "palabra_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "palabra_idioma_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_id) REFERENCES idioma(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "palabra_palabra_canonica_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_canonica_id) REFERENCES palabra(id) ON DELETE SET NULL"
+        },
+        {
+          "tipo": "p",
+          "nombre": "palabra_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "palabra_tipo_entrada_check",
+          "definicion": "CHECK ((tipo_entrada = ANY (ARRAY['palabra'::text, 'locucion'::text, 'morfema_fragmento'::text, 'texto_lexicografico'::text, 'pendiente_clasificacion'::text])))"
+        }
+      ]
+    },
+    {
+      "tabla": "palabra_canonica",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "palabra_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "palabra_canonica_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "motivo",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "palabra_canonica_check",
+          "definicion": "CHECK (((palabra_id > 0) AND (palabra_canonica_id > 0)))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "palabra_canonica_palabra_canonica_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_canonica_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "palabra_canonica_palabra_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "palabra_canonica_pkey",
+          "definicion": "PRIMARY KEY (palabra_id)"
+        }
+      ]
+    },
+    {
+      "tabla": "palabra_favorita",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "uuid",
+          "columna": "usuario_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "palabra_id",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "palabra_favorita_palabra_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "palabra_favorita_pkey",
+          "definicion": "PRIMARY KEY (usuario_id, palabra_id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "palabra_favorita_usuario_id_fkey",
+          "definicion": "FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "tabla": "palabra_fuente",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "palabra_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "pagina_inicio",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "pagina_fin",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "palabra_fuente_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "palabra_fuente_paginas_check",
+          "definicion": "CHECK (((pagina_inicio IS NULL) OR (pagina_fin IS NULL) OR (pagina_fin >= pagina_inicio)))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "palabra_fuente_palabra_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "palabra_fuente_pkey",
+          "definicion": "PRIMARY KEY (palabra_id, fuente_id)"
+        }
+      ]
+    },
+    {
+      "tabla": "progreso_leccion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "uuid",
+          "columna": "usuario_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "leccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "estado",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "puntaje",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "fecha_completado",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "chk_estado_valido",
+          "definicion": "CHECK ((estado = ANY (ARRAY['no_iniciada'::text, 'en_progreso'::text, 'completada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "progreso_leccion_leccion_id_fkey",
+          "definicion": "FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "progreso_leccion_pkey",
+          "definicion": "PRIMARY KEY (usuario_id, leccion_id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "progreso_leccion_usuario_id_fkey",
+          "definicion": "FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "tabla": "regla_gramatical",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "codigo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "categoria",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "titulo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "descripcion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "patron",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "aplicacion",
+          "not_null": false
+        },
+        {
+          "tipo": "boolean",
+          "columna": "productiva",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "prioridad",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "notas",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "regla_gramatical_estado_validacion_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "regla_gramatical_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL"
+        },
+        {
+          "tipo": "u",
+          "nombre": "regla_gramatical_idioma_id_codigo_key",
+          "definicion": "UNIQUE (idioma_id, codigo)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "regla_gramatical_idioma_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_id) REFERENCES idioma(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "regla_gramatical_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "regla_pronunciacion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "patron",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "descripcion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "reemplazo_fonetico",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "ejemplo",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "prioridad",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "activa",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "notas",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "regla_pronunciacion_estado_validacion_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['documentada'::text, 'pendiente_fonetica'::text, 'validada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "regla_pronunciacion_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL"
+        },
+        {
+          "tipo": "f",
+          "nombre": "regla_pronunciacion_idioma_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_id) REFERENCES idioma(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "u",
+          "nombre": "regla_pronunciacion_idioma_id_patron_tipo_key",
+          "definicion": "UNIQUE (idioma_id, patron, tipo)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "regla_pronunciacion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "regla_pronunciacion_tipo_check",
+          "definicion": "CHECK ((tipo = ANY (ARRAY['grafema'::text, 'digrafo'::text, 'vocal_larga'::text, 'ortografia'::text, 'otro'::text])))"
+        }
+      ]
+    },
+    {
+      "tabla": "revision_linguistica",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_entidad",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "entidad_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "clasificacion",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "estado",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "observacion",
+          "not_null": false
+        },
+        {
+          "tipo": "uuid",
+          "columna": "revisado_por",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "revision_linguistica_estado_check",
+          "definicion": "CHECK ((estado = ANY (ARRAY['pendiente'::text, 'en_revision'::text, 'aprobada'::text, 'rechazada'::text, 'requiere_consulta'::text])))"
+        },
+        {
+          "tipo": "p",
+          "nombre": "revision_linguistica_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "revision_linguistica_revisado_por_fkey",
+          "definicion": "FOREIGN KEY (revisado_por) REFERENCES usuario(id) ON DELETE SET NULL"
+        },
+        {
+          "tipo": "c",
+          "nombre": "revision_linguistica_tipo_entidad_check",
+          "definicion": "CHECK ((tipo_entidad = ANY (ARRAY['palabra'::text, 'traduccion'::text, 'acepcion'::text, 'traduccion_acepcion'::text, 'expresion'::text, 'traduccion_expresion'::text, 'variante_palabra'::text])))"
+        }
+      ]
+    },
+    {
+      "tabla": "super_administrador",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "uuid",
+          "columna": "usuario_id",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "p",
+          "nombre": "super_administrador_pkey",
+          "definicion": "PRIMARY KEY (usuario_id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "super_administrador_usuario_id_fkey",
+          "definicion": "FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "tabla": "traduccion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "palabra_origen_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "palabra_destino_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        },
+        {
+          "tipo": "numeric(4,3)",
+          "columna": "nivel_confianza",
+          "not_null": false
+        },
+        {
+          "tipo": "boolean",
+          "columna": "es_preferida",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "traduccion_estado_validacion_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "traduccion_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "traduccion_palabra_destino_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_destino_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "traduccion_palabra_origen_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_origen_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "u",
+          "nombre": "traduccion_palabra_origen_id_palabra_destino_id_key",
+          "definicion": "UNIQUE (palabra_origen_id, palabra_destino_id)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "traduccion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "traduccion_acepcion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "acepcion_origen_id",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "acepcion_destino_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "numeric(4,3)",
+          "columna": "nivel_confianza",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "traduccion_acepcion_acepcion_destino_id_fkey",
+          "definicion": "FOREIGN KEY (acepcion_destino_id) REFERENCES acepcion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "u",
+          "nombre": "traduccion_acepcion_acepcion_origen_id_acepcion_destino_id__key",
+          "definicion": "UNIQUE (acepcion_origen_id, acepcion_destino_id, tipo)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "traduccion_acepcion_acepcion_origen_id_fkey",
+          "definicion": "FOREIGN KEY (acepcion_origen_id) REFERENCES acepcion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "c",
+          "nombre": "traduccion_acepcion_confianza_check",
+          "definicion": "CHECK (((nivel_confianza IS NULL) OR ((nivel_confianza >= (0)::numeric) AND (nivel_confianza <= (1)::numeric))))"
+        },
+        {
+          "tipo": "c",
+          "nombre": "traduccion_acepcion_distinta_check",
+          "definicion": "CHECK ((acepcion_origen_id <> acepcion_destino_id))"
+        },
+        {
+          "tipo": "c",
+          "nombre": "traduccion_acepcion_estado_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "p",
+          "nombre": "traduccion_acepcion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "traduccion_expresion",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "expresion_origen_id",
+          "not_null": true
+        },
+        {
+          "tipo": "bigint",
+          "columna": "expresion_destino_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "traduccion_expresion_distinta_check",
+          "definicion": "CHECK ((expresion_origen_id <> expresion_destino_id))"
+        },
+        {
+          "tipo": "c",
+          "nombre": "traduccion_expresion_estado_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "traduccion_expresion_expresion_destino_id_fkey",
+          "definicion": "FOREIGN KEY (expresion_destino_id) REFERENCES expresion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "u",
+          "nombre": "traduccion_expresion_expresion_origen_id_expresion_destino__key",
+          "definicion": "UNIQUE (expresion_origen_id, expresion_destino_id)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "traduccion_expresion_expresion_origen_id_fkey",
+          "definicion": "FOREIGN KEY (expresion_origen_id) REFERENCES expresion(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "p",
+          "nombre": "traduccion_expresion_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "traduccion_fuente",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "integer",
+          "columna": "traduccion_id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo_vinculo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "traduccion_fuente_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "traduccion_fuente_pkey",
+          "definicion": "PRIMARY KEY (traduccion_id, fuente_id, tipo_vinculo)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "traduccion_fuente_traduccion_id_fkey",
+          "definicion": "FOREIGN KEY (traduccion_id) REFERENCES traduccion(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "tabla": "tuki_respuesta_sistema",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "codigo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_respuesta_id",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "texto",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "prioridad",
+          "not_null": true
+        },
+        {
+          "tipo": "boolean",
+          "columna": "activa",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "u",
+          "nombre": "tuki_respuesta_sistema_codigo_key",
+          "definicion": "UNIQUE (codigo)"
+        },
+        {
+          "tipo": "f",
+          "nombre": "tuki_respuesta_sistema_idioma_respuesta_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_respuesta_id) REFERENCES idioma(id)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "tuki_respuesta_sistema_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "usuario",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "uuid",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "nombre_usuario",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "correo",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "edad",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "pais",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "ciudad",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "idioma_meta_id",
+          "not_null": false
+        },
+        {
+          "tipo": "integer",
+          "columna": "xp",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "racha_actual",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "racha_maxima",
+          "not_null": true
+        },
+        {
+          "tipo": "date",
+          "columna": "ultima_actividad",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "nombre",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "apellido",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "f",
+          "nombre": "usuario_id_fkey",
+          "definicion": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "f",
+          "nombre": "usuario_idioma_meta_id_fkey",
+          "definicion": "FOREIGN KEY (idioma_meta_id) REFERENCES idioma(id)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "usuario_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "tabla": "variante_palabra",
+      "rls": true,
+      "descripcion": null,
+      "columnas": [
+        {
+          "tipo": "bigint",
+          "columna": "id",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "palabra_id",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_normalizado",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "tipo",
+          "not_null": true
+        },
+        {
+          "tipo": "text",
+          "columna": "estado_validacion",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "created_at",
+          "not_null": true
+        },
+        {
+          "tipo": "timestamp with time zone",
+          "columna": "updated_at",
+          "not_null": true
+        },
+        {
+          "tipo": "integer",
+          "columna": "fuente_id",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "nota",
+          "not_null": false
+        },
+        {
+          "tipo": "text",
+          "columna": "texto_busqueda",
+          "not_null": false
+        }
+      ],
+      "restricciones": [
+        {
+          "tipo": "c",
+          "nombre": "variante_palabra_estado_check",
+          "definicion": "CHECK ((estado_validacion = ANY (ARRAY['importada'::text, 'pendiente_revision'::text, 'documentada'::text, 'validada'::text, 'rechazada'::text])))"
+        },
+        {
+          "tipo": "f",
+          "nombre": "variante_palabra_fuente_id_fkey",
+          "definicion": "FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL"
+        },
+        {
+          "tipo": "f",
+          "nombre": "variante_palabra_palabra_id_fkey",
+          "definicion": "FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE"
+        },
+        {
+          "tipo": "u",
+          "nombre": "variante_palabra_palabra_id_texto_normalizado_tipo_key",
+          "definicion": "UNIQUE (palabra_id, texto_normalizado, tipo)"
+        },
+        {
+          "tipo": "p",
+          "nombre": "variante_palabra_pkey",
+          "definicion": "PRIMARY KEY (id)"
+        },
+        {
+          "tipo": "c",
+          "nombre": "variante_palabra_tipo_check",
+          "definicion": "CHECK ((tipo = ANY (ARRAY['ortografica'::text, 'dialectal'::text, 'alternativa'::text, 'historica'::text, 'abreviacion'::text])))"
+        }
+      ]
+    }
+  ],
+  "views": [
+    {
+      "nombre": "vista_expresiones_estudiantiles",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_diccionario_estudiantil",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_cobertura_leccion",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_huecos_contenido",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vw_expresiones_estudiantiles",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vw_traducciones_estudiantiles",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_expresiones_respuestas",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_contenido_offline_aikukisna",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_diccionario_respuestas",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_tuki_conocimiento",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_auditoria_curricular_leccion",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_expresiones_sin_salida",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_modulo_alineacion_curricular",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_auditoria_curricular_leccion_v2",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_leccion_curricular_interna",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_secuencia_leccion_estudiante",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_leccion_estudiante",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_auditoria_curricular_leccion_v3",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_estado_produccion_lecciones",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_catalogo_offline_lecciones",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_actividad_recurso_resuelto",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "nombre": "vista_auditoria_integridad_contenido",
+      "opciones": [
+        "security_invoker=true"
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "traduccion_fuente",
+      "using": "true",
+      "nombre": "lectura_publica_traduccion_fuente"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "leccion_regla_gramatical",
+      "using": "true",
+      "nombre": "lectura_publica_leccion_regla_gramatical"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "leccion_cultura",
+      "using": "true",
+      "nombre": "lectura_publica_leccion_cultura"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "palabra_canonica",
+      "using": "true",
+      "nombre": "lectura_publica_palabra_canonica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "leccion_expresion",
+      "using": "true",
+      "nombre": "lectura_publica_leccion_expresion"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "oracion_ejemplo",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "idioma",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "leccion_regla_pronunciacion",
+      "using": "true",
+      "nombre": "lectura_publica_leccion_regla_pronunciacion"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "regla_pronunciacion",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "fuente_documento",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "logro",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "ALL",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "usuario",
+      "using": "(( SELECT auth.uid() AS uid) = id)",
+      "nombre": "usuario ve y edita su propio perfil"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "leccion",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "DELETE",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "leccion",
+      "using": "(EXISTS ( SELECT 1\n   FROM super_administrador\n  WHERE (super_administrador.usuario_id = ( SELECT auth.uid() AS uid))))",
+      "nombre": "solo superadmin borra lecciones"
+    },
+    {
+      "cmd": "INSERT",
+      "check": "(EXISTS ( SELECT 1\n   FROM super_administrador\n  WHERE (super_administrador.usuario_id = ( SELECT auth.uid() AS uid))))",
+      "roles": [
+        "public"
+      ],
+      "tabla": "leccion",
+      "using": null,
+      "nombre": "solo superadmin crea lecciones"
+    },
+    {
+      "cmd": "UPDATE",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "leccion",
+      "using": "(EXISTS ( SELECT 1\n   FROM super_administrador\n  WHERE (super_administrador.usuario_id = ( SELECT auth.uid() AS uid))))",
+      "nombre": "solo superadmin edita lecciones"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "categoria",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "leccion_palabra",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "ALL",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "progreso_leccion",
+      "using": "(( SELECT auth.uid() AS uid) = usuario_id)",
+      "nombre": "usuario ve y edita su propio progreso"
+    },
+    {
+      "cmd": "ALL",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "palabra_favorita",
+      "using": "(( SELECT auth.uid() AS uid) = usuario_id)",
+      "nombre": "usuario ve y edita sus propios favoritos"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "logro_desbloqueado",
+      "using": "(( SELECT auth.uid() AS uid) = usuario_id)",
+      "nombre": "usuario lee sus propios logros"
+    },
+    {
+      "cmd": "ALL",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "memoria_tuki",
+      "using": "(( SELECT auth.uid() AS uid) = usuario_id)",
+      "nombre": "usuario ve sus propias memorias de tuki"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "cultura_contenido",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "palabra_fuente",
+      "using": "true",
+      "nombre": "lectura_contenido_linguistico"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "super_administrador",
+      "using": "(usuario_id = ( SELECT auth.uid() AS uid))",
+      "nombre": "usuario solo verifica si el mismo es superadmin"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "traduccion_acepcion",
+      "using": "true",
+      "nombre": "lectura_contenido_linguistico"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "acepcion",
+      "using": "true",
+      "nombre": "lectura_contenido_linguistico"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "traduccion_expresion",
+      "using": "true",
+      "nombre": "lectura_contenido_linguistico"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "expresion",
+      "using": "true",
+      "nombre": "lectura_contenido_linguistico"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "variante_palabra",
+      "using": "true",
+      "nombre": "lectura_contenido_linguistico"
+    },
+    {
+      "cmd": "ALL",
+      "check": "((EXISTS ( SELECT 1\n   FROM super_administrador sa\n  WHERE (sa.usuario_id = ( SELECT auth.uid() AS uid)))) AND ((revisado_por IS NULL) OR (revisado_por = ( SELECT auth.uid() AS uid))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tabla": "revision_linguistica",
+      "using": "(EXISTS ( SELECT 1\n   FROM super_administrador sa\n  WHERE (sa.usuario_id = ( SELECT auth.uid() AS uid))))",
+      "nombre": "superadmin gestiona revisiones linguisticas"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "leccion_fuente",
+      "using": "true",
+      "nombre": "lectura_publica_leccion_fuente"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "traduccion",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "public"
+      ],
+      "tabla": "palabra",
+      "using": "true",
+      "nombre": "lectura publica"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "ejemplo_regla_gramatical",
+      "using": "(estado_validacion <> 'rechazada'::text)",
+      "nombre": "lectura_publica_ejemplo_regla_gramatical"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "regla_gramatical",
+      "using": "(estado_validacion <> 'rechazada'::text)",
+      "nombre": "lectura_publica_regla_gramatical"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "leccion_oracion",
+      "using": "true",
+      "nombre": "lectura_publica_leccion_oracion"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "tuki_respuesta_sistema",
+      "using": "(activa = true)",
+      "nombre": "lectura_publica_respuestas_tuki"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "alineacion_curricular",
+      "using": "(estado_validacion <> 'rechazada'::text)",
+      "nombre": "lectura publica alineacion curricular"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "expresion_contexto_cultural",
+      "using": "true",
+      "nombre": "lectura_publica_expresion_contexto_cultural"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "etapa_ruta_curricular",
+      "using": "activa",
+      "nombre": "lectura_publica_etapa_ruta_curricular"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "leccion_ruta_curricular",
+      "using": "true",
+      "nombre": "lectura_publica_leccion_ruta_curricular"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tabla": "evidencia_curricular_leccion",
+      "using": "true",
+      "nombre": "lectura_autenticada_evidencia_curricular"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "actividad_leccion",
+      "using": "activa",
+      "nombre": "lectura_publica_actividad_leccion"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "leccion_experiencia_gamificada",
+      "using": "activa",
+      "nombre": "lectura_publica_leccion_experiencia_gamificada"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "mundo_gamificado",
+      "using": "activo",
+      "nombre": "lectura_publica_mundo_gamificado"
+    },
+    {
+      "cmd": "SELECT",
+      "check": null,
+      "roles": [
+        "anon",
+        "authenticated"
+      ],
+      "tabla": "actividad_recurso",
+      "using": "true",
+      "nombre": "lectura_publica_actividad_recurso"
+    }
+  ],
+  "triggers": [
+    {
+      "tabla": "usuario",
+      "accion": "EXECUTE FUNCTION proteger_columnas_gamificacion()",
+      "evento": "UPDATE",
+      "nombre": "trg_proteger_gamificacion"
+    },
+    {
+      "tabla": "palabra",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "palabra_actualizar_updated_at"
+    },
+    {
+      "tabla": "palabra_fuente",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "palabra_fuente_actualizar_updated_at"
+    },
+    {
+      "tabla": "acepcion",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "acepcion_actualizar_updated_at"
+    },
+    {
+      "tabla": "traduccion_acepcion",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "traduccion_acepcion_actualizar_updated_at"
+    },
+    {
+      "tabla": "variante_palabra",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "variante_palabra_actualizar_updated_at"
+    },
+    {
+      "tabla": "expresion",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "expresion_actualizar_updated_at"
+    },
+    {
+      "tabla": "traduccion_expresion",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "traduccion_expresion_actualizar_updated_at"
+    },
+    {
+      "tabla": "cultura_contenido",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "trg_cultura_contenido_updated_at"
+    },
+    {
+      "tabla": "regla_pronunciacion",
+      "accion": "EXECUTE FUNCTION actualizar_updated_at_linguistico()",
+      "evento": "UPDATE",
+      "nombre": "trg_regla_pronunciacion_updated_at"
+    }
+  ],
+  "funciones": [
+    {
+      "args": "p_nombre_usuario text",
+      "nombre": "obtener_correo_por_usuario",
+      "security_definer": true
+    },
+    {
+      "args": "p_logro_id integer",
+      "nombre": "desbloquear_logro",
+      "security_definer": false
+    },
+    {
+      "args": "input_text text",
+      "nombre": "miskito_a_fonetica",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "nombre": "actualizar_updated_at_linguistico",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "nombre": "proteger_columnas_gamificacion",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "nombre": "crear_usuario_nuevo",
+      "security_definer": true
+    },
+    {
+      "args": "p_texto text, p_idioma_origen integer, p_idioma_destino integer",
+      "nombre": "resolver_consulta_linguistica",
+      "security_definer": false
+    },
+    {
+      "args": "p_pregunta text, p_idioma_origen integer, p_idioma_destino integer",
+      "nombre": "responder_tuki",
+      "security_definer": false
+    },
+    {
+      "args": "p_leccion_id integer, p_puntaje integer",
+      "nombre": "completar_leccion",
+      "security_definer": false
+    },
+    {
+      "args": "p_texto text, p_idioma_origen integer, p_idioma_destino integer",
+      "nombre": "traducir_texto_seguro",
+      "security_definer": false
+    },
+    {
+      "args": "p_texto text, p_idioma_origen integer, p_idioma_destino integer",
+      "nombre": "buscar_rutas_traduccion_expresion",
+      "security_definer": false
+    },
+    {
+      "args": "p_texto text, p_idioma_id integer",
+      "nombre": "obtener_pronunciacion_segura",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "nombre": "obtener_contexto_tuki_usuario",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "nombre": "saludo_tuki_usuario",
+      "security_definer": false
+    },
+    {
+      "args": "p_texto text, p_idioma_origen integer, p_idioma_destino integer",
+      "nombre": "buscar_rutas_traduccion_palabra",
+      "security_definer": false
+    },
+    {
+      "args": "p_texto text, p_idioma_origen integer, p_idioma_destino integer",
+      "nombre": "consultar_diccionario_seguro",
+      "security_definer": false
+    },
+    {
+      "args": "p_leccion_id integer",
+      "nombre": "obtener_paquete_leccion",
+      "security_definer": false
+    },
+    {
+      "args": "p_desde timestamp with time zone",
+      "nombre": "obtener_paquetes_lecciones_actualizados",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "nombre": "auditar_integridad_aikukisna",
+      "security_definer": false
+    }
+  ],
+  "conteos": {
+    "fuentes": 54,
+    "idiomas": 4,
+    "palabras": 72111,
+    "lecciones": 93,
+    "oraciones": 1010,
+    "acepciones": 72925,
+    "expresiones": 8896,
+    "traducciones": 132350
+  },
+  "idiomas": [
+    {
+      "id": 1,
+      "codigo": "mi",
+      "nombre": "Miskito"
+    },
+    {
+      "id": 2,
+      "codigo": "es",
+      "nombre": "Español"
+    },
+    {
+      "id": 3,
+      "codigo": "jam",
+      "nombre": "Inglés Kriol"
+    },
+    {
+      "id": 4,
+      "codigo": "en",
+      "nombre": "Inglés Estándar"
+    }
+  ],
+  "indices": [
+    {
+      "tabla": "traduccion_fuente",
+      "nombre": "traduccion_fuente_pkey",
+      "definicion": "CREATE UNIQUE INDEX traduccion_fuente_pkey ON public.traduccion_fuente USING btree (traduccion_id, fuente_id, tipo_vinculo)"
+    },
+    {
+      "tabla": "traduccion_fuente",
+      "nombre": "idx_traduccion_fuente_fuente_id",
+      "definicion": "CREATE INDEX idx_traduccion_fuente_fuente_id ON public.traduccion_fuente USING btree (fuente_id)"
+    },
+    {
+      "tabla": "leccion_regla_gramatical",
+      "nombre": "leccion_regla_gramatical_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_regla_gramatical_pkey ON public.leccion_regla_gramatical USING btree (leccion_id, regla_id)"
+    },
+    {
+      "tabla": "leccion_regla_gramatical",
+      "nombre": "idx_leccion_regla_gramatical_regla_id",
+      "definicion": "CREATE INDEX idx_leccion_regla_gramatical_regla_id ON public.leccion_regla_gramatical USING btree (regla_id)"
+    },
+    {
+      "tabla": "leccion_cultura",
+      "nombre": "leccion_cultura_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_cultura_pkey ON public.leccion_cultura USING btree (leccion_id, cultura_id, tipo_vinculo)"
+    },
+    {
+      "tabla": "leccion_cultura",
+      "nombre": "idx_leccion_cultura_cultura_id",
+      "definicion": "CREATE INDEX idx_leccion_cultura_cultura_id ON public.leccion_cultura USING btree (cultura_id)"
+    },
+    {
+      "tabla": "palabra_canonica",
+      "nombre": "palabra_canonica_pkey",
+      "definicion": "CREATE UNIQUE INDEX palabra_canonica_pkey ON public.palabra_canonica USING btree (palabra_id)"
+    },
+    {
+      "tabla": "palabra_canonica",
+      "nombre": "idx_palabra_canonica_canonica",
+      "definicion": "CREATE INDEX idx_palabra_canonica_canonica ON public.palabra_canonica USING btree (palabra_canonica_id)"
+    },
+    {
+      "tabla": "leccion_expresion",
+      "nombre": "leccion_expresion_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_expresion_pkey ON public.leccion_expresion USING btree (leccion_id, expresion_id, tipo_vinculo)"
+    },
+    {
+      "tabla": "leccion_expresion",
+      "nombre": "idx_leccion_expresion_expresion",
+      "definicion": "CREATE INDEX idx_leccion_expresion_expresion ON public.leccion_expresion USING btree (expresion_id)"
+    },
+    {
+      "tabla": "oracion_ejemplo",
+      "nombre": "oracion_ejemplo_pkey",
+      "definicion": "CREATE UNIQUE INDEX oracion_ejemplo_pkey ON public.oracion_ejemplo USING btree (id)"
+    },
+    {
+      "tabla": "oracion_ejemplo",
+      "nombre": "idx_oracion_ejemplo_fuente_id",
+      "definicion": "CREATE INDEX idx_oracion_ejemplo_fuente_id ON public.oracion_ejemplo USING btree (fuente_id)"
+    },
+    {
+      "tabla": "oracion_ejemplo",
+      "nombre": "idx_oracion_ejemplo_leccion_id",
+      "definicion": "CREATE INDEX idx_oracion_ejemplo_leccion_id ON public.oracion_ejemplo USING btree (leccion_id)"
+    },
+    {
+      "tabla": "oracion_ejemplo",
+      "nombre": "oracion_ejemplo_busqueda_origen_idx",
+      "definicion": "CREATE INDEX oracion_ejemplo_busqueda_origen_idx ON public.oracion_ejemplo USING btree (idioma_origen_id, lower(btrim(texto_origen)))"
+    },
+    {
+      "tabla": "oracion_ejemplo",
+      "nombre": "oracion_ejemplo_busqueda_destino_idx",
+      "definicion": "CREATE INDEX oracion_ejemplo_busqueda_destino_idx ON public.oracion_ejemplo USING btree (idioma_destino_id, lower(btrim(texto_destino)))"
+    },
+    {
+      "tabla": "idioma",
+      "nombre": "idioma_pkey",
+      "definicion": "CREATE UNIQUE INDEX idioma_pkey ON public.idioma USING btree (id)"
+    },
+    {
+      "tabla": "idioma",
+      "nombre": "idioma_codigo_key",
+      "definicion": "CREATE UNIQUE INDEX idioma_codigo_key ON public.idioma USING btree (codigo)"
+    },
+    {
+      "tabla": "leccion_regla_pronunciacion",
+      "nombre": "leccion_regla_pronunciacion_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_regla_pronunciacion_pkey ON public.leccion_regla_pronunciacion USING btree (leccion_id, regla_id)"
+    },
+    {
+      "tabla": "leccion_regla_pronunciacion",
+      "nombre": "idx_leccion_regla_pronunciacion_regla",
+      "definicion": "CREATE INDEX idx_leccion_regla_pronunciacion_regla ON public.leccion_regla_pronunciacion USING btree (regla_id)"
+    },
+    {
+      "tabla": "regla_pronunciacion",
+      "nombre": "regla_pronunciacion_pkey",
+      "definicion": "CREATE UNIQUE INDEX regla_pronunciacion_pkey ON public.regla_pronunciacion USING btree (id)"
+    },
+    {
+      "tabla": "regla_pronunciacion",
+      "nombre": "regla_pronunciacion_idioma_id_patron_tipo_key",
+      "definicion": "CREATE UNIQUE INDEX regla_pronunciacion_idioma_id_patron_tipo_key ON public.regla_pronunciacion USING btree (idioma_id, patron, tipo)"
+    },
+    {
+      "tabla": "regla_pronunciacion",
+      "nombre": "idx_regla_pronunciacion_fuente_id",
+      "definicion": "CREATE INDEX idx_regla_pronunciacion_fuente_id ON public.regla_pronunciacion USING btree (fuente_id)"
+    },
+    {
+      "tabla": "regla_pronunciacion",
+      "nombre": "idx_regla_pronunciacion_updated_at",
+      "definicion": "CREATE INDEX idx_regla_pronunciacion_updated_at ON public.regla_pronunciacion USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "fuente_documento",
+      "nombre": "fuente_documento_pkey",
+      "definicion": "CREATE UNIQUE INDEX fuente_documento_pkey ON public.fuente_documento USING btree (id)"
+    },
+    {
+      "tabla": "logro",
+      "nombre": "logro_pkey",
+      "definicion": "CREATE UNIQUE INDEX logro_pkey ON public.logro USING btree (id)"
+    },
+    {
+      "tabla": "logro",
+      "nombre": "idx_logro_categoria_id",
+      "definicion": "CREATE INDEX idx_logro_categoria_id ON public.logro USING btree (categoria_id)"
+    },
+    {
+      "tabla": "usuario",
+      "nombre": "usuario_pkey",
+      "definicion": "CREATE UNIQUE INDEX usuario_pkey ON public.usuario USING btree (id)"
+    },
+    {
+      "tabla": "usuario",
+      "nombre": "idx_usuario_idioma_meta_id",
+      "definicion": "CREATE INDEX idx_usuario_idioma_meta_id ON public.usuario USING btree (idioma_meta_id)"
+    },
+    {
+      "tabla": "usuario",
+      "nombre": "usuario_nombre_usuario_unico",
+      "definicion": "CREATE UNIQUE INDEX usuario_nombre_usuario_unico ON public.usuario USING btree (lower(nombre_usuario))"
+    },
+    {
+      "tabla": "leccion",
+      "nombre": "leccion_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_pkey ON public.leccion USING btree (id)"
+    },
+    {
+      "tabla": "leccion",
+      "nombre": "idx_leccion_categoria_id",
+      "definicion": "CREATE INDEX idx_leccion_categoria_id ON public.leccion USING btree (categoria_id)"
+    },
+    {
+      "tabla": "leccion",
+      "nombre": "idx_leccion_idioma_meta_id",
+      "definicion": "CREATE INDEX idx_leccion_idioma_meta_id ON public.leccion USING btree (idioma_meta_id)"
+    },
+    {
+      "tabla": "categoria",
+      "nombre": "categoria_pkey",
+      "definicion": "CREATE UNIQUE INDEX categoria_pkey ON public.categoria USING btree (id)"
+    },
+    {
+      "tabla": "categoria",
+      "nombre": "categoria_nombre_key",
+      "definicion": "CREATE UNIQUE INDEX categoria_nombre_key ON public.categoria USING btree (nombre)"
+    },
+    {
+      "tabla": "leccion_palabra",
+      "nombre": "leccion_palabra_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_palabra_pkey ON public.leccion_palabra USING btree (leccion_id, palabra_id)"
+    },
+    {
+      "tabla": "leccion_palabra",
+      "nombre": "idx_leccion_palabra_palabra_id",
+      "definicion": "CREATE INDEX idx_leccion_palabra_palabra_id ON public.leccion_palabra USING btree (palabra_id)"
+    },
+    {
+      "tabla": "progreso_leccion",
+      "nombre": "progreso_leccion_pkey",
+      "definicion": "CREATE UNIQUE INDEX progreso_leccion_pkey ON public.progreso_leccion USING btree (usuario_id, leccion_id)"
+    },
+    {
+      "tabla": "progreso_leccion",
+      "nombre": "idx_progreso_leccion_leccion_id",
+      "definicion": "CREATE INDEX idx_progreso_leccion_leccion_id ON public.progreso_leccion USING btree (leccion_id)"
+    },
+    {
+      "tabla": "palabra_favorita",
+      "nombre": "palabra_favorita_pkey",
+      "definicion": "CREATE UNIQUE INDEX palabra_favorita_pkey ON public.palabra_favorita USING btree (usuario_id, palabra_id)"
+    },
+    {
+      "tabla": "palabra_favorita",
+      "nombre": "idx_palabra_favorita_palabra_id",
+      "definicion": "CREATE INDEX idx_palabra_favorita_palabra_id ON public.palabra_favorita USING btree (palabra_id)"
+    },
+    {
+      "tabla": "logro_desbloqueado",
+      "nombre": "logro_desbloqueado_pkey",
+      "definicion": "CREATE UNIQUE INDEX logro_desbloqueado_pkey ON public.logro_desbloqueado USING btree (usuario_id, logro_id)"
+    },
+    {
+      "tabla": "logro_desbloqueado",
+      "nombre": "idx_logro_desbloqueado_logro_id",
+      "definicion": "CREATE INDEX idx_logro_desbloqueado_logro_id ON public.logro_desbloqueado USING btree (logro_id)"
+    },
+    {
+      "tabla": "memoria_tuki",
+      "nombre": "memoria_tuki_pkey",
+      "definicion": "CREATE UNIQUE INDEX memoria_tuki_pkey ON public.memoria_tuki USING btree (id)"
+    },
+    {
+      "tabla": "memoria_tuki",
+      "nombre": "idx_memoria_tuki_usuario_id",
+      "definicion": "CREATE INDEX idx_memoria_tuki_usuario_id ON public.memoria_tuki USING btree (usuario_id)"
+    },
+    {
+      "tabla": "cultura_contenido",
+      "nombre": "cultura_contenido_pkey",
+      "definicion": "CREATE UNIQUE INDEX cultura_contenido_pkey ON public.cultura_contenido USING btree (id)"
+    },
+    {
+      "tabla": "cultura_contenido",
+      "nombre": "idx_cultura_contenido_fuente_id",
+      "definicion": "CREATE INDEX idx_cultura_contenido_fuente_id ON public.cultura_contenido USING btree (fuente_id)"
+    },
+    {
+      "tabla": "cultura_contenido",
+      "nombre": "idx_cultura_contenido_updated_at",
+      "definicion": "CREATE INDEX idx_cultura_contenido_updated_at ON public.cultura_contenido USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "palabra_fuente",
+      "nombre": "palabra_fuente_pkey",
+      "definicion": "CREATE UNIQUE INDEX palabra_fuente_pkey ON public.palabra_fuente USING btree (palabra_id, fuente_id)"
+    },
+    {
+      "tabla": "palabra_fuente",
+      "nombre": "idx_palabra_fuente_fuente",
+      "definicion": "CREATE INDEX idx_palabra_fuente_fuente ON public.palabra_fuente USING btree (fuente_id)"
+    },
+    {
+      "tabla": "palabra_fuente",
+      "nombre": "idx_palabra_fuente_updated_at",
+      "definicion": "CREATE INDEX idx_palabra_fuente_updated_at ON public.palabra_fuente USING btree (updated_at, palabra_id)"
+    },
+    {
+      "tabla": "super_administrador",
+      "nombre": "super_administrador_pkey",
+      "definicion": "CREATE UNIQUE INDEX super_administrador_pkey ON public.super_administrador USING btree (usuario_id)"
+    },
+    {
+      "tabla": "traduccion_acepcion",
+      "nombre": "traduccion_acepcion_pkey",
+      "definicion": "CREATE UNIQUE INDEX traduccion_acepcion_pkey ON public.traduccion_acepcion USING btree (id)"
+    },
+    {
+      "tabla": "traduccion_acepcion",
+      "nombre": "traduccion_acepcion_acepcion_origen_id_acepcion_destino_id__key",
+      "definicion": "CREATE UNIQUE INDEX traduccion_acepcion_acepcion_origen_id_acepcion_destino_id__key ON public.traduccion_acepcion USING btree (acepcion_origen_id, acepcion_destino_id, tipo)"
+    },
+    {
+      "tabla": "traduccion_acepcion",
+      "nombre": "idx_traduccion_acepcion_origen",
+      "definicion": "CREATE INDEX idx_traduccion_acepcion_origen ON public.traduccion_acepcion USING btree (acepcion_origen_id)"
+    },
+    {
+      "tabla": "traduccion_acepcion",
+      "nombre": "idx_traduccion_acepcion_destino",
+      "definicion": "CREATE INDEX idx_traduccion_acepcion_destino ON public.traduccion_acepcion USING btree (acepcion_destino_id)"
+    },
+    {
+      "tabla": "traduccion_acepcion",
+      "nombre": "idx_traduccion_acepcion_updated_at",
+      "definicion": "CREATE INDEX idx_traduccion_acepcion_updated_at ON public.traduccion_acepcion USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "acepcion",
+      "nombre": "acepcion_pkey",
+      "definicion": "CREATE UNIQUE INDEX acepcion_pkey ON public.acepcion USING btree (id)"
+    },
+    {
+      "tabla": "acepcion",
+      "nombre": "acepcion_palabra_id_numero_acepcion_key",
+      "definicion": "CREATE UNIQUE INDEX acepcion_palabra_id_numero_acepcion_key ON public.acepcion USING btree (palabra_id, numero_acepcion)"
+    },
+    {
+      "tabla": "acepcion",
+      "nombre": "idx_acepcion_palabra_estado",
+      "definicion": "CREATE INDEX idx_acepcion_palabra_estado ON public.acepcion USING btree (palabra_id, estado_validacion)"
+    },
+    {
+      "tabla": "acepcion",
+      "nombre": "idx_acepcion_updated_at",
+      "definicion": "CREATE INDEX idx_acepcion_updated_at ON public.acepcion USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "traduccion_expresion",
+      "nombre": "traduccion_expresion_pkey",
+      "definicion": "CREATE UNIQUE INDEX traduccion_expresion_pkey ON public.traduccion_expresion USING btree (id)"
+    },
+    {
+      "tabla": "traduccion_expresion",
+      "nombre": "traduccion_expresion_expresion_origen_id_expresion_destino__key",
+      "definicion": "CREATE UNIQUE INDEX traduccion_expresion_expresion_origen_id_expresion_destino__key ON public.traduccion_expresion USING btree (expresion_origen_id, expresion_destino_id)"
+    },
+    {
+      "tabla": "traduccion_expresion",
+      "nombre": "idx_traduccion_expresion_origen",
+      "definicion": "CREATE INDEX idx_traduccion_expresion_origen ON public.traduccion_expresion USING btree (expresion_origen_id)"
+    },
+    {
+      "tabla": "traduccion_expresion",
+      "nombre": "idx_traduccion_expresion_updated_at",
+      "definicion": "CREATE INDEX idx_traduccion_expresion_updated_at ON public.traduccion_expresion USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "traduccion_expresion",
+      "nombre": "idx_traduccion_expresion_destino",
+      "definicion": "CREATE INDEX idx_traduccion_expresion_destino ON public.traduccion_expresion USING btree (expresion_destino_id)"
+    },
+    {
+      "tabla": "expresion",
+      "nombre": "expresion_pkey",
+      "definicion": "CREATE UNIQUE INDEX expresion_pkey ON public.expresion USING btree (id)"
+    },
+    {
+      "tabla": "expresion",
+      "nombre": "idx_expresion_idioma_texto",
+      "definicion": "CREATE INDEX idx_expresion_idioma_texto ON public.expresion USING btree (idioma_id, texto_normalizado)"
+    },
+    {
+      "tabla": "expresion",
+      "nombre": "idx_expresion_updated_at",
+      "definicion": "CREATE INDEX idx_expresion_updated_at ON public.expresion USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "expresion",
+      "nombre": "idx_expresion_fuente_id",
+      "definicion": "CREATE INDEX idx_expresion_fuente_id ON public.expresion USING btree (fuente_id)"
+    },
+    {
+      "tabla": "expresion",
+      "nombre": "idx_expresion_idioma_texto_busqueda",
+      "definicion": "CREATE INDEX idx_expresion_idioma_texto_busqueda ON public.expresion USING btree (idioma_id, texto_busqueda)"
+    },
+    {
+      "tabla": "variante_palabra",
+      "nombre": "variante_palabra_pkey",
+      "definicion": "CREATE UNIQUE INDEX variante_palabra_pkey ON public.variante_palabra USING btree (id)"
+    },
+    {
+      "tabla": "variante_palabra",
+      "nombre": "variante_palabra_palabra_id_texto_normalizado_tipo_key",
+      "definicion": "CREATE UNIQUE INDEX variante_palabra_palabra_id_texto_normalizado_tipo_key ON public.variante_palabra USING btree (palabra_id, texto_normalizado, tipo)"
+    },
+    {
+      "tabla": "variante_palabra",
+      "nombre": "idx_variante_idioma_busqueda",
+      "definicion": "CREATE INDEX idx_variante_idioma_busqueda ON public.variante_palabra USING btree (texto_normalizado, palabra_id)"
+    },
+    {
+      "tabla": "variante_palabra",
+      "nombre": "idx_variante_updated_at",
+      "definicion": "CREATE INDEX idx_variante_updated_at ON public.variante_palabra USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "variante_palabra",
+      "nombre": "idx_variante_texto_busqueda",
+      "definicion": "CREATE INDEX idx_variante_texto_busqueda ON public.variante_palabra USING btree (texto_busqueda)"
+    },
+    {
+      "tabla": "variante_palabra",
+      "nombre": "idx_variante_palabra_fuente_id",
+      "definicion": "CREATE INDEX idx_variante_palabra_fuente_id ON public.variante_palabra USING btree (fuente_id)"
+    },
+    {
+      "tabla": "revision_linguistica",
+      "nombre": "revision_linguistica_pkey",
+      "definicion": "CREATE UNIQUE INDEX revision_linguistica_pkey ON public.revision_linguistica USING btree (id)"
+    },
+    {
+      "tabla": "revision_linguistica",
+      "nombre": "idx_revision_linguistica_entidad",
+      "definicion": "CREATE INDEX idx_revision_linguistica_entidad ON public.revision_linguistica USING btree (tipo_entidad, entidad_id)"
+    },
+    {
+      "tabla": "revision_linguistica",
+      "nombre": "idx_revision_linguistica_estado",
+      "definicion": "CREATE INDEX idx_revision_linguistica_estado ON public.revision_linguistica USING btree (estado)"
+    },
+    {
+      "tabla": "revision_linguistica",
+      "nombre": "idx_revision_linguistica_revisado_por",
+      "definicion": "CREATE INDEX idx_revision_linguistica_revisado_por ON public.revision_linguistica USING btree (revisado_por)"
+    },
+    {
+      "tabla": "leccion_fuente",
+      "nombre": "leccion_fuente_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_fuente_pkey ON public.leccion_fuente USING btree (leccion_id, fuente_id, tipo_vinculo)"
+    },
+    {
+      "tabla": "leccion_fuente",
+      "nombre": "idx_leccion_fuente_fuente_id",
+      "definicion": "CREATE INDEX idx_leccion_fuente_fuente_id ON public.leccion_fuente USING btree (fuente_id)"
+    },
+    {
+      "tabla": "traduccion",
+      "nombre": "traduccion_pkey",
+      "definicion": "CREATE UNIQUE INDEX traduccion_pkey ON public.traduccion USING btree (id)"
+    },
+    {
+      "tabla": "traduccion",
+      "nombre": "traduccion_palabra_origen_id_palabra_destino_id_key",
+      "definicion": "CREATE UNIQUE INDEX traduccion_palabra_origen_id_palabra_destino_id_key ON public.traduccion USING btree (palabra_origen_id, palabra_destino_id)"
+    },
+    {
+      "tabla": "traduccion",
+      "nombre": "idx_traduccion_origen",
+      "definicion": "CREATE INDEX idx_traduccion_origen ON public.traduccion USING btree (palabra_origen_id)"
+    },
+    {
+      "tabla": "traduccion",
+      "nombre": "idx_traduccion_palabra_destino_id",
+      "definicion": "CREATE INDEX idx_traduccion_palabra_destino_id ON public.traduccion USING btree (palabra_destino_id)"
+    },
+    {
+      "tabla": "traduccion",
+      "nombre": "idx_traduccion_fuente_id",
+      "definicion": "CREATE INDEX idx_traduccion_fuente_id ON public.traduccion USING btree (fuente_id)"
+    },
+    {
+      "tabla": "traduccion",
+      "nombre": "idx_traduccion_updated_at",
+      "definicion": "CREATE INDEX idx_traduccion_updated_at ON public.traduccion USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "palabra_pkey",
+      "definicion": "CREATE UNIQUE INDEX palabra_pkey ON public.palabra USING btree (id)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "idx_palabra_texto_trgm",
+      "definicion": "CREATE INDEX idx_palabra_texto_trgm ON public.palabra USING gin (texto gin_trgm_ops)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "idx_palabra_categoria_id",
+      "definicion": "CREATE INDEX idx_palabra_categoria_id ON public.palabra USING btree (categoria_id)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "idx_palabra_fuente_id",
+      "definicion": "CREATE INDEX idx_palabra_fuente_id ON public.palabra USING btree (fuente_id)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "idx_palabra_idioma_id",
+      "definicion": "CREATE INDEX idx_palabra_idioma_id ON public.palabra USING btree (idioma_id)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "idx_palabra_idioma_texto_normalizado",
+      "definicion": "CREATE INDEX idx_palabra_idioma_texto_normalizado ON public.palabra USING btree (idioma_id, texto_normalizado)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "idx_palabra_updated_at",
+      "definicion": "CREATE INDEX idx_palabra_updated_at ON public.palabra USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "idx_palabra_canonica_id",
+      "definicion": "CREATE INDEX idx_palabra_canonica_id ON public.palabra USING btree (palabra_canonica_id)"
+    },
+    {
+      "tabla": "palabra",
+      "nombre": "idx_palabra_idioma_texto_busqueda",
+      "definicion": "CREATE INDEX idx_palabra_idioma_texto_busqueda ON public.palabra USING btree (idioma_id, texto_busqueda)"
+    },
+    {
+      "tabla": "ejemplo_regla_gramatical",
+      "nombre": "ejemplo_regla_gramatical_pkey",
+      "definicion": "CREATE UNIQUE INDEX ejemplo_regla_gramatical_pkey ON public.ejemplo_regla_gramatical USING btree (id)"
+    },
+    {
+      "tabla": "ejemplo_regla_gramatical",
+      "nombre": "ejemplo_regla_gramatical_regla_id_texto_idioma_key",
+      "definicion": "CREATE UNIQUE INDEX ejemplo_regla_gramatical_regla_id_texto_idioma_key ON public.ejemplo_regla_gramatical USING btree (regla_id, texto_idioma)"
+    },
+    {
+      "tabla": "ejemplo_regla_gramatical",
+      "nombre": "idx_ejemplo_regla_gramatical_fuente_id",
+      "definicion": "CREATE INDEX idx_ejemplo_regla_gramatical_fuente_id ON public.ejemplo_regla_gramatical USING btree (fuente_id)"
+    },
+    {
+      "tabla": "ejemplo_regla_gramatical",
+      "nombre": "idx_ejemplo_regla_gramatical_idioma_traduccion_id",
+      "definicion": "CREATE INDEX idx_ejemplo_regla_gramatical_idioma_traduccion_id ON public.ejemplo_regla_gramatical USING btree (idioma_traduccion_id)"
+    },
+    {
+      "tabla": "regla_gramatical",
+      "nombre": "regla_gramatical_pkey",
+      "definicion": "CREATE UNIQUE INDEX regla_gramatical_pkey ON public.regla_gramatical USING btree (id)"
+    },
+    {
+      "tabla": "regla_gramatical",
+      "nombre": "regla_gramatical_idioma_id_codigo_key",
+      "definicion": "CREATE UNIQUE INDEX regla_gramatical_idioma_id_codigo_key ON public.regla_gramatical USING btree (idioma_id, codigo)"
+    },
+    {
+      "tabla": "regla_gramatical",
+      "nombre": "idx_regla_gramatical_fuente_id",
+      "definicion": "CREATE INDEX idx_regla_gramatical_fuente_id ON public.regla_gramatical USING btree (fuente_id)"
+    },
+    {
+      "tabla": "regla_gramatical",
+      "nombre": "idx_regla_gramatical_updated_at",
+      "definicion": "CREATE INDEX idx_regla_gramatical_updated_at ON public.regla_gramatical USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "leccion_oracion",
+      "nombre": "leccion_oracion_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_oracion_pkey ON public.leccion_oracion USING btree (leccion_id, oracion_id, tipo_vinculo)"
+    },
+    {
+      "tabla": "leccion_oracion",
+      "nombre": "idx_leccion_oracion_oracion_id",
+      "definicion": "CREATE INDEX idx_leccion_oracion_oracion_id ON public.leccion_oracion USING btree (oracion_id)"
+    },
+    {
+      "tabla": "tuki_respuesta_sistema",
+      "nombre": "tuki_respuesta_sistema_pkey",
+      "definicion": "CREATE UNIQUE INDEX tuki_respuesta_sistema_pkey ON public.tuki_respuesta_sistema USING btree (id)"
+    },
+    {
+      "tabla": "tuki_respuesta_sistema",
+      "nombre": "tuki_respuesta_sistema_codigo_key",
+      "definicion": "CREATE UNIQUE INDEX tuki_respuesta_sistema_codigo_key ON public.tuki_respuesta_sistema USING btree (codigo)"
+    },
+    {
+      "tabla": "tuki_respuesta_sistema",
+      "nombre": "idx_tuki_respuesta_sistema_idioma_respuesta",
+      "definicion": "CREATE INDEX idx_tuki_respuesta_sistema_idioma_respuesta ON public.tuki_respuesta_sistema USING btree (idioma_respuesta_id)"
+    },
+    {
+      "tabla": "tuki_respuesta_sistema",
+      "nombre": "idx_tuki_respuesta_sistema_updated_at",
+      "definicion": "CREATE INDEX idx_tuki_respuesta_sistema_updated_at ON public.tuki_respuesta_sistema USING btree (updated_at, id)"
+    },
+    {
+      "tabla": "alineacion_curricular",
+      "nombre": "alineacion_curricular_pkey",
+      "definicion": "CREATE UNIQUE INDEX alineacion_curricular_pkey ON public.alineacion_curricular USING btree (id)"
+    },
+    {
+      "tabla": "alineacion_curricular",
+      "nombre": "alineacion_curricular_leccion_id_fuente_id_tema_key",
+      "definicion": "CREATE UNIQUE INDEX alineacion_curricular_leccion_id_fuente_id_tema_key ON public.alineacion_curricular USING btree (leccion_id, fuente_id, tema)"
+    },
+    {
+      "tabla": "alineacion_curricular",
+      "nombre": "idx_alineacion_curricular_fuente_id",
+      "definicion": "CREATE INDEX idx_alineacion_curricular_fuente_id ON public.alineacion_curricular USING btree (fuente_id)"
+    },
+    {
+      "tabla": "expresion_contexto_cultural",
+      "nombre": "expresion_contexto_cultural_pkey",
+      "definicion": "CREATE UNIQUE INDEX expresion_contexto_cultural_pkey ON public.expresion_contexto_cultural USING btree (expresion_id)"
+    },
+    {
+      "tabla": "expresion_contexto_cultural",
+      "nombre": "idx_expresion_contexto_cultural_cultura_id",
+      "definicion": "CREATE INDEX idx_expresion_contexto_cultural_cultura_id ON public.expresion_contexto_cultural USING btree (cultura_id)"
+    },
+    {
+      "tabla": "etapa_ruta_curricular",
+      "nombre": "etapa_ruta_curricular_pkey",
+      "definicion": "CREATE UNIQUE INDEX etapa_ruta_curricular_pkey ON public.etapa_ruta_curricular USING btree (codigo)"
+    },
+    {
+      "tabla": "etapa_ruta_curricular",
+      "nombre": "etapa_ruta_curricular_orden_key",
+      "definicion": "CREATE UNIQUE INDEX etapa_ruta_curricular_orden_key ON public.etapa_ruta_curricular USING btree (orden)"
+    },
+    {
+      "tabla": "leccion_ruta_curricular",
+      "nombre": "leccion_ruta_curricular_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_ruta_curricular_pkey ON public.leccion_ruta_curricular USING btree (leccion_id)"
+    },
+    {
+      "tabla": "leccion_ruta_curricular",
+      "nombre": "idx_leccion_ruta_curricular_etapa",
+      "definicion": "CREATE INDEX idx_leccion_ruta_curricular_etapa ON public.leccion_ruta_curricular USING btree (etapa_codigo)"
+    },
+    {
+      "tabla": "leccion_ruta_curricular",
+      "nombre": "idx_leccion_ruta_curricular_fuente",
+      "definicion": "CREATE INDEX idx_leccion_ruta_curricular_fuente ON public.leccion_ruta_curricular USING btree (fuente_primaria_id)"
+    },
+    {
+      "tabla": "evidencia_curricular_leccion",
+      "nombre": "evidencia_curricular_leccion_pkey",
+      "definicion": "CREATE UNIQUE INDEX evidencia_curricular_leccion_pkey ON public.evidencia_curricular_leccion USING btree (id)"
+    },
+    {
+      "tabla": "evidencia_curricular_leccion",
+      "nombre": "idx_evidencia_curricular_leccion_leccion",
+      "definicion": "CREATE INDEX idx_evidencia_curricular_leccion_leccion ON public.evidencia_curricular_leccion USING btree (leccion_id)"
+    },
+    {
+      "tabla": "evidencia_curricular_leccion",
+      "nombre": "idx_evidencia_curricular_leccion_etapa",
+      "definicion": "CREATE INDEX idx_evidencia_curricular_leccion_etapa ON public.evidencia_curricular_leccion USING btree (etapa_codigo)"
+    },
+    {
+      "tabla": "evidencia_curricular_leccion",
+      "nombre": "idx_evidencia_curricular_leccion_fuente",
+      "definicion": "CREATE INDEX idx_evidencia_curricular_leccion_fuente ON public.evidencia_curricular_leccion USING btree (fuente_id)"
+    },
+    {
+      "tabla": "evidencia_curricular_leccion",
+      "nombre": "idx_evidencia_curricular_lengua_aplicacion",
+      "definicion": "CREATE INDEX idx_evidencia_curricular_lengua_aplicacion ON public.evidencia_curricular_leccion USING btree (lengua_aplicacion_id)"
+    },
+    {
+      "tabla": "actividad_leccion",
+      "nombre": "actividad_leccion_pkey",
+      "definicion": "CREATE UNIQUE INDEX actividad_leccion_pkey ON public.actividad_leccion USING btree (id)"
+    },
+    {
+      "tabla": "actividad_leccion",
+      "nombre": "actividad_leccion_leccion_id_codigo_key",
+      "definicion": "CREATE UNIQUE INDEX actividad_leccion_leccion_id_codigo_key ON public.actividad_leccion USING btree (leccion_id, codigo)"
+    },
+    {
+      "tabla": "actividad_leccion",
+      "nombre": "idx_actividad_leccion_leccion_orden",
+      "definicion": "CREATE INDEX idx_actividad_leccion_leccion_orden ON public.actividad_leccion USING btree (leccion_id, orden)"
+    },
+    {
+      "tabla": "leccion_experiencia_gamificada",
+      "nombre": "leccion_experiencia_gamificada_pkey",
+      "definicion": "CREATE UNIQUE INDEX leccion_experiencia_gamificada_pkey ON public.leccion_experiencia_gamificada USING btree (leccion_id)"
+    },
+    {
+      "tabla": "leccion_experiencia_gamificada",
+      "nombre": "idx_leccion_experiencia_gamificada_mundo",
+      "definicion": "CREATE INDEX idx_leccion_experiencia_gamificada_mundo ON public.leccion_experiencia_gamificada USING btree (mundo_codigo)"
+    },
+    {
+      "tabla": "mundo_gamificado",
+      "nombre": "mundo_gamificado_pkey",
+      "definicion": "CREATE UNIQUE INDEX mundo_gamificado_pkey ON public.mundo_gamificado USING btree (codigo)"
+    },
+    {
+      "tabla": "mundo_gamificado",
+      "nombre": "mundo_gamificado_orden_key",
+      "definicion": "CREATE UNIQUE INDEX mundo_gamificado_orden_key ON public.mundo_gamificado USING btree (orden)"
+    },
+    {
+      "tabla": "actividad_recurso",
+      "nombre": "actividad_recurso_pkey",
+      "definicion": "CREATE UNIQUE INDEX actividad_recurso_pkey ON public.actividad_recurso USING btree (actividad_id, tipo_recurso, recurso_id)"
+    },
+    {
+      "tabla": "actividad_recurso",
+      "nombre": "idx_actividad_recurso_actividad_orden",
+      "definicion": "CREATE INDEX idx_actividad_recurso_actividad_orden ON public.actividad_recurso USING btree (actividad_id, orden)"
+    }
+  ]
+}

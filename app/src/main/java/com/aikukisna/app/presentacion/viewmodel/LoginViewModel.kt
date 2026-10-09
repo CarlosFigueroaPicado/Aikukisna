@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.viewmodel
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +51,7 @@ class LoginViewModel @Inject constructor(
 
     fun intentarLogin() {
         if (identificador.isBlank() || password.isBlank()) {
-            errorMessage = "Completa todos los campos"
+            errorMessage = t(R.string.login_completa_todos_los_campos)
             return
         }
 
@@ -59,7 +62,7 @@ class LoginViewModel @Inject constructor(
                 iniciarSesionUseCase(identificador, password)
                 continuarTrasAutenticacion()
             } catch (e: Exception) {
-                errorMessage = e.message ?: "Error al conectar con el servidor"
+                errorMessage = IniciarSesionUseCase.MENSAJE_CREDENCIALES_INVALIDAS
             } finally {
                 isLoading = false
             }
@@ -78,9 +81,9 @@ class LoginViewModel @Inject constructor(
             } catch (e: Exception) {
 
                 errorMessage = if (e.message?.contains("cancel", ignoreCase = true) == true) {
-                    "Inicio de sesión cancelado"
+                    t(R.string.login_inicio_de_sesion_cancelado)
                 } else {
-                    e.message ?: "Error al iniciar sesión con Google"
+                    e.message ?: t(R.string.login_error_al_iniciar_sesion_con)
                 }
             } finally {
                 isLoadingGoogle = false
@@ -99,13 +102,13 @@ class LoginViewModel @Inject constructor(
             isLoading = true
             errorMessage = null
             try {
-                val userId = authRepository.usuarioActualId() ?: error("Sesión no iniciada")
-                val usuario = obtenerUsuarioUseCase(userId) ?: error("No se encontró el perfil")
+                val userId = authRepository.usuarioActualId() ?: error(t(R.string.login_sesion_no_iniciada))
+                val usuario = obtenerUsuarioUseCase(userId) ?: error(t(R.string.login_no_se_encontro_el_perfil))
                 cambiarIdiomaMetaUseCase(usuario, idioma)
                 requiereSeleccionIdioma = false
                 loginExitoso = true
             } catch (e: Exception) {
-                errorMessage = e.message ?: "No se pudo guardar el idioma elegido"
+                errorMessage = e.message ?: t(R.string.login_no_se_pudo_guardar_el)
             } finally {
                 isLoading = false
             }

@@ -1,7 +1,80 @@
 package com.aikukisna.app
 
 import android.app.Application
+import android.util.Log
+import com.aikukisna.app.data.local.SembradorAudiosHumanos
+import com.aikukisna.app.data.local.SembradorReplicaSupabase
+import com.aikukisna.app.data.local.dao.MemoriaTukiLocalDao
+import com.aikukisna.app.data.sync.DescargaModeloTukiWorker
+import com.aikukisna.app.data.sync.SyncWorker
+import com.aikukisna.app.domain.repository.AuthRepository
+import com.aikukisna.app.domain.repository.UsuarioRepository
+import com.aikukisna.app.domain.usecase.SincronizarFavoritosPendientesUseCase
+import com.aikukisna.app.domain.usecase.SincronizarLeccionesPendientesUseCase
+import com.aikukisna.app.domain.usecase.SincronizarDatosOfflineUseCase
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
+
+sealed interface EstadoContenidoInicial {
+    data object Preparando : EstadoContenidoInicial
+    data object Disponible : EstadoContenidoInicial
+    data object NoDisponible : EstadoContenidoInicial
+}
 
 @HiltAndroidApp
-class AikukisnaApplication : Application()
+class AikukisnaApplication : Application() {
+
+    @Inject
+    lateinit var sembradorReplicaSupabase: SembradorReplicaSupabase
+
+    @Inject lateinit var sembradorAudiosHumanos: SembradorAudiosHumanos
+
+    @Inject lateinit var sincronizarLeccionesPendientesUseCase: SincronizarLeccionesPendientesUseCase
+    @Inject lateinit var sincronizarFavoritosPendientesUseCase: SincronizarFavoritosPendientesUseCase
+    @Inject lateinit var sincronizarDatosOfflineUseCase: SincronizarDatosOfflineUseCase
+    @Inject lateinit var authRepository: AuthRepository
+    @Inject lateinit var usuarioRepository: UsuarioRepository
+    @Inject lateinit var memoriaTukiLocalDao: MemoriaTukiLocalDao
+
+    private val scopeInicializacion = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val _estadoContenidoInicial =
+        MutableStateFlow<EstadoContenidoInicial>(EstadoContenidoInicial.Preparando)
+    val estadoContenidoInicial = _estadoContenidoInicial.asStateFlow()
+
+    override fun onCreate() {
+        super.onCreate()
+        com.aikukisna.app.presentacion.idioma.IdiomaInterfaz.envolver(this)
+        scopeInicializacion.launch {
+            try {
+                sembradorReplicaSupabase.sembrarSiExiste()
+            } catch (e: Exception) {
+                Log.e(ETIQUETA, "No se pudo preparar el contenido offline; tipo=${e.javaClass.simpleName}")
+            }
+            _estadoContenidoInicial.value = if (sembradorReplicaSupabase.hayContenidoDisponible()) {
+                EstadoContenidoInicial.Disponible
+            } else {
+                EstadoContenidoInicial.NoDisponible
+            }
+            if (_estadoContenidoInicial.value == EstadoContenidoInicial.Disponible) {
+                try {
+                    sembradorAudiosHumanos.sembrarSiCambio()
+                } catch (e: Exception) {
+                    Log.e(ETIQUETA, "No se pudieron registrar los audios de hablantes; tipo=${e.javaClass.simpleName}")
+                }
+                SyncWorker.programar(applicationContext)
+                // El modelo de Tuki offline se baja solo cuando hay Wi-Fi.
+                DescargaModeloTukiWorker.programar(applicationContext)
+            }
+        }
+    }
+
+    private companion object {
+        const val ETIQUETA = "AikukisnaInicio"
+    }
+}

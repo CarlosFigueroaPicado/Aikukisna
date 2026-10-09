@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,14 +38,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.audio.AudioPlayer
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material.icons.automirrored.outlined.VolumeUp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.OutlinedButton
 import com.aikukisna.app.domain.usecase.ItemVocabularioLeccion
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.presentacion.viewmodel.LeccionViewModel
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import com.aikukisna.app.ui.theme.BrandSubtle
-import com.aikukisna.app.ui.theme.CardSurface
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
 import com.aikukisna.app.ui.theme.OrangePressed
 import androidx.compose.runtime.getValue
 
@@ -55,13 +61,27 @@ fun LeccionVocabularioScreen(
 ) {
     LaunchedEffect(leccionId) { viewModel.cargar(leccionId) }
 
+    val context = LocalContext.current
+    val audioPlayer = remember(context) { AudioPlayer(context.applicationContext) }
+    DisposableEffect(Unit) { onDispose { audioPlayer.liberar() } }
+    LaunchedEffect(viewModel.audioTarjeta) {
+        viewModel.audioTarjeta?.let { audio ->
+            audioPlayer.reproducir(audio)
+            viewModel.consumirAudioTarjeta()
+        }
+    }
+
     LeccionVocabularioScreenContenido(
         isLoading = viewModel.isLoadingVocabulario,
         errorMessage = viewModel.errorMessage,
         vocabulario = viewModel.vocabulario,
+        tituloLeccion = viewModel.tituloLeccion,
         indiceActual = viewModel.indiceActual,
         tarjetaVolteada = viewModel.tarjetaVolteada,
+        tarjetaRevelada = viewModel.tarjetaRevelada,
         onVoltear = viewModel::voltearTarjeta,
+        onEscuchar = viewModel::escucharTarjeta,
+        avisoAudio = viewModel.avisoAudio,
         onSiguienteClick = { if (viewModel.siguienteTarjeta()) onCompletado() },
         onVolver = onVolver
     )
@@ -72,9 +92,13 @@ private fun LeccionVocabularioScreenContenido(
     isLoading: Boolean,
     errorMessage: String?,
     vocabulario: List<ItemVocabularioLeccion>,
+    tituloLeccion: String,
     indiceActual: Int,
     tarjetaVolteada: Boolean,
+    tarjetaRevelada: Boolean = tarjetaVolteada,
     onVoltear: () -> Unit,
+    onEscuchar: () -> Unit = {},
+    avisoAudio: String? = null,
     onSiguienteClick: () -> Unit,
     onVolver: () -> Unit
 ) {
@@ -82,6 +106,7 @@ private fun LeccionVocabularioScreenContenido(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
         Row(
@@ -94,13 +119,13 @@ private fun LeccionVocabularioScreenContenido(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_back),
-                contentDescription = "Volver",
+                contentDescription = t(R.string.leccionvocabulario_volver),
                 modifier = Modifier
                     .size(20.dp)
                     .clickable(onClick = onVolver)
             )
             Text(
-                text = "Vocabulario",
+                text = tituloLeccion.uppercase().ifBlank { t(R.string.leccionvocabulario_leccion) },
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -119,7 +144,7 @@ private fun LeccionVocabularioScreenContenido(
             }
             vocabulario.isEmpty() -> {
                 Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Text("Esta lección no tiene contenido todavía.", color = MediumGray, style = MaterialTheme.typography.bodyMedium)
+                    Text(t(R.string.leccionvocabulario_esta_leccion_no_tiene_contenido), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
                 }
             }
             else -> {
@@ -128,11 +153,11 @@ private fun LeccionVocabularioScreenContenido(
 
                 Column(modifier = Modifier.padding(horizontal = 26.dp, vertical = 16.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Vocabulario", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onBackground)
-                        Text("${indiceActual + 1}/$total", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
+                        Text(t(R.string.leccionvocabulario_vocabulario), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onBackground)
+                        Text(t(R.string.leccionvocabulario_texto, indiceActual + 1, total), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
                     }
                     Spacer(modifier = Modifier.height(4.dp))
-                    Box(modifier = Modifier.fillMaxWidth().height(11.dp).clip(RoundedCornerShape(8.dp)).background(BrandSubtle)) {
+                    Box(modifier = Modifier.fillMaxWidth().height(11.dp).clip(RoundedCornerShape(8.dp)).background(MaterialTheme.colorScheme.primaryContainer)) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth((indiceActual + 1f) / total)
@@ -149,13 +174,29 @@ private fun LeccionVocabularioScreenContenido(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "¿Cómo se dice?",
+                        text = t(R.string.leccionvocabulario_como_se_dice),
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     TarjetaVocabularioLeccion(item = actual, volteada = tarjetaVolteada, onVoltear = onVoltear)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    // Pronuncia la palabra del idioma que se aprende (grabación verificada o voz del sistema).
+                    OutlinedButton(onClick = onEscuchar) {
+                        Icon(Icons.AutoMirrored.Outlined.VolumeUp, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(t(R.string.traductor_escuchar))
+                    }
+                    avisoAudio?.let {
+                        Text(
+                            it,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(top = 6.dp)
+                        )
+                    }
                 }
 
                 Row(
@@ -164,9 +205,9 @@ private fun LeccionVocabularioScreenContenido(
                 ) {
                     Box(modifier = Modifier.width(200.dp)) {
                         AikukisnaButton(
-                            text = "Siguiente",
+                            text = t(R.string.leccionvocabulario_siguiente),
                             onClick = onSiguienteClick,
-                            enabled = tarjetaVolteada,
+                            enabled = tarjetaRevelada,
                             trailingIcon = R.drawable.arrow_right
                         )
                     }
@@ -197,9 +238,9 @@ private fun TarjetaVocabularioLeccion(
                 cameraDistance = 12f * density.density
             }
             .clip(RoundedCornerShape(16.dp))
-            .border(width = 1.dp, color = LightGray, shape = RoundedCornerShape(16.dp))
-            .background(color = CardSurface, shape = RoundedCornerShape(16.dp))
-            .then(if (!volteada) Modifier.clickable(onClick = onVoltear) else Modifier)
+            .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = RoundedCornerShape(16.dp))
+            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
+            .clickable(onClick = onVoltear)
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -212,7 +253,7 @@ private fun TarjetaVocabularioLeccion(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = if (rotacion <= 90f) "Revelar traducción" else "Toca para voltear",
+                text = if (rotacion <= 90f) t(R.string.leccionvocabulario_revelar_traduccion) else t(R.string.leccionvocabulario_toca_para_voltear),
                 style = MaterialTheme.typography.labelLarge,
                 color = OrangePressed,
                 textAlign = TextAlign.Center
@@ -237,7 +278,7 @@ private val itemDeMuestra = ItemVocabularioLeccion(textoOrigen = "Tingki", texto
 private fun LeccionVocabularioScreenContenidoPreview() {
     AikukisnaTheme {
         LeccionVocabularioScreenContenido(
-            isLoading = false, errorMessage = null, vocabulario = listOf(itemDeMuestra),
+            isLoading = false, errorMessage = null, vocabulario = listOf(itemDeMuestra), tituloLeccion = "Saludos y despedidas",
             indiceActual = 0, tarjetaVolteada = false,
             onVoltear = {}, onSiguienteClick = {}, onVolver = {}
         )
@@ -249,7 +290,7 @@ private fun LeccionVocabularioScreenContenidoPreview() {
 private fun LeccionVocabularioScreenContenidoVolteadaPreview() {
     AikukisnaTheme {
         LeccionVocabularioScreenContenido(
-            isLoading = false, errorMessage = null, vocabulario = listOf(itemDeMuestra),
+            isLoading = false, errorMessage = null, vocabulario = listOf(itemDeMuestra), tituloLeccion = "Saludos y despedidas",
             indiceActual = 0, tarjetaVolteada = true,
             onVoltear = {}, onSiguienteClick = {}, onVolver = {}
         )
@@ -261,7 +302,7 @@ private fun LeccionVocabularioScreenContenidoVolteadaPreview() {
 private fun LeccionVocabularioScreenContenidoCargandoPreview() {
     AikukisnaTheme {
         LeccionVocabularioScreenContenido(
-            isLoading = true, errorMessage = null, vocabulario = emptyList(),
+            isLoading = true, errorMessage = null, vocabulario = emptyList(), tituloLeccion = "Saludos y despedidas",
             indiceActual = 0, tarjetaVolteada = false,
             onVoltear = {}, onSiguienteClick = {}, onVolver = {}
         )

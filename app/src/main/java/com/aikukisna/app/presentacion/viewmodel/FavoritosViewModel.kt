@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.viewmodel
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -34,10 +37,10 @@ class FavoritosViewModel @Inject constructor(
             errorMessage = null
             try {
                 val userId = authRepository.usuarioActualId()
-                    ?: error("Sesión no iniciada")
+                    ?: error(t(R.string.favoritos_sesion_no_iniciada))
                 favoritos = obtenerFavoritosUseCase(userId)
             } catch (e: Exception) {
-                errorMessage = e.message ?: "No se pudieron cargar tus favoritos"
+                errorMessage = e.message ?: t(R.string.favoritos_no_se_pudieron_cargar_tus)
             } finally {
                 isLoading = false
             }
@@ -51,7 +54,7 @@ class FavoritosViewModel @Inject constructor(
                 quitarFavoritoUseCase(userId, palabraId)
                 favoritos = favoritos.filterNot { it.palabra.id == palabraId }
             } catch (e: Exception) {
-                errorMessage = e.message ?: "No se pudo quitar el favorito"
+                errorMessage = e.message ?: t(R.string.favoritos_no_se_pudo_quitar_el)
             }
         }
     }

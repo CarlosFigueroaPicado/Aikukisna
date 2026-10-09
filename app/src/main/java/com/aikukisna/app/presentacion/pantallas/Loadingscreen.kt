@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
@@ -107,7 +109,7 @@ private val tukiScaleKeyframes = listOf(
 )
 
 /** Cuánto tarda la fase 1 (AK dibujándose + Tuki asentándose). */
-private const val REVEAL_DURATION_MS = 2000
+private const val REVEAL_DURATION_MS = 1500
 
 // --- Puntos de carga: indicador continuo en secuencia, fase 2 ---
 
@@ -115,12 +117,13 @@ private const val DOTS_LOADING_CYCLE_MS = 800
 private const val DOT_SCALE_PEAK = 1.6f
 
 
-private const val DOTS_PHASE_DURATION_MS = 7_000L
+// Antes eran 7 s fijos (9 s de arranque en total) sin esperar nada: la sesión ya está lista antes.
+private const val DOTS_PHASE_DURATION_MS = 400L
 
 
 @Composable
 private fun animarEscalaPunto(indiceEnSecuencia: Int): State<Float> {
-    val infiniteTransition = rememberInfiniteTransition(label = "puntoCarga$indiceEnSecuencia")
+    val infiniteTransition = rememberInfiniteTransition(label = "puntoCarga${indiceEnSecuencia}")
     return infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = 1f,
@@ -137,7 +140,7 @@ private fun animarEscalaPunto(indiceEnSecuencia: Int): State<Float> {
                 offsetType = StartOffsetType.FastForward,
             ),
         ),
-        label = "escalaPunto$indiceEnSecuencia",
+        label = "escalaPunto${indiceEnSecuencia}",
     )
 }
 

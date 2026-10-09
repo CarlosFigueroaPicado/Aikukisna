@@ -1,0 +1,24 @@
+{
+  "prueba_loss": 5.382521152496338,
+  "prueba_chrf_pp": 0.0,
+  "prueba_runtime": 18.362,
+  "prueba_samples_per_second": 0.436,
+  "prueba_steps_per_second": 0.436,
+  "epoch": 0.3125,
+  "por_direccion": {
+    "3_a_4": {
+      "3_a_4_loss": 5.479658603668213,
+      "3_a_4_chrf_pp": 0.0,
+      "3_a_4_runtime": 8.9927,
+      "3_a_4_samples_per_second": 0.445,
+      "3_a_4_steps_per_second": 0.445
+    },
+    "4_a_3": {
+      "4_a_3_loss": 5.285383701324463,
+      "4_a_3_chrf_pp": 0.0,
+      "4_a_3_runtime": 8.8289,
+      "4_a_3_samples_per_second": 0.453,
+      "4_a_3_steps_per_second": 0.453
+    }
+  }
+}

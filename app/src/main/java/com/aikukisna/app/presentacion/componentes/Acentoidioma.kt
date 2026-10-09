@@ -14,7 +14,7 @@ data class AcentoIdioma(val color: Color, val inicial: String)
 fun acentoPara(idioma: Idioma): AcentoIdioma = when (idioma.codigo) {
     "mi" -> AcentoIdioma(OrangePrimary, "MI")
     "es" -> AcentoIdioma(BluePrimary, "ES")
-    "jam" -> AcentoIdioma(YellowPrimary, "KR")
+    Idioma.CODIGO_KRIOL, "jam" -> AcentoIdioma(YellowPrimary, "KR")
     "en" -> AcentoIdioma(GreenSecondary, "EN")
     else -> AcentoIdioma(MediumGray, idioma.nombre.take(2).uppercase())
 }

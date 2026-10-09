@@ -69,10 +69,14 @@ class LeccionRepositoryImpl @Inject constructor(
         // Misma regla de negocio de siempre:
         // capituloNumero != null -> vocabulario (leccion_palabra)
         // capituloNumero == null -> frases (oracion_ejemplo)
+        // Si el tipo esperado no tiene contenido, se muestra el otro: una lección con palabras y sin
+        // frases (p. ej. "Diálogos de Presentación en el Aula") no debe quedar vacía.
         return if (leccion.capituloNumero != null) {
-            ContenidoLeccion.Vocabulario(obtenerVocabulario(leccionId))
+            obtenerVocabulario(leccionId).takeIf { it.isNotEmpty() }?.let { ContenidoLeccion.Vocabulario(it) }
+                ?: ContenidoLeccion.Frases(obtenerFrases(leccionId))
         } else {
-            ContenidoLeccion.Frases(obtenerFrases(leccionId))
+            obtenerFrases(leccionId).takeIf { it.isNotEmpty() }?.let { ContenidoLeccion.Frases(it) }
+                ?: ContenidoLeccion.Vocabulario(obtenerVocabulario(leccionId))
         }
     }
 
@@ -119,6 +123,8 @@ class LeccionRepositoryImpl @Inject constructor(
         return exitosas
     }
 
+    override suspend fun contarLeccionesPendientes(): Int = cache.contarLeccionesPendientes()
+
     private suspend fun obtenerVocabulario(leccionId: Int): List<com.aikukisna.app.domain.model.Palabra> {
         if (conectividad.hayConexion()) {
             try {
@@ -161,6 +167,8 @@ private fun OracionEjemploDto.toDomain() = OracionEjemplo(
     id = id,
     textoOrigen = textoOrigen,
     textoDestino = textoDestino,
+    idiomaOrigenId = idiomaOrigenId,
+    idiomaDestinoId = idiomaDestinoId,
     leccion = null, // ya se conoce el contexto (leccionId) desde donde se llamó; no se re-embebe
     fuente = FuenteDocumento(fuente.id, fuente.titulo, fuente.autor, fuente.anio, fuente.institucion)
 )

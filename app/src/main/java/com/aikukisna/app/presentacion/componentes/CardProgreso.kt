@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.componentes
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,12 +53,12 @@ fun CardProgreso(
                     is ProgresoUiState.Exito -> {
                         if (uiState.listaProgreso.isEmpty()) {
                             Text(
-                                text = "No hay progreso",
+                                text = t(R.string.cardprogreso_no_hay_progreso),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         } else {
                             Text(
-                                text = "Progreso",
+                                text = t(R.string.cardprogreso_progreso),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             uiState.listaProgreso.forEach { progreso ->

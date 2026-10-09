@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,23 +36,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aikukisna.app.R
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.aikukisna.app.domain.usecase.ObtenerPalabrasDemoUseCase
+import com.aikukisna.app.domain.usecase.ObtenerQuizDemoUseCase
+import com.aikukisna.app.presentacion.viewmodel.GuestLeccionViewModel
 import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import com.aikukisna.app.ui.theme.CardSurface
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
 
 @Composable
 fun GuestModeIntroScreen(
     idioma: Idioma,
     onEmpezarLeccion: () -> Unit,
-    onVolver: () -> Unit
+    onVolver: () -> Unit,
+    viewModel: GuestLeccionViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(idioma.id) { viewModel.cargarResumen(idioma.id) }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
         Column {
@@ -63,18 +71,18 @@ fun GuestModeIntroScreen(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = "Volver",
+                    contentDescription = t(R.string.guestmodeintro_volver),
                     modifier = Modifier
                         .size(20.dp)
                         .clickable(onClick = onVolver)
                 )
                 Text(
-                    text = "MODO INVITADO",
+                    text = t(R.string.guestmodeintro_modo_invitado),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            HorizontalDivider(color = LightGray)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
 
         Column(
@@ -88,12 +96,12 @@ fun GuestModeIntroScreen(
         ) {
             Box(
                 modifier = Modifier
-                    .border(width = 1.dp, color = LightGray, shape = RoundedCornerShape(12.dp))
-                    .background(color = CardSurface, shape = RoundedCornerShape(12.dp))
+                    .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = RoundedCornerShape(12.dp))
+                    .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = "¡Vamos a aprender juntos!",
+                    text = t(R.string.guestmodeintro_vamos_a_aprender_juntos),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -114,34 +122,49 @@ fun GuestModeIntroScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Aprende ${idioma.nombre}",
+                    text = t(R.string.guestmodeintro_aprende, idioma.nombre),
                     style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    text = "EN 2 MINUTOS",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center
-                )
+                viewModel.tituloLeccion?.let {
+                    Text(
+                        text = t(R.string.guestmodeintro_leccion_de_prueba, it),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Descubre tu primera sesión gratuita.",
+                    text = t(R.string.guestmodeintro_esta_es_una_muestra_de),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MediumGray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                DetalleLeccion(emoji = "\uD83D\uDCD6", valor = "5", etiqueta = "palabras")
-                DetalleLeccion(emoji = "\u2753", valor = "2", etiqueta = "preguntas")
-                DetalleLeccion(emoji = "\u2B50", valor = "50", etiqueta = "XP")
+            Column(
+                modifier = Modifier.widthIn(max = 300.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                PasoLeccion(
+                    numero = "1",
+                    texto = t(R.string.guestmodeintro_aprende_palabras_con_tarjetas, ObtenerPalabrasDemoUseCase.PALABRAS_DEMO) +
+                        t(R.string.guestmodeintro_ves_la_palabra_en_piensas, idioma.nombre)
+                )
+                PasoLeccion(
+                    numero = "2",
+                    texto = t(R.string.guestmodeintro_prueba_tu_conocimiento_con_un, ObtenerQuizDemoUseCase.PREGUNTAS_DEMO)
+                )
+                PasoLeccion(
+                    numero = "3",
+                    texto = t(R.string.guestmodeintro_mira_tu_resultado_y_todo)
+                )
             }
         }
 
@@ -153,18 +176,38 @@ fun GuestModeIntroScreen(
         ) {
             Box(modifier = Modifier.width(240.dp)) {
                 AikukisnaButton(
-                    text = "Empezar lección",
+                    text = t(R.string.guestmodeintro_empezar_leccion),
                     onClick = onEmpezarLeccion,
                     trailingIcon = R.drawable.play
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Sin crear cuenta - Gratis",
+                text = t(R.string.guestmodeintro_sin_crear_cuenta_gratis),
                 style = MaterialTheme.typography.bodySmall,
-                color = MediumGray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+    }
+}
+
+@Composable
+private fun PasoLeccion(numero: String, texto: String) {
+    Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Box(
+            modifier = Modifier
+                .size(24.dp)
+                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(numero, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onPrimary)
+        }
+        Text(
+            texto,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 
@@ -184,7 +227,7 @@ private fun DetalleLeccion(emoji: String, valor: String, etiqueta: String) {
         Text(
             text = etiqueta,
             style = MaterialTheme.typography.bodySmall,
-            color = MediumGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
     }

@@ -56,3 +56,32 @@ Los scripts imprimen respuestas JSON resumidas y nunca imprimen la clave Supabas
 ```
 
 La plantilla está en `local.properties.example`. El proyecto Android utiliza `local.properties`, no un archivo `.env`.
+
+## Preparar el corpus de traducción
+
+El corpus se genera exclusivamente desde la réplica local de Supabase:
+
+```powershell
+python .\scripts\preparar_corpus_traduccion.py
+```
+
+Los pares con estado `documentada` o `validada` se distribuyen de forma reproducible entre entrenamiento, validación y prueba. Los registros `importada` quedan en `pendientes_validacion.jsonl` y no entran al entrenamiento hasta que sean revisados. Una pareja bilingüe y su dirección inversa siempre quedan en la misma partición para evitar contaminación de la evaluación.
+
+Las aprobaciones humanas se registran por referencia en `modelos/traduccion/validaciones/aprobadas.jsonl`. El estado original procedente de Supabase se conserva para auditoría.
+
+El entrenamiento del modelo maestro requiere un entorno aislado con GPU:
+
+```powershell
+python -m pip install -r .\scripts\requirements-traduccion.txt
+python .\scripts\entrenar_traductor_byt5.py --origen 2 --destino 1
+```
+
+El modelo no debe incorporarse a Android solo por terminar el entrenamiento. Primero debe superar la evaluación reservada y una revisión lingüística externa; después se cuantiza o destila a un modelo móvil.
+
+## Validar plantillas gramaticales
+
+```powershell
+python .\scripts\preparar_plantillas_gramaticales.py
+```
+
+El archivo resultante conserva el patrón y los ejemplos documentados, pero deja vacíos el patrón ejecutable y sus restricciones. Esos campos deben ser completados por el validador lingüístico antes de permitir que el motor genere una oración nueva.

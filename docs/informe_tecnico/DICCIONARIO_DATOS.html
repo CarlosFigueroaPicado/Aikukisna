@@ -1,0 +1,3713 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Diccionario de datos de Aikukisna</title><style>
+:root { color-scheme: light; --ink:#172332; --accent:#175d8e; }
+* { box-sizing:border-box; }
+body { margin:0; color:var(--ink); background:#edf1f5; font:16px/1.65 'Segoe UI',Arial,sans-serif; }
+.layout { max-width:1440px; margin:auto; display:grid; grid-template-columns:265px minmax(0,1fr); }
+nav { padding:30px 20px; position:sticky; top:0; height:100vh; overflow:auto; font-size:13px; }
+nav a { display:block; margin:0 0 9px; text-decoration:none; color:#244d70; }
+nav strong { display:block; margin-bottom:18px; }
+main { padding:50px 62px 80px; background:white; min-width:0; }
+h1 { color:#111; font-size:38px; line-height:1.18; margin:0 0 28px; }
+h2 { font-size:25px; margin-top:46px; line-height:1.3; color:#173951; scroll-margin-top:20px; }
+h3 { font-size:19px; margin-top:30px; color:#244d70; }
+p { margin:12px 0; }
+a { color:#175d8e; overflow-wrap:anywhere; }
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13px; line-height:1.45; table-layout:auto; }
+th,td { border:1px solid #cbd5df; padding:9px 10px; text-align:left; vertical-align:top; overflow-wrap:anywhere; }
+th { background:#e8f0f6; color:#143650; }
+tr:nth-child(even) td { background:#f8fafc; }
+pre { background:#f2f5f8; padding:18px; white-space:pre-wrap; overflow-wrap:anywhere; font:13px/1.6 Consolas,monospace; }
+code { font:0.88em Consolas,monospace; overflow-wrap:anywhere; }
+li { margin:8px 0; }
+.meta { font-size:13px; color:#4c6275; margin-bottom:24px; }
+.related { border:1px solid #ccd8e2; padding:14px; background:#f6f9fb; }
+@media(max-width:950px){ .layout{display:block;} nav{position:static;height:auto;} main{padding:28px 22px;} }
+@media print {
+ @page { size:A4; margin:16mm 16mm 18mm; }
+ body { background:white; font:10pt/1.45 Arial,sans-serif; }
+ .layout { display:block; max-width:none; }
+ nav { display:none; }
+ main { padding:0; }
+ h1 { font-size:25pt; }
+ h2 { font-size:16pt; margin-top:24pt; break-after:avoid; }
+ h3 { font-size:12pt; break-after:avoid; }
+ p,li { orphans:3; widows:3; }
+ table { font-size:8pt; margin:10pt 0; }
+ th,td { padding:5pt; }
+ tr { break-inside:avoid; }
+ thead { display:table-header-group; }
+ pre { font-size:8pt; break-inside:avoid; }
+ a { text-decoration:none; }
+ .meta { font-size:9pt; }
+}
+</style></head><body><div class="layout"><nav aria-label="Contenido"><strong>AIKUKISNA<br>Documentación técnica</strong><a href="#seccion-1">Alcance de la referencia</a><a href="#seccion-2">acepcion</a><a href="#seccion-3">actividad_leccion</a><a href="#seccion-4">actividad_recurso</a><a href="#seccion-5">alineacion_curricular</a><a href="#seccion-6">categoria</a><a href="#seccion-7">cultura_contenido</a><a href="#seccion-8">ejemplo_regla_gramatical</a><a href="#seccion-9">etapa_ruta_curricular</a><a href="#seccion-10">evidencia_curricular_leccion</a><a href="#seccion-11">expresion</a><a href="#seccion-12">expresion_contexto_cultural</a><a href="#seccion-13">fuente_documento</a><a href="#seccion-14">idioma</a><a href="#seccion-15">leccion</a><a href="#seccion-16">leccion_cultura</a><a href="#seccion-17">leccion_experiencia_gamificada</a><a href="#seccion-18">leccion_expresion</a><a href="#seccion-19">leccion_fuente</a><a href="#seccion-20">leccion_oracion</a><a href="#seccion-21">leccion_palabra</a><a href="#seccion-22">leccion_regla_gramatical</a><a href="#seccion-23">leccion_regla_pronunciacion</a><a href="#seccion-24">leccion_ruta_curricular</a><a href="#seccion-25">logro</a><a href="#seccion-26">logro_desbloqueado</a><a href="#seccion-27">memoria_tuki</a><a href="#seccion-28">mundo_gamificado</a><a href="#seccion-29">oracion_ejemplo</a><a href="#seccion-30">palabra</a><a href="#seccion-31">palabra_canonica</a><a href="#seccion-32">palabra_favorita</a><a href="#seccion-33">palabra_fuente</a><a href="#seccion-34">progreso_leccion</a><a href="#seccion-35">regla_gramatical</a><a href="#seccion-36">regla_pronunciacion</a><a href="#seccion-37">revision_linguistica</a><a href="#seccion-38">super_administrador</a><a href="#seccion-39">traduccion</a><a href="#seccion-40">traduccion_acepcion</a><a href="#seccion-41">traduccion_expresion</a><a href="#seccion-42">traduccion_fuente</a><a href="#seccion-43">tuki_respuesta_sistema</a><a href="#seccion-44">usuario</a><a href="#seccion-45">variante_palabra</a><a href="#seccion-46">Vistas de lectura</a><a href="#seccion-47">Funciones SQL propias</a><a href="#seccion-48">Triggers públicos observados</a><a href="#seccion-49">Relaciones por clave foránea</a></nav><main><p class="meta">Corte técnico 1 de octubre de 2026 · Diseño y desarrollo · Lectura y defensa</p><h1>Diccionario de datos de Aikukisna</h1>
+<h2 id="seccion-1">Alcance de la referencia</h2>
+<p>Catálogo del esquema público consultado en Supabase el 1 de octubre de 2026. Incluye 44 tablas, 78 claves foráneas, 22 vistas y 135 índices. No incluye filas de usuarios ni claves de acceso. Las restricciones se reproducen como SQL descriptivo, no como instrucciones de modificación.</p>
+<p><code>NOT NULL</code> significa que el campo no admite nulo. Una FK nullable permite omitir la relación. Las FK solo garantizan existencia de la referencia; no demuestran equivalencia lingüística. Los índices únicos también pueden imponer unicidad sin aparecer como restricciones UNIQUE en pg_constraint.</p>
+<h2 id="seccion-2">acepcion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>palabra_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>numero_acepcion</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>definicion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>contexto</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>categoria_gramatical</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>acepcion_estado_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>acepcion_numero_check</code>: <code>CHECK ((numero_acepcion &gt; 0))</code>.</li>
+<li><code>acepcion_palabra_id_fkey</code>: <code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>acepcion_palabra_id_numero_acepcion_key</code>: <code>UNIQUE (palabra_id, numero_acepcion)</code>.</li>
+<li><code>acepcion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_contenido_linguistico. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX acepcion_pkey ON public.acepcion USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX acepcion_palabra_id_numero_acepcion_key ON public.acepcion USING btree (palabra_id, numero_acepcion)</code>.</li>
+<li><code>CREATE INDEX idx_acepcion_palabra_estado ON public.acepcion USING btree (palabra_id, estado_validacion)</code>.</li>
+<li><code>CREATE INDEX idx_acepcion_updated_at ON public.acepcion USING btree (updated_at, id)</code>.</li>
+</ul>
+<h2 id="seccion-3">actividad_leccion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>orden</code></td>
+<td>smallint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>codigo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>habilidad_curricular</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>mecanica_gamificada</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>descripcion_estudiante</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>evidencia_aprendizaje</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>xp</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>obligatoria</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>activa</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>actividad_leccion_leccion_id_codigo_key</code>: <code>UNIQUE (leccion_id, codigo)</code>.</li>
+<li><code>actividad_leccion_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>actividad_leccion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+<li><code>actividad_leccion_tipo_check</code>: <code>CHECK ((tipo = ANY (ARRAY[&#39;enganche&#39;::text, &#39;vocabulario_contexto&#39;::text, &#39;comprension_escucha&#39;::text, &#39;comprension_lectora&#39;::text, &#39;pronunciacion&#39;::text, &#39;gramatica_aplicada&#39;::text, &#39;produccion_oral&#39;::text, &#39;produccion_escrita&#39;::text, &#39;interaccion_tuki&#39;::text, &#39;reto_final&#39;::text, &#39;retroalimentacion&#39;::text])))</code>.</li>
+<li><code>actividad_leccion_xp_check</code>: <code>CHECK ((xp &gt;= 0))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_actividad_leccion. Operación: SELECT. Roles: anon, authenticated. USING: <code>activa</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX actividad_leccion_pkey ON public.actividad_leccion USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX actividad_leccion_leccion_id_codigo_key ON public.actividad_leccion USING btree (leccion_id, codigo)</code>.</li>
+<li><code>CREATE INDEX idx_actividad_leccion_leccion_orden ON public.actividad_leccion USING btree (leccion_id, orden)</code>.</li>
+</ul>
+<h2 id="seccion-4">actividad_recurso</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>actividad_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_recurso</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>recurso_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>orden</code></td>
+<td>smallint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>rol</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>actividad_recurso_actividad_id_fkey</code>: <code>FOREIGN KEY (actividad_id) REFERENCES actividad_leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>actividad_recurso_pkey</code>: <code>PRIMARY KEY (actividad_id, tipo_recurso, recurso_id)</code>.</li>
+<li><code>actividad_recurso_rol_check</code>: <code>CHECK ((rol = ANY (ARRAY[&#39;principal&#39;::text, &#39;apoyo&#39;::text, &#39;distractor&#39;::text, &#39;contexto&#39;::text])))</code>.</li>
+<li><code>actividad_recurso_tipo_recurso_check</code>: <code>CHECK ((tipo_recurso = ANY (ARRAY[&#39;palabra&#39;::text, &#39;expresion&#39;::text, &#39;oracion&#39;::text, &#39;regla_gramatical&#39;::text, &#39;regla_pronunciacion&#39;::text, &#39;cultura&#39;::text])))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_actividad_recurso. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX actividad_recurso_pkey ON public.actividad_recurso USING btree (actividad_id, tipo_recurso, recurso_id)</code>.</li>
+<li><code>CREATE INDEX idx_actividad_recurso_actividad_orden ON public.actividad_recurso USING btree (actividad_id, orden)</code>.</li>
+</ul>
+<h2 id="seccion-5">alineacion_curricular</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>unidad</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tema</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nivel_referencia</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>evidencia</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_alineacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>grado_referencia</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>area_curricular</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>competencia</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>indicador_logro</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>contenido_curricular</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>eje_sear</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>referencia_documental</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>pagina_referencia</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>apta_revision_formal</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>alineacion_curricular_estado_validacion_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>alineacion_curricular_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>alineacion_curricular_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>alineacion_curricular_leccion_id_fuente_id_tema_key</code>: <code>UNIQUE (leccion_id, fuente_id, tema)</code>.</li>
+<li><code>alineacion_curricular_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica alineacion curricular. Operación: SELECT. Roles: anon, authenticated. USING: <code>(estado_validacion &lt;&gt; &#39;rechazada&#39;::text)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX alineacion_curricular_pkey ON public.alineacion_curricular USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX alineacion_curricular_leccion_id_fuente_id_tema_key ON public.alineacion_curricular USING btree (leccion_id, fuente_id, tema)</code>.</li>
+<li><code>CREATE INDEX idx_alineacion_curricular_fuente_id ON public.alineacion_curricular USING btree (fuente_id)</code>.</li>
+</ul>
+<h2 id="seccion-6">categoria</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nombre</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>categoria_nombre_key</code>: <code>UNIQUE (nombre)</code>.</li>
+<li><code>categoria_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX categoria_pkey ON public.categoria USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX categoria_nombre_key ON public.categoria USING btree (nombre)</code>.</li>
+</ul>
+<h2 id="seccion-7">cultura_contenido</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>titulo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>contenido</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>rango_pagina_inicio</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>rango_pagina_fin</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>cultura_contenido_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>cultura_contenido_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX cultura_contenido_pkey ON public.cultura_contenido USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_cultura_contenido_fuente_id ON public.cultura_contenido USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_cultura_contenido_updated_at ON public.cultura_contenido USING btree (updated_at, id)</code>.</li>
+</ul>
+<h2 id="seccion-8">ejemplo_regla_gramatical</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>regla_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto_idioma</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>traduccion_espanol</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>idioma_traduccion_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>ejemplo_regla_gramatical_estado_validacion_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>ejemplo_regla_gramatical_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL</code>.</li>
+<li><code>ejemplo_regla_gramatical_idioma_traduccion_id_fkey</code>: <code>FOREIGN KEY (idioma_traduccion_id) REFERENCES idioma(id) ON DELETE SET NULL</code>.</li>
+<li><code>ejemplo_regla_gramatical_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+<li><code>ejemplo_regla_gramatical_regla_id_fkey</code>: <code>FOREIGN KEY (regla_id) REFERENCES regla_gramatical(id) ON DELETE CASCADE</code>.</li>
+<li><code>ejemplo_regla_gramatical_regla_id_texto_idioma_key</code>: <code>UNIQUE (regla_id, texto_idioma)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_ejemplo_regla_gramatical. Operación: SELECT. Roles: anon, authenticated. USING: <code>(estado_validacion &lt;&gt; &#39;rechazada&#39;::text)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX ejemplo_regla_gramatical_pkey ON public.ejemplo_regla_gramatical USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX ejemplo_regla_gramatical_regla_id_texto_idioma_key ON public.ejemplo_regla_gramatical USING btree (regla_id, texto_idioma)</code>.</li>
+<li><code>CREATE INDEX idx_ejemplo_regla_gramatical_fuente_id ON public.ejemplo_regla_gramatical USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_ejemplo_regla_gramatical_idioma_traduccion_id ON public.ejemplo_regla_gramatical USING btree (idioma_traduccion_id)</code>.</li>
+</ul>
+<h2 id="seccion-9">etapa_ruta_curricular</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>codigo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nombre</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>orden</code></td>
+<td>smallint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>modalidad</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>grado_origen</code></td>
+<td>smallint</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>grado_destino</code></td>
+<td>smallint</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>unidad_pedagogica_ciclo</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>descripcion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>activa</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>etapa_ruta_curricular_orden_key</code>: <code>UNIQUE (orden)</code>.</li>
+<li><code>etapa_ruta_curricular_pkey</code>: <code>PRIMARY KEY (codigo)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_etapa_ruta_curricular. Operación: SELECT. Roles: anon, authenticated. USING: <code>activa</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX etapa_ruta_curricular_pkey ON public.etapa_ruta_curricular USING btree (codigo)</code>.</li>
+<li><code>CREATE UNIQUE INDEX etapa_ruta_curricular_orden_key ON public.etapa_ruta_curricular USING btree (orden)</code>.</li>
+</ul>
+<h2 id="seccion-10">evidencia_curricular_leccion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>etapa_codigo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>grado</code></td>
+<td>smallint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>asignatura_area</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>unidad_oficial</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>competencia_eje_transversal</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>competencia_grado</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>indicador_logro</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>contenido_oficial</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>criterio_evaluacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>actividad_aikukisna</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>evidencia_aprendizaje</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>pagina_seccion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tipo_correspondencia</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>aplica_sear</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>eje_sear</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>adecuacion_intercultural</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>observacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>lengua_aplicacion_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>naturaleza_aplicacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>es_texto_oficial_literal</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>evidencia_curricular_leccion_estado_validacion_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>evidencia_curricular_leccion_etapa_codigo_fkey</code>: <code>FOREIGN KEY (etapa_codigo) REFERENCES etapa_ruta_curricular(codigo)</code>.</li>
+<li><code>evidencia_curricular_leccion_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>evidencia_curricular_leccion_grado_check</code>: <code>CHECK (((grado &gt;= 1) AND (grado &lt;= 11)))</code>.</li>
+<li><code>evidencia_curricular_leccion_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>evidencia_curricular_leccion_lengua_aplicacion_id_fkey</code>: <code>FOREIGN KEY (lengua_aplicacion_id) REFERENCES idioma(id)</code>.</li>
+<li><code>evidencia_curricular_leccion_naturaleza_aplicacion_check</code>: <code>CHECK ((naturaleza_aplicacion = ANY (ARRAY[&#39;curriculo_nacional&#39;::text, &#39;adaptacion_linguistica&#39;::text, &#39;eib_sear&#39;::text, &#39;puente_transicion&#39;::text])))</code>.</li>
+<li><code>evidencia_curricular_leccion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+<li><code>evidencia_curricular_leccion_tipo_correspondencia_check</code>: <code>CHECK ((tipo_correspondencia = ANY (ARRAY[&#39;literal&#39;::text, &#39;directa&#39;::text, &#39;tematica&#39;::text, &#39;prerrequisito&#39;::text, &#39;puente&#39;::text])))</code>.</li>
+<li><code>evidencia_documentada_completa_chk</code>: <code>CHECK (((estado_validacion &lt;&gt; ALL (ARRAY[&#39;documentada&#39;::text, &#39;validada&#39;::text])) OR ((NULLIF(btrim(COALESCE(competencia_grado, &#39;&#39;::text)), &#39;&#39;::text) IS NOT NULL) AND (NULLIF(btrim(COALESCE(indicador_logro, &#39;&#39;::text)), &#39;&#39;::text) IS NOT NULL) AND (NULLIF(btrim(COALESCE(contenido_oficial, &#39;&#39;::text)), &#39;&#39;::text) IS NOT NULL) AND (NULLIF(btrim(COALESCE(criterio_evaluacion, &#39;&#39;::text)), &#39;&#39;::text) IS NOT NULL))))</code>.</li>
+<li><code>evidencia_sear_completa_chk</code>: <code>CHECK (((NOT aplica_sear) OR ((NULLIF(btrim(COALESCE(eje_sear, &#39;&#39;::text)), &#39;&#39;::text) IS NOT NULL) AND (NULLIF(btrim(COALESCE(adecuacion_intercultural, &#39;&#39;::text)), &#39;&#39;::text) IS NOT NULL))))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_autenticada_evidencia_curricular. Operación: SELECT. Roles: authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX evidencia_curricular_leccion_pkey ON public.evidencia_curricular_leccion USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_evidencia_curricular_leccion_leccion ON public.evidencia_curricular_leccion USING btree (leccion_id)</code>.</li>
+<li><code>CREATE INDEX idx_evidencia_curricular_leccion_etapa ON public.evidencia_curricular_leccion USING btree (etapa_codigo)</code>.</li>
+<li><code>CREATE INDEX idx_evidencia_curricular_leccion_fuente ON public.evidencia_curricular_leccion USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_evidencia_curricular_lengua_aplicacion ON public.evidencia_curricular_leccion USING btree (lengua_aplicacion_id)</code>.</li>
+</ul>
+<h2 id="seccion-11">expresion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>idioma_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto_normalizado</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto_busqueda</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>expresion_estado_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>expresion_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>expresion_idioma_id_fkey</code>: <code>FOREIGN KEY (idioma_id) REFERENCES idioma(id)</code>.</li>
+<li><code>expresion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_contenido_linguistico. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX expresion_pkey ON public.expresion USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_expresion_idioma_texto ON public.expresion USING btree (idioma_id, texto_normalizado)</code>.</li>
+<li><code>CREATE INDEX idx_expresion_updated_at ON public.expresion USING btree (updated_at, id)</code>.</li>
+<li><code>CREATE INDEX idx_expresion_fuente_id ON public.expresion USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_expresion_idioma_texto_busqueda ON public.expresion USING btree (idioma_id, texto_busqueda)</code>.</li>
+</ul>
+<h2 id="seccion-12">expresion_contexto_cultural</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>expresion_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>cultura_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_relacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>expresion_contexto_cultural_cultura_id_fkey</code>: <code>FOREIGN KEY (cultura_id) REFERENCES cultura_contenido(id) ON DELETE CASCADE</code>.</li>
+<li><code>expresion_contexto_cultural_expresion_id_fkey</code>: <code>FOREIGN KEY (expresion_id) REFERENCES expresion(id) ON DELETE CASCADE</code>.</li>
+<li><code>expresion_contexto_cultural_pkey</code>: <code>PRIMARY KEY (expresion_id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_expresion_contexto_cultural. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX expresion_contexto_cultural_pkey ON public.expresion_contexto_cultural USING btree (expresion_id)</code>.</li>
+<li><code>CREATE INDEX idx_expresion_contexto_cultural_cultura_id ON public.expresion_contexto_cultural USING btree (cultura_id)</code>.</li>
+</ul>
+<h2 id="seccion-13">fuente_documento</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>titulo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>autor</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>anio</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>institucion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>licencia</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>nota_uso</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>fuente_documento_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX fuente_documento_pkey ON public.fuente_documento USING btree (id)</code>.</li>
+</ul>
+<h2 id="seccion-14">idioma</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>codigo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nombre</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>idioma_codigo_key</code>: <code>UNIQUE (codigo)</code>.</li>
+<li><code>idioma_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX idioma_pkey ON public.idioma USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX idioma_codigo_key ON public.idioma USING btree (codigo)</code>.</li>
+</ul>
+<h2 id="seccion-15">leccion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>titulo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>capitulo_numero</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>nivel</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>categoria_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>idioma_meta_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_categoria_id_fkey</code>: <code>FOREIGN KEY (categoria_id) REFERENCES categoria(id)</code>.</li>
+<li><code>leccion_idioma_meta_id_fkey</code>: <code>FOREIGN KEY (idioma_meta_id) REFERENCES idioma(id)</code>.</li>
+<li><code>leccion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+<li>solo superadmin borra lecciones. Operación: DELETE. Roles: public. USING: <code>(EXISTS ( SELECT 1    FROM super_administrador   WHERE (super_administrador.usuario_id = ( SELECT auth.uid() AS uid))))</code>. WITH CHECK: <code>no explícito</code>.</li>
+<li>solo superadmin crea lecciones. Operación: INSERT. Roles: public. USING: <code>no explícito</code>. WITH CHECK: <code>(EXISTS ( SELECT 1    FROM super_administrador   WHERE (super_administrador.usuario_id = ( SELECT auth.uid() AS uid))))</code>.</li>
+<li>solo superadmin edita lecciones. Operación: UPDATE. Roles: public. USING: <code>(EXISTS ( SELECT 1    FROM super_administrador   WHERE (super_administrador.usuario_id = ( SELECT auth.uid() AS uid))))</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_pkey ON public.leccion USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_categoria_id ON public.leccion USING btree (categoria_id)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_idioma_meta_id ON public.leccion USING btree (idioma_meta_id)</code>.</li>
+</ul>
+<h2 id="seccion-16">leccion_cultura</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>cultura_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_vinculo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_cultura_cultura_id_fkey</code>: <code>FOREIGN KEY (cultura_id) REFERENCES cultura_contenido(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_cultura_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_cultura_pkey</code>: <code>PRIMARY KEY (leccion_id, cultura_id, tipo_vinculo)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_leccion_cultura. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_cultura_pkey ON public.leccion_cultura USING btree (leccion_id, cultura_id, tipo_vinculo)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_cultura_cultura_id ON public.leccion_cultura USING btree (cultura_id)</code>.</li>
+</ul>
+<h2 id="seccion-17">leccion_experiencia_gamificada</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>titulo_visible</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>subtitulo_visible</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>formato_principal</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>xp_base</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>usa_tuki</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>usa_audio</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>usa_lectura</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>usa_escritura</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>usa_oralidad</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tiene_reto_final</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>mostrar_info_curricular</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>activa</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>mundo_codigo</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>orden_en_mundo</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>recompensa_visible</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mensaje_inicio_tuki</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>mensaje_fin_tuki</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_experiencia_gamificada_formato_principal_check</code>: <code>CHECK ((formato_principal = ANY (ARRAY[&#39;mision&#39;::text, &#39;historia&#39;::text, &#39;reto&#39;::text, &#39;dialogo&#39;::text, &#39;exploracion&#39;::text, &#39;jefe&#39;::text])))</code>.</li>
+<li><code>leccion_experiencia_gamificada_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_experiencia_gamificada_mundo_codigo_fkey</code>: <code>FOREIGN KEY (mundo_codigo) REFERENCES mundo_gamificado(codigo)</code>.</li>
+<li><code>leccion_experiencia_gamificada_pkey</code>: <code>PRIMARY KEY (leccion_id)</code>.</li>
+<li><code>leccion_experiencia_gamificada_xp_base_check</code>: <code>CHECK ((xp_base &gt;= 0))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_leccion_experiencia_gamificada. Operación: SELECT. Roles: anon, authenticated. USING: <code>activa</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_experiencia_gamificada_pkey ON public.leccion_experiencia_gamificada USING btree (leccion_id)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_experiencia_gamificada_mundo ON public.leccion_experiencia_gamificada USING btree (mundo_codigo)</code>.</li>
+</ul>
+<h2 id="seccion-18">leccion_expresion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>expresion_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_vinculo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_expresion_expresion_id_fkey</code>: <code>FOREIGN KEY (expresion_id) REFERENCES expresion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_expresion_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_expresion_pkey</code>: <code>PRIMARY KEY (leccion_id, expresion_id, tipo_vinculo)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_leccion_expresion. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_expresion_pkey ON public.leccion_expresion USING btree (leccion_id, expresion_id, tipo_vinculo)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_expresion_expresion ON public.leccion_expresion USING btree (expresion_id)</code>.</li>
+</ul>
+<h2 id="seccion-19">leccion_fuente</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_vinculo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_fuente_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>leccion_fuente_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_fuente_pkey</code>: <code>PRIMARY KEY (leccion_id, fuente_id, tipo_vinculo)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_leccion_fuente. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_fuente_pkey ON public.leccion_fuente USING btree (leccion_id, fuente_id, tipo_vinculo)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_fuente_fuente_id ON public.leccion_fuente USING btree (fuente_id)</code>.</li>
+</ul>
+<h2 id="seccion-20">leccion_oracion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>oracion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_vinculo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_oracion_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_oracion_oracion_id_fkey</code>: <code>FOREIGN KEY (oracion_id) REFERENCES oracion_ejemplo(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_oracion_pkey</code>: <code>PRIMARY KEY (leccion_id, oracion_id, tipo_vinculo)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_leccion_oracion. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_oracion_pkey ON public.leccion_oracion USING btree (leccion_id, oracion_id, tipo_vinculo)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_oracion_oracion_id ON public.leccion_oracion USING btree (oracion_id)</code>.</li>
+</ul>
+<h2 id="seccion-21">leccion_palabra</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>palabra_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_palabra_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_palabra_palabra_id_fkey</code>: <code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_palabra_pkey</code>: <code>PRIMARY KEY (leccion_id, palabra_id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_palabra_pkey ON public.leccion_palabra USING btree (leccion_id, palabra_id)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_palabra_palabra_id ON public.leccion_palabra USING btree (palabra_id)</code>.</li>
+</ul>
+<h2 id="seccion-22">leccion_regla_gramatical</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>regla_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>orden</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_regla_gramatical_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_regla_gramatical_pkey</code>: <code>PRIMARY KEY (leccion_id, regla_id)</code>.</li>
+<li><code>leccion_regla_gramatical_regla_id_fkey</code>: <code>FOREIGN KEY (regla_id) REFERENCES regla_gramatical(id) ON DELETE CASCADE</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_leccion_regla_gramatical. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_regla_gramatical_pkey ON public.leccion_regla_gramatical USING btree (leccion_id, regla_id)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_regla_gramatical_regla_id ON public.leccion_regla_gramatical USING btree (regla_id)</code>.</li>
+</ul>
+<h2 id="seccion-23">leccion_regla_pronunciacion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>regla_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>orden</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_regla_pronunciacion_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_regla_pronunciacion_pkey</code>: <code>PRIMARY KEY (leccion_id, regla_id)</code>.</li>
+<li><code>leccion_regla_pronunciacion_regla_id_fkey</code>: <code>FOREIGN KEY (regla_id) REFERENCES regla_pronunciacion(id) ON DELETE CASCADE</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_leccion_regla_pronunciacion. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_regla_pronunciacion_pkey ON public.leccion_regla_pronunciacion USING btree (leccion_id, regla_id)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_regla_pronunciacion_regla ON public.leccion_regla_pronunciacion USING btree (regla_id)</code>.</li>
+</ul>
+<h2 id="seccion-24">leccion_ruta_curricular</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>etapa_codigo</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>estado_mapeo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>es_refuerzo</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>es_transicion</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>prerrequisito_descripcion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>proposito_transicion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>justificacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>fuente_primaria_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>leccion_ruta_curricular_estado_mapeo_check</code>: <code>CHECK ((estado_mapeo = ANY (ARRAY[&#39;pendiente_evidencia&#39;::text, &#39;propuesta&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text])))</code>.</li>
+<li><code>leccion_ruta_curricular_etapa_codigo_fkey</code>: <code>FOREIGN KEY (etapa_codigo) REFERENCES etapa_ruta_curricular(codigo)</code>.</li>
+<li><code>leccion_ruta_curricular_fuente_primaria_id_fkey</code>: <code>FOREIGN KEY (fuente_primaria_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>leccion_ruta_curricular_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>leccion_ruta_curricular_pkey</code>: <code>PRIMARY KEY (leccion_id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_leccion_ruta_curricular. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX leccion_ruta_curricular_pkey ON public.leccion_ruta_curricular USING btree (leccion_id)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_ruta_curricular_etapa ON public.leccion_ruta_curricular USING btree (etapa_codigo)</code>.</li>
+<li><code>CREATE INDEX idx_leccion_ruta_curricular_fuente ON public.leccion_ruta_curricular USING btree (fuente_primaria_id)</code>.</li>
+</ul>
+<h2 id="seccion-25">logro</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nombre</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>descripcion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>condicion_tipo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>condicion_valor</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>categoria_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>chk_condicion_tipo_valido</code>: <code>CHECK ((condicion_tipo = ANY (ARRAY[&#39;lecciones_completadas&#39;::text, &#39;racha_maxima&#39;::text, &#39;palabras_favoritas&#39;::text, &#39;memorias_tuki&#39;::text, &#39;leccion_categoria_completada&#39;::text])))</code>.</li>
+<li><code>logro_categoria_id_fkey</code>: <code>FOREIGN KEY (categoria_id) REFERENCES categoria(id)</code>.</li>
+<li><code>logro_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX logro_pkey ON public.logro USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_logro_categoria_id ON public.logro USING btree (categoria_id)</code>.</li>
+</ul>
+<h2 id="seccion-26">logro_desbloqueado</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>usuario_id</code></td>
+<td>uuid</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>logro_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fecha</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>logro_desbloqueado_logro_id_fkey</code>: <code>FOREIGN KEY (logro_id) REFERENCES logro(id) ON DELETE CASCADE</code>.</li>
+<li><code>logro_desbloqueado_pkey</code>: <code>PRIMARY KEY (usuario_id, logro_id)</code>.</li>
+<li><code>logro_desbloqueado_usuario_id_fkey</code>: <code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>usuario lee sus propios logros. Operación: SELECT. Roles: public. USING: <code>(( SELECT auth.uid() AS uid) = usuario_id)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX logro_desbloqueado_pkey ON public.logro_desbloqueado USING btree (usuario_id, logro_id)</code>.</li>
+<li><code>CREATE INDEX idx_logro_desbloqueado_logro_id ON public.logro_desbloqueado USING btree (logro_id)</code>.</li>
+</ul>
+<h2 id="seccion-27">memoria_tuki</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>usuario_id</code></td>
+<td>uuid</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>resumen</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fecha</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>chk_tipo_valido</code>: <code>CHECK ((tipo = ANY (ARRAY[&#39;aprendizaje&#39;::text, &#39;conversacion&#39;::text, &#39;preferencia&#39;::text, &#39;recomendacion&#39;::text])))</code>.</li>
+<li><code>memoria_tuki_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+<li><code>memoria_tuki_usuario_id_fkey</code>: <code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>usuario ve sus propias memorias de tuki. Operación: ALL. Roles: public. USING: <code>(( SELECT auth.uid() AS uid) = usuario_id)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX memoria_tuki_pkey ON public.memoria_tuki USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_memoria_tuki_usuario_id ON public.memoria_tuki USING btree (usuario_id)</code>.</li>
+</ul>
+<h2 id="seccion-28">mundo_gamificado</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>codigo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nombre_visible</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>descripcion_visible</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>orden</code></td>
+<td>smallint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>icono_clave</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>xp_desbloqueo</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>recompensa_final</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>activo</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>mundo_gamificado_orden_key</code>: <code>UNIQUE (orden)</code>.</li>
+<li><code>mundo_gamificado_pkey</code>: <code>PRIMARY KEY (codigo)</code>.</li>
+<li><code>mundo_gamificado_xp_desbloqueo_check</code>: <code>CHECK ((xp_desbloqueo &gt;= 0))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_mundo_gamificado. Operación: SELECT. Roles: anon, authenticated. USING: <code>activo</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX mundo_gamificado_pkey ON public.mundo_gamificado USING btree (codigo)</code>.</li>
+<li><code>CREATE UNIQUE INDEX mundo_gamificado_orden_key ON public.mundo_gamificado USING btree (orden)</code>.</li>
+</ul>
+<h2 id="seccion-29">oracion_ejemplo</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto_origen</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto_destino</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>idioma_origen_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>idioma_destino_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota_validacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>oracion_ejemplo_estado_validacion_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>oracion_ejemplo_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>oracion_ejemplo_idioma_destino_id_fkey</code>: <code>FOREIGN KEY (idioma_destino_id) REFERENCES idioma(id)</code>.</li>
+<li><code>oracion_ejemplo_idioma_origen_id_fkey</code>: <code>FOREIGN KEY (idioma_origen_id) REFERENCES idioma(id)</code>.</li>
+<li><code>oracion_ejemplo_idiomas_distintos</code>: <code>CHECK ((idioma_origen_id &lt;&gt; idioma_destino_id))</code>.</li>
+<li><code>oracion_ejemplo_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE SET NULL</code>.</li>
+<li><code>oracion_ejemplo_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX oracion_ejemplo_pkey ON public.oracion_ejemplo USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_oracion_ejemplo_fuente_id ON public.oracion_ejemplo USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_oracion_ejemplo_leccion_id ON public.oracion_ejemplo USING btree (leccion_id)</code>.</li>
+<li><code>CREATE INDEX oracion_ejemplo_busqueda_origen_idx ON public.oracion_ejemplo USING btree (idioma_origen_id, lower(btrim(texto_origen)))</code>.</li>
+<li><code>CREATE INDEX oracion_ejemplo_busqueda_destino_idx ON public.oracion_ejemplo USING btree (idioma_destino_id, lower(btrim(texto_destino)))</code>.</li>
+</ul>
+<h2 id="seccion-30">palabra</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>idioma_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>categoria_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>pronunciacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>pronunciacion_fonetica</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>pronunciacion_verificada</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto_normalizado</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>palabra_canonica_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>texto_busqueda</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>tipo_entrada</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>palabra_categoria_id_fkey</code>: <code>FOREIGN KEY (categoria_id) REFERENCES categoria(id)</code>.</li>
+<li><code>palabra_estado_validacion_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>palabra_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>palabra_idioma_id_fkey</code>: <code>FOREIGN KEY (idioma_id) REFERENCES idioma(id)</code>.</li>
+<li><code>palabra_palabra_canonica_id_fkey</code>: <code>FOREIGN KEY (palabra_canonica_id) REFERENCES palabra(id) ON DELETE SET NULL</code>.</li>
+<li><code>palabra_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+<li><code>palabra_tipo_entrada_check</code>: <code>CHECK ((tipo_entrada = ANY (ARRAY[&#39;palabra&#39;::text, &#39;locucion&#39;::text, &#39;morfema_fragmento&#39;::text, &#39;texto_lexicografico&#39;::text, &#39;pendiente_clasificacion&#39;::text])))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX palabra_pkey ON public.palabra USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_texto_trgm ON public.palabra USING gin (texto gin_trgm_ops)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_categoria_id ON public.palabra USING btree (categoria_id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_fuente_id ON public.palabra USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_idioma_id ON public.palabra USING btree (idioma_id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_idioma_texto_normalizado ON public.palabra USING btree (idioma_id, texto_normalizado)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_updated_at ON public.palabra USING btree (updated_at, id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_canonica_id ON public.palabra USING btree (palabra_canonica_id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_idioma_texto_busqueda ON public.palabra USING btree (idioma_id, texto_busqueda)</code>.</li>
+</ul>
+<h2 id="seccion-31">palabra_canonica</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>palabra_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>palabra_canonica_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>motivo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>palabra_canonica_check</code>: <code>CHECK (((palabra_id &gt; 0) AND (palabra_canonica_id &gt; 0)))</code>.</li>
+<li><code>palabra_canonica_palabra_canonica_id_fkey</code>: <code>FOREIGN KEY (palabra_canonica_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>palabra_canonica_palabra_id_fkey</code>: <code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>palabra_canonica_pkey</code>: <code>PRIMARY KEY (palabra_id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_palabra_canonica. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX palabra_canonica_pkey ON public.palabra_canonica USING btree (palabra_id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_canonica_canonica ON public.palabra_canonica USING btree (palabra_canonica_id)</code>.</li>
+</ul>
+<h2 id="seccion-32">palabra_favorita</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>usuario_id</code></td>
+<td>uuid</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>palabra_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>palabra_favorita_palabra_id_fkey</code>: <code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>palabra_favorita_pkey</code>: <code>PRIMARY KEY (usuario_id, palabra_id)</code>.</li>
+<li><code>palabra_favorita_usuario_id_fkey</code>: <code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>usuario ve y edita sus propios favoritos. Operación: ALL. Roles: public. USING: <code>(( SELECT auth.uid() AS uid) = usuario_id)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX palabra_favorita_pkey ON public.palabra_favorita USING btree (usuario_id, palabra_id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_favorita_palabra_id ON public.palabra_favorita USING btree (palabra_id)</code>.</li>
+</ul>
+<h2 id="seccion-33">palabra_fuente</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>palabra_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>pagina_inicio</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>pagina_fin</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>palabra_fuente_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>palabra_fuente_paginas_check</code>: <code>CHECK (((pagina_inicio IS NULL) OR (pagina_fin IS NULL) OR (pagina_fin &gt;= pagina_inicio)))</code>.</li>
+<li><code>palabra_fuente_palabra_id_fkey</code>: <code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>palabra_fuente_pkey</code>: <code>PRIMARY KEY (palabra_id, fuente_id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_contenido_linguistico. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX palabra_fuente_pkey ON public.palabra_fuente USING btree (palabra_id, fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_fuente_fuente ON public.palabra_fuente USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_palabra_fuente_updated_at ON public.palabra_fuente USING btree (updated_at, palabra_id)</code>.</li>
+</ul>
+<h2 id="seccion-34">progreso_leccion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>usuario_id</code></td>
+<td>uuid</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>leccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>estado</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>puntaje</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>fecha_completado</code></td>
+<td>timestamp with time zone</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>chk_estado_valido</code>: <code>CHECK ((estado = ANY (ARRAY[&#39;no_iniciada&#39;::text, &#39;en_progreso&#39;::text, &#39;completada&#39;::text])))</code>.</li>
+<li><code>progreso_leccion_leccion_id_fkey</code>: <code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code>.</li>
+<li><code>progreso_leccion_pkey</code>: <code>PRIMARY KEY (usuario_id, leccion_id)</code>.</li>
+<li><code>progreso_leccion_usuario_id_fkey</code>: <code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>usuario ve y edita su propio progreso. Operación: ALL. Roles: public. USING: <code>(( SELECT auth.uid() AS uid) = usuario_id)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX progreso_leccion_pkey ON public.progreso_leccion USING btree (usuario_id, leccion_id)</code>.</li>
+<li><code>CREATE INDEX idx_progreso_leccion_leccion_id ON public.progreso_leccion USING btree (leccion_id)</code>.</li>
+</ul>
+<h2 id="seccion-35">regla_gramatical</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>idioma_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>codigo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>categoria</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>titulo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>descripcion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>patron</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>aplicacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>productiva</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>prioridad</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>notas</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>regla_gramatical_estado_validacion_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>regla_gramatical_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL</code>.</li>
+<li><code>regla_gramatical_idioma_id_codigo_key</code>: <code>UNIQUE (idioma_id, codigo)</code>.</li>
+<li><code>regla_gramatical_idioma_id_fkey</code>: <code>FOREIGN KEY (idioma_id) REFERENCES idioma(id) ON DELETE CASCADE</code>.</li>
+<li><code>regla_gramatical_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_regla_gramatical. Operación: SELECT. Roles: anon, authenticated. USING: <code>(estado_validacion &lt;&gt; &#39;rechazada&#39;::text)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX regla_gramatical_pkey ON public.regla_gramatical USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX regla_gramatical_idioma_id_codigo_key ON public.regla_gramatical USING btree (idioma_id, codigo)</code>.</li>
+<li><code>CREATE INDEX idx_regla_gramatical_fuente_id ON public.regla_gramatical USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_regla_gramatical_updated_at ON public.regla_gramatical USING btree (updated_at, id)</code>.</li>
+</ul>
+<h2 id="seccion-36">regla_pronunciacion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>idioma_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>patron</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>descripcion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>reemplazo_fonetico</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>ejemplo</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>prioridad</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>activa</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>notas</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>regla_pronunciacion_estado_validacion_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;documentada&#39;::text, &#39;pendiente_fonetica&#39;::text, &#39;validada&#39;::text])))</code>.</li>
+<li><code>regla_pronunciacion_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL</code>.</li>
+<li><code>regla_pronunciacion_idioma_id_fkey</code>: <code>FOREIGN KEY (idioma_id) REFERENCES idioma(id) ON DELETE CASCADE</code>.</li>
+<li><code>regla_pronunciacion_idioma_id_patron_tipo_key</code>: <code>UNIQUE (idioma_id, patron, tipo)</code>.</li>
+<li><code>regla_pronunciacion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+<li><code>regla_pronunciacion_tipo_check</code>: <code>CHECK ((tipo = ANY (ARRAY[&#39;grafema&#39;::text, &#39;digrafo&#39;::text, &#39;vocal_larga&#39;::text, &#39;ortografia&#39;::text, &#39;otro&#39;::text])))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX regla_pronunciacion_pkey ON public.regla_pronunciacion USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX regla_pronunciacion_idioma_id_patron_tipo_key ON public.regla_pronunciacion USING btree (idioma_id, patron, tipo)</code>.</li>
+<li><code>CREATE INDEX idx_regla_pronunciacion_fuente_id ON public.regla_pronunciacion USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_regla_pronunciacion_updated_at ON public.regla_pronunciacion USING btree (updated_at, id)</code>.</li>
+</ul>
+<h2 id="seccion-37">revision_linguistica</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_entidad</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>entidad_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>clasificacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>estado</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>observacion</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>revisado_por</code></td>
+<td>uuid</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>revision_linguistica_estado_check</code>: <code>CHECK ((estado = ANY (ARRAY[&#39;pendiente&#39;::text, &#39;en_revision&#39;::text, &#39;aprobada&#39;::text, &#39;rechazada&#39;::text, &#39;requiere_consulta&#39;::text])))</code>.</li>
+<li><code>revision_linguistica_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+<li><code>revision_linguistica_revisado_por_fkey</code>: <code>FOREIGN KEY (revisado_por) REFERENCES usuario(id) ON DELETE SET NULL</code>.</li>
+<li><code>revision_linguistica_tipo_entidad_check</code>: <code>CHECK ((tipo_entidad = ANY (ARRAY[&#39;palabra&#39;::text, &#39;traduccion&#39;::text, &#39;acepcion&#39;::text, &#39;traduccion_acepcion&#39;::text, &#39;expresion&#39;::text, &#39;traduccion_expresion&#39;::text, &#39;variante_palabra&#39;::text])))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>superadmin gestiona revisiones linguisticas. Operación: ALL. Roles: authenticated. USING: <code>(EXISTS ( SELECT 1    FROM super_administrador sa   WHERE (sa.usuario_id = ( SELECT auth.uid() AS uid))))</code>. WITH CHECK: <code>((EXISTS ( SELECT 1    FROM super_administrador sa   WHERE (sa.usuario_id = ( SELECT auth.uid() AS uid)))) AND ((revisado_por IS NULL) OR (revisado_por = ( SELECT auth.uid() AS uid))))</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX revision_linguistica_pkey ON public.revision_linguistica USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_revision_linguistica_entidad ON public.revision_linguistica USING btree (tipo_entidad, entidad_id)</code>.</li>
+<li><code>CREATE INDEX idx_revision_linguistica_estado ON public.revision_linguistica USING btree (estado)</code>.</li>
+<li><code>CREATE INDEX idx_revision_linguistica_revisado_por ON public.revision_linguistica USING btree (revisado_por)</code>.</li>
+</ul>
+<h2 id="seccion-38">super_administrador</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>usuario_id</code></td>
+<td>uuid</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>super_administrador_pkey</code>: <code>PRIMARY KEY (usuario_id)</code>.</li>
+<li><code>super_administrador_usuario_id_fkey</code>: <code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>usuario solo verifica si el mismo es superadmin. Operación: SELECT. Roles: public. USING: <code>(usuario_id = ( SELECT auth.uid() AS uid))</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX super_administrador_pkey ON public.super_administrador USING btree (usuario_id)</code>.</li>
+</ul>
+<h2 id="seccion-39">traduccion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>palabra_origen_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>palabra_destino_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nivel_confianza</code></td>
+<td>numeric(4,3)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>es_preferida</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>traduccion_estado_validacion_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>traduccion_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>traduccion_palabra_destino_id_fkey</code>: <code>FOREIGN KEY (palabra_destino_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>traduccion_palabra_origen_id_fkey</code>: <code>FOREIGN KEY (palabra_origen_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>traduccion_palabra_origen_id_palabra_destino_id_key</code>: <code>UNIQUE (palabra_origen_id, palabra_destino_id)</code>.</li>
+<li><code>traduccion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura publica. Operación: SELECT. Roles: public. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX traduccion_pkey ON public.traduccion USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX traduccion_palabra_origen_id_palabra_destino_id_key ON public.traduccion USING btree (palabra_origen_id, palabra_destino_id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_origen ON public.traduccion USING btree (palabra_origen_id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_palabra_destino_id ON public.traduccion USING btree (palabra_destino_id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_fuente_id ON public.traduccion USING btree (fuente_id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_updated_at ON public.traduccion USING btree (updated_at, id)</code>.</li>
+</ul>
+<h2 id="seccion-40">traduccion_acepcion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>acepcion_origen_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>acepcion_destino_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nivel_confianza</code></td>
+<td>numeric(4,3)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>traduccion_acepcion_acepcion_destino_id_fkey</code>: <code>FOREIGN KEY (acepcion_destino_id) REFERENCES acepcion(id) ON DELETE CASCADE</code>.</li>
+<li><code>traduccion_acepcion_acepcion_origen_id_acepcion_destino_id__key</code>: <code>UNIQUE (acepcion_origen_id, acepcion_destino_id, tipo)</code>.</li>
+<li><code>traduccion_acepcion_acepcion_origen_id_fkey</code>: <code>FOREIGN KEY (acepcion_origen_id) REFERENCES acepcion(id) ON DELETE CASCADE</code>.</li>
+<li><code>traduccion_acepcion_confianza_check</code>: <code>CHECK (((nivel_confianza IS NULL) OR ((nivel_confianza &gt;= (0)::numeric) AND (nivel_confianza &lt;= (1)::numeric))))</code>.</li>
+<li><code>traduccion_acepcion_distinta_check</code>: <code>CHECK ((acepcion_origen_id &lt;&gt; acepcion_destino_id))</code>.</li>
+<li><code>traduccion_acepcion_estado_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>traduccion_acepcion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_contenido_linguistico. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX traduccion_acepcion_pkey ON public.traduccion_acepcion USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX traduccion_acepcion_acepcion_origen_id_acepcion_destino_id__key ON public.traduccion_acepcion USING btree (acepcion_origen_id, acepcion_destino_id, tipo)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_acepcion_origen ON public.traduccion_acepcion USING btree (acepcion_origen_id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_acepcion_destino ON public.traduccion_acepcion USING btree (acepcion_destino_id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_acepcion_updated_at ON public.traduccion_acepcion USING btree (updated_at, id)</code>.</li>
+</ul>
+<h2 id="seccion-41">traduccion_expresion</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>expresion_origen_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>expresion_destino_id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>traduccion_expresion_distinta_check</code>: <code>CHECK ((expresion_origen_id &lt;&gt; expresion_destino_id))</code>.</li>
+<li><code>traduccion_expresion_estado_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>traduccion_expresion_expresion_destino_id_fkey</code>: <code>FOREIGN KEY (expresion_destino_id) REFERENCES expresion(id) ON DELETE CASCADE</code>.</li>
+<li><code>traduccion_expresion_expresion_origen_id_expresion_destino__key</code>: <code>UNIQUE (expresion_origen_id, expresion_destino_id)</code>.</li>
+<li><code>traduccion_expresion_expresion_origen_id_fkey</code>: <code>FOREIGN KEY (expresion_origen_id) REFERENCES expresion(id) ON DELETE CASCADE</code>.</li>
+<li><code>traduccion_expresion_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_contenido_linguistico. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX traduccion_expresion_pkey ON public.traduccion_expresion USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX traduccion_expresion_expresion_origen_id_expresion_destino__key ON public.traduccion_expresion USING btree (expresion_origen_id, expresion_destino_id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_expresion_origen ON public.traduccion_expresion USING btree (expresion_origen_id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_expresion_updated_at ON public.traduccion_expresion USING btree (updated_at, id)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_expresion_destino ON public.traduccion_expresion USING btree (expresion_destino_id)</code>.</li>
+</ul>
+<h2 id="seccion-42">traduccion_fuente</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>traduccion_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo_vinculo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>traduccion_fuente_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code>.</li>
+<li><code>traduccion_fuente_pkey</code>: <code>PRIMARY KEY (traduccion_id, fuente_id, tipo_vinculo)</code>.</li>
+<li><code>traduccion_fuente_traduccion_id_fkey</code>: <code>FOREIGN KEY (traduccion_id) REFERENCES traduccion(id) ON DELETE CASCADE</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_traduccion_fuente. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX traduccion_fuente_pkey ON public.traduccion_fuente USING btree (traduccion_id, fuente_id, tipo_vinculo)</code>.</li>
+<li><code>CREATE INDEX idx_traduccion_fuente_fuente_id ON public.traduccion_fuente USING btree (fuente_id)</code>.</li>
+</ul>
+<h2 id="seccion-43">tuki_respuesta_sistema</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>codigo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>idioma_respuesta_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>texto</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>prioridad</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>activa</code></td>
+<td>boolean</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>tuki_respuesta_sistema_codigo_key</code>: <code>UNIQUE (codigo)</code>.</li>
+<li><code>tuki_respuesta_sistema_idioma_respuesta_id_fkey</code>: <code>FOREIGN KEY (idioma_respuesta_id) REFERENCES idioma(id)</code>.</li>
+<li><code>tuki_respuesta_sistema_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_publica_respuestas_tuki. Operación: SELECT. Roles: anon, authenticated. USING: <code>(activa = true)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX tuki_respuesta_sistema_pkey ON public.tuki_respuesta_sistema USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX tuki_respuesta_sistema_codigo_key ON public.tuki_respuesta_sistema USING btree (codigo)</code>.</li>
+<li><code>CREATE INDEX idx_tuki_respuesta_sistema_idioma_respuesta ON public.tuki_respuesta_sistema USING btree (idioma_respuesta_id)</code>.</li>
+<li><code>CREATE INDEX idx_tuki_respuesta_sistema_updated_at ON public.tuki_respuesta_sistema USING btree (updated_at, id)</code>.</li>
+</ul>
+<h2 id="seccion-44">usuario</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>uuid</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>nombre_usuario</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>correo</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>edad</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>pais</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>ciudad</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>idioma_meta_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>xp</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>racha_actual</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>racha_maxima</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>ultima_actividad</code></td>
+<td>date</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>nombre</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>apellido</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>usuario_id_fkey</code>: <code>FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE</code>.</li>
+<li><code>usuario_idioma_meta_id_fkey</code>: <code>FOREIGN KEY (idioma_meta_id) REFERENCES idioma(id)</code>.</li>
+<li><code>usuario_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>usuario ve y edita su propio perfil. Operación: ALL. Roles: public. USING: <code>(( SELECT auth.uid() AS uid) = id)</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX usuario_pkey ON public.usuario USING btree (id)</code>.</li>
+<li><code>CREATE INDEX idx_usuario_idioma_meta_id ON public.usuario USING btree (idioma_meta_id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX usuario_nombre_usuario_unico ON public.usuario USING btree (lower(nombre_usuario))</code>.</li>
+</ul>
+<h2 id="seccion-45">variante_palabra</h2>
+<p>RLS habilitada: sí.</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Tipo PostgreSQL</th>
+<th>Obligatoria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>bigint</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>palabra_id</code></td>
+<td>integer</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>texto_normalizado</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>tipo</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>estado_validacion</code></td>
+<td>text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>timestamp with time zone</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>fuente_id</code></td>
+<td>integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>nota</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>texto_busqueda</code></td>
+<td>text</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h3>Claves e integridad</h3>
+<ul>
+<li><code>variante_palabra_estado_check</code>: <code>CHECK ((estado_validacion = ANY (ARRAY[&#39;importada&#39;::text, &#39;pendiente_revision&#39;::text, &#39;documentada&#39;::text, &#39;validada&#39;::text, &#39;rechazada&#39;::text])))</code>.</li>
+<li><code>variante_palabra_fuente_id_fkey</code>: <code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL</code>.</li>
+<li><code>variante_palabra_palabra_id_fkey</code>: <code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code>.</li>
+<li><code>variante_palabra_palabra_id_texto_normalizado_tipo_key</code>: <code>UNIQUE (palabra_id, texto_normalizado, tipo)</code>.</li>
+<li><code>variante_palabra_pkey</code>: <code>PRIMARY KEY (id)</code>.</li>
+<li><code>variante_palabra_tipo_check</code>: <code>CHECK ((tipo = ANY (ARRAY[&#39;ortografica&#39;::text, &#39;dialectal&#39;::text, &#39;alternativa&#39;::text, &#39;historica&#39;::text, &#39;abreviacion&#39;::text])))</code>.</li>
+</ul>
+<h3>Políticas de acceso</h3>
+<ul>
+<li>lectura_contenido_linguistico. Operación: SELECT. Roles: anon, authenticated. USING: <code>true</code>. WITH CHECK: <code>no explícito</code>.</li>
+</ul>
+<h3>Índices</h3>
+<ul>
+<li><code>CREATE UNIQUE INDEX variante_palabra_pkey ON public.variante_palabra USING btree (id)</code>.</li>
+<li><code>CREATE UNIQUE INDEX variante_palabra_palabra_id_texto_normalizado_tipo_key ON public.variante_palabra USING btree (palabra_id, texto_normalizado, tipo)</code>.</li>
+<li><code>CREATE INDEX idx_variante_idioma_busqueda ON public.variante_palabra USING btree (texto_normalizado, palabra_id)</code>.</li>
+<li><code>CREATE INDEX idx_variante_updated_at ON public.variante_palabra USING btree (updated_at, id)</code>.</li>
+<li><code>CREATE INDEX idx_variante_texto_busqueda ON public.variante_palabra USING btree (texto_busqueda)</code>.</li>
+<li><code>CREATE INDEX idx_variante_palabra_fuente_id ON public.variante_palabra USING btree (fuente_id)</code>.</li>
+</ul>
+<h2 id="seccion-46">Vistas de lectura</h2>
+<table>
+<thead>
+<tr>
+<th>Vista</th>
+<th>Opciones observadas</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>vista_expresiones_estudiantiles</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_diccionario_estudiantil</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_cobertura_leccion</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_huecos_contenido</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vw_expresiones_estudiantiles</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vw_traducciones_estudiantiles</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_expresiones_respuestas</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_contenido_offline_aikukisna</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_diccionario_respuestas</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_tuki_conocimiento</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_auditoria_curricular_leccion</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_expresiones_sin_salida</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_modulo_alineacion_curricular</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_auditoria_curricular_leccion_v2</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_leccion_curricular_interna</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_secuencia_leccion_estudiante</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_leccion_estudiante</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_auditoria_curricular_leccion_v3</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_estado_produccion_lecciones</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_catalogo_offline_lecciones</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_actividad_recurso_resuelto</code></td>
+<td>security_invoker=true</td>
+</tr>
+<tr>
+<td><code>vista_auditoria_integridad_contenido</code></td>
+<td>security_invoker=true</td>
+</tr>
+</tbody></table>
+<h2 id="seccion-47">Funciones SQL propias</h2>
+<p>No se incluyen funciones de extensiones. SECURITY DEFINER ejecuta con privilegios del propietario y requiere controles específicos; false indica el comportamiento invoker observado.</p>
+<table>
+<thead>
+<tr>
+<th>Función</th>
+<th>Argumentos</th>
+<th>SECURITY DEFINER</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>obtener_correo_por_usuario</code></td>
+<td>p_nombre_usuario text</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>desbloquear_logro</code></td>
+<td>p_logro_id integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>miskito_a_fonetica</code></td>
+<td>input_text text</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>actualizar_updated_at_linguistico</code></td>
+<td>Sin argumentos</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>proteger_columnas_gamificacion</code></td>
+<td>Sin argumentos</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>crear_usuario_nuevo</code></td>
+<td>Sin argumentos</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td><code>resolver_consulta_linguistica</code></td>
+<td>p_texto text, p_idioma_origen integer, p_idioma_destino integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>responder_tuki</code></td>
+<td>p_pregunta text, p_idioma_origen integer, p_idioma_destino integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>completar_leccion</code></td>
+<td>p_leccion_id integer, p_puntaje integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>traducir_texto_seguro</code></td>
+<td>p_texto text, p_idioma_origen integer, p_idioma_destino integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>buscar_rutas_traduccion_expresion</code></td>
+<td>p_texto text, p_idioma_origen integer, p_idioma_destino integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>obtener_pronunciacion_segura</code></td>
+<td>p_texto text, p_idioma_id integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>obtener_contexto_tuki_usuario</code></td>
+<td>Sin argumentos</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>saludo_tuki_usuario</code></td>
+<td>Sin argumentos</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>buscar_rutas_traduccion_palabra</code></td>
+<td>p_texto text, p_idioma_origen integer, p_idioma_destino integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>consultar_diccionario_seguro</code></td>
+<td>p_texto text, p_idioma_origen integer, p_idioma_destino integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>obtener_paquete_leccion</code></td>
+<td>p_leccion_id integer</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>obtener_paquetes_lecciones_actualizados</code></td>
+<td>p_desde timestamp with time zone</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>auditar_integridad_aikukisna</code></td>
+<td>Sin argumentos</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h2 id="seccion-48">Triggers públicos observados</h2>
+<table>
+<thead>
+<tr>
+<th>Tabla</th>
+<th>Trigger</th>
+<th>Evento</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>usuario</td>
+<td>trg_proteger_gamificacion</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION proteger_columnas_gamificacion()</code></td>
+</tr>
+<tr>
+<td>palabra</td>
+<td>palabra_actualizar_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+<tr>
+<td>palabra_fuente</td>
+<td>palabra_fuente_actualizar_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+<tr>
+<td>acepcion</td>
+<td>acepcion_actualizar_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+<tr>
+<td>traduccion_acepcion</td>
+<td>traduccion_acepcion_actualizar_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+<tr>
+<td>variante_palabra</td>
+<td>variante_palabra_actualizar_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+<tr>
+<td>expresion</td>
+<td>expresion_actualizar_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+<tr>
+<td>traduccion_expresion</td>
+<td>traduccion_expresion_actualizar_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+<tr>
+<td>cultura_contenido</td>
+<td>trg_cultura_contenido_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+<tr>
+<td>regla_pronunciacion</td>
+<td>trg_regla_pronunciacion_updated_at</td>
+<td>UPDATE</td>
+<td><code>EXECUTE FUNCTION actualizar_updated_at_linguistico()</code></td>
+</tr>
+</tbody></table>
+<h2 id="seccion-49">Relaciones por clave foránea</h2>
+<p>Esta lista es exhaustiva para las FK de las 44 tablas inspeccionadas. No incluye vínculos polimórficos sin FK.</p>
+<table>
+<thead>
+<tr>
+<th>Tabla hija</th>
+<th>Restricción referencial</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>acepcion</code></td>
+<td><code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>actividad_leccion</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>actividad_recurso</code></td>
+<td><code>FOREIGN KEY (actividad_id) REFERENCES actividad_leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>alineacion_curricular</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>alineacion_curricular</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>cultura_contenido</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>ejemplo_regla_gramatical</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL</code></td>
+</tr>
+<tr>
+<td><code>ejemplo_regla_gramatical</code></td>
+<td><code>FOREIGN KEY (idioma_traduccion_id) REFERENCES idioma(id) ON DELETE SET NULL</code></td>
+</tr>
+<tr>
+<td><code>ejemplo_regla_gramatical</code></td>
+<td><code>FOREIGN KEY (regla_id) REFERENCES regla_gramatical(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>evidencia_curricular_leccion</code></td>
+<td><code>FOREIGN KEY (etapa_codigo) REFERENCES etapa_ruta_curricular(codigo)</code></td>
+</tr>
+<tr>
+<td><code>evidencia_curricular_leccion</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>evidencia_curricular_leccion</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>evidencia_curricular_leccion</code></td>
+<td><code>FOREIGN KEY (lengua_aplicacion_id) REFERENCES idioma(id)</code></td>
+</tr>
+<tr>
+<td><code>expresion</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>expresion</code></td>
+<td><code>FOREIGN KEY (idioma_id) REFERENCES idioma(id)</code></td>
+</tr>
+<tr>
+<td><code>expresion_contexto_cultural</code></td>
+<td><code>FOREIGN KEY (cultura_id) REFERENCES cultura_contenido(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>expresion_contexto_cultural</code></td>
+<td><code>FOREIGN KEY (expresion_id) REFERENCES expresion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion</code></td>
+<td><code>FOREIGN KEY (categoria_id) REFERENCES categoria(id)</code></td>
+</tr>
+<tr>
+<td><code>leccion</code></td>
+<td><code>FOREIGN KEY (idioma_meta_id) REFERENCES idioma(id)</code></td>
+</tr>
+<tr>
+<td><code>leccion_cultura</code></td>
+<td><code>FOREIGN KEY (cultura_id) REFERENCES cultura_contenido(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_cultura</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_experiencia_gamificada</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_experiencia_gamificada</code></td>
+<td><code>FOREIGN KEY (mundo_codigo) REFERENCES mundo_gamificado(codigo)</code></td>
+</tr>
+<tr>
+<td><code>leccion_expresion</code></td>
+<td><code>FOREIGN KEY (expresion_id) REFERENCES expresion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_expresion</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_fuente</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>leccion_fuente</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_oracion</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_oracion</code></td>
+<td><code>FOREIGN KEY (oracion_id) REFERENCES oracion_ejemplo(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_palabra</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_palabra</code></td>
+<td><code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_regla_gramatical</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_regla_gramatical</code></td>
+<td><code>FOREIGN KEY (regla_id) REFERENCES regla_gramatical(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_regla_pronunciacion</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_regla_pronunciacion</code></td>
+<td><code>FOREIGN KEY (regla_id) REFERENCES regla_pronunciacion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>leccion_ruta_curricular</code></td>
+<td><code>FOREIGN KEY (etapa_codigo) REFERENCES etapa_ruta_curricular(codigo)</code></td>
+</tr>
+<tr>
+<td><code>leccion_ruta_curricular</code></td>
+<td><code>FOREIGN KEY (fuente_primaria_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>leccion_ruta_curricular</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>logro</code></td>
+<td><code>FOREIGN KEY (categoria_id) REFERENCES categoria(id)</code></td>
+</tr>
+<tr>
+<td><code>logro_desbloqueado</code></td>
+<td><code>FOREIGN KEY (logro_id) REFERENCES logro(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>logro_desbloqueado</code></td>
+<td><code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>memoria_tuki</code></td>
+<td><code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>oracion_ejemplo</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>oracion_ejemplo</code></td>
+<td><code>FOREIGN KEY (idioma_destino_id) REFERENCES idioma(id)</code></td>
+</tr>
+<tr>
+<td><code>oracion_ejemplo</code></td>
+<td><code>FOREIGN KEY (idioma_origen_id) REFERENCES idioma(id)</code></td>
+</tr>
+<tr>
+<td><code>oracion_ejemplo</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE SET NULL</code></td>
+</tr>
+<tr>
+<td><code>palabra</code></td>
+<td><code>FOREIGN KEY (categoria_id) REFERENCES categoria(id)</code></td>
+</tr>
+<tr>
+<td><code>palabra</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>palabra</code></td>
+<td><code>FOREIGN KEY (idioma_id) REFERENCES idioma(id)</code></td>
+</tr>
+<tr>
+<td><code>palabra</code></td>
+<td><code>FOREIGN KEY (palabra_canonica_id) REFERENCES palabra(id) ON DELETE SET NULL</code></td>
+</tr>
+<tr>
+<td><code>palabra_canonica</code></td>
+<td><code>FOREIGN KEY (palabra_canonica_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>palabra_canonica</code></td>
+<td><code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>palabra_favorita</code></td>
+<td><code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>palabra_favorita</code></td>
+<td><code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>palabra_fuente</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>palabra_fuente</code></td>
+<td><code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>progreso_leccion</code></td>
+<td><code>FOREIGN KEY (leccion_id) REFERENCES leccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>progreso_leccion</code></td>
+<td><code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>regla_gramatical</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL</code></td>
+</tr>
+<tr>
+<td><code>regla_gramatical</code></td>
+<td><code>FOREIGN KEY (idioma_id) REFERENCES idioma(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>regla_pronunciacion</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL</code></td>
+</tr>
+<tr>
+<td><code>regla_pronunciacion</code></td>
+<td><code>FOREIGN KEY (idioma_id) REFERENCES idioma(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>revision_linguistica</code></td>
+<td><code>FOREIGN KEY (revisado_por) REFERENCES usuario(id) ON DELETE SET NULL</code></td>
+</tr>
+<tr>
+<td><code>super_administrador</code></td>
+<td><code>FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>traduccion</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>traduccion</code></td>
+<td><code>FOREIGN KEY (palabra_destino_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>traduccion</code></td>
+<td><code>FOREIGN KEY (palabra_origen_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>traduccion_acepcion</code></td>
+<td><code>FOREIGN KEY (acepcion_destino_id) REFERENCES acepcion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>traduccion_acepcion</code></td>
+<td><code>FOREIGN KEY (acepcion_origen_id) REFERENCES acepcion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>traduccion_expresion</code></td>
+<td><code>FOREIGN KEY (expresion_destino_id) REFERENCES expresion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>traduccion_expresion</code></td>
+<td><code>FOREIGN KEY (expresion_origen_id) REFERENCES expresion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>traduccion_fuente</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id)</code></td>
+</tr>
+<tr>
+<td><code>traduccion_fuente</code></td>
+<td><code>FOREIGN KEY (traduccion_id) REFERENCES traduccion(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>tuki_respuesta_sistema</code></td>
+<td><code>FOREIGN KEY (idioma_respuesta_id) REFERENCES idioma(id)</code></td>
+</tr>
+<tr>
+<td><code>usuario</code></td>
+<td><code>FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE</code></td>
+</tr>
+<tr>
+<td><code>usuario</code></td>
+<td><code>FOREIGN KEY (idioma_meta_id) REFERENCES idioma(id)</code></td>
+</tr>
+<tr>
+<td><code>variante_palabra</code></td>
+<td><code>FOREIGN KEY (fuente_id) REFERENCES fuente_documento(id) ON DELETE SET NULL</code></td>
+</tr>
+<tr>
+<td><code>variante_palabra</code></td>
+<td><code>FOREIGN KEY (palabra_id) REFERENCES palabra(id) ON DELETE CASCADE</code></td>
+</tr>
+</tbody></table>
+<p class="related"><a href="INFORME_AIKUKISNA.html">Volver al informe técnico</a></p></main></div></body></html>

@@ -19,4 +19,5 @@ interface LeccionRepository {
 
 
     suspend fun sincronizarLeccionesPendientes(): Int
+    suspend fun contarLeccionesPendientes(): Int
 }

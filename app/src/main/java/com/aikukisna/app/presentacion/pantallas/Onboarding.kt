@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,8 +51,6 @@ import androidx.compose.ui.util.lerp
 import com.aikukisna.app.R
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.presentacion.componentes.DotsPagination
-import com.aikukisna.app.ui.theme.CardSurface
-import com.aikukisna.app.ui.theme.LightGray
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -64,24 +64,24 @@ private data class PaginaOnboarding(
 
 private val paginas = listOf(
     PaginaOnboarding(
-        titulo = "Descubre las lenguas",
-        subtitulo = "Lenguas vivas de la costa caribe de Nicaragua",
-        cuerpo = "Aprende estas lenguas originarias y afrodescendientes, habladas entre 200,000 y 230,000 personas en la Costa Caribe de Nicaragua: Miskito (Miskitu), Mayangna / Sumu, Rama, Creole / Kriol (Inglés Criollo Nicaragüense) y Garífuna."
+        titulo = t(R.string.onboarding_descubre_las_lenguas),
+        subtitulo = t(R.string.onboarding_lenguas_vivas_de_la_costa),
+        cuerpo = t(R.string.onboarding_aprende_miskito_miskitu_e_ingles)
     ),
     PaginaOnboarding(
-        titulo = "Aprende de verdad",
-        subtitulo = "Método probado y divertido",
-        cuerpo = "Lecciones breves, quizzes interactivos y un diccionario completo para que domines estas lenguas paso a paso."
+        titulo = t(R.string.onboarding_aprende_de_verdad),
+        subtitulo = t(R.string.onboarding_metodo_probado_y_divertido),
+        cuerpo = t(R.string.onboarding_lecciones_breves_quizzes_interactivos_y)
     ),
     PaginaOnboarding(
-        titulo = "¡Gana logros!",
-        subtitulo = "Gamificación que motiva",
-        cuerpo = "Acumula XP, mantén tu racha diaria y desbloquea logros únicos mientras dominas estas lenguas."
+        titulo = t(R.string.onboarding_gana_logros),
+        subtitulo = t(R.string.onboarding_gamificacion_que_motiva),
+        cuerpo = t(R.string.onboarding_acumula_xp_manten_tu_racha)
     ),
     PaginaOnboarding(
-        titulo = "Conecta con la cultura",
-        subtitulo = "Más que un idioma",
-        cuerpo = "Explora la rica cultura, tradiciones, música y gastronomía de los pueblos originarios y afrodescendientes del Caribe nicaragüense."
+        titulo = t(R.string.onboarding_conecta_con_la_cultura),
+        subtitulo = t(R.string.onboarding_mas_que_un_idioma),
+        cuerpo = t(R.string.onboarding_explora_la_rica_cultura_tradiciones)
     ),
 )
 
@@ -135,7 +135,7 @@ fun OnboardingScreen(
 
                 Box(modifier = Modifier.width(240.dp)) {
                     AikukisnaButton(
-                        text = "¡Empieza a aprender!",
+                        text = t(R.string.onboarding_empieza_a_aprender),
                         onClick = onOnboardingTerminado,
                         fontSize = 16.sp
                     )
@@ -153,7 +153,7 @@ fun OnboardingScreen(
                         contentPadding = PaddingValues(0.dp)
                     ) {
                         Text(
-                            text = "Saltar".uppercase(),
+                            text = t(R.string.onboarding_saltar).uppercase(),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -161,7 +161,7 @@ fun OnboardingScreen(
 
                     Box(modifier = Modifier.width(IntrinsicSize.Min)) {
                         AikukisnaButton(
-                            text = "Siguiente",
+                            text = t(R.string.onboarding_siguiente),
                             onClick = {
                                 scope.launch {
                                     pagerState.animateScrollToPage(pagerState.currentPage + 1)
@@ -324,10 +324,10 @@ private fun IlustracionCultura() {
 
 private val MENSAJES_TUKI: List<AnnotatedString> = listOf(
     buildAnnotatedString {
-        append("¡Hola! Soy ")
-        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append("Tuki") }
+        append(t(R.string.onboarding_hola_soy))
+        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(t(R.string.onboarding_tuki)) }
     },
-    AnnotatedString("¡Juntos aprenderemos el fabuloso mundo de los idiomas!"),
+    AnnotatedString(t(R.string.onboarding_juntos_aprenderemos_el_fabuloso_mundo)),
 )
 
 private const val MENSAJE_INTERVALO_MS = 3500L
@@ -347,8 +347,8 @@ private fun BurbujaTuki(modifier: Modifier = Modifier) {
 
         modifier = modifier
             .widthIn(max = 220.dp)
-            .border(width = 1.dp, color = LightGray, shape = RoundedCornerShape(12.dp))
-            .background(color = CardSurface, shape = RoundedCornerShape(12.dp))
+            .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = RoundedCornerShape(12.dp))
+            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Crossfade(targetState = indiceMensaje, label = "mensajeTuki") { i ->
