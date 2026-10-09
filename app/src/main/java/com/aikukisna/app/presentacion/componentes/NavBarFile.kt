@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.componentes
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -31,11 +33,12 @@ private data class ItemNav(
 )
 
 
-private val itemsNav = listOf(
-    ItemNav(R.drawable.home, "Inicio"),
-    ItemNav(R.drawable.ic_graduation_cap, "Aprender"),
-    ItemNav(R.drawable.book_bookmark, "Diccionario"),
-    ItemNav(R.drawable.user, "Perfil")
+// Se arma en cada uso: así las etiquetas siguen el idioma de la app elegido.
+private val itemsNav get() = listOf(
+    ItemNav(R.drawable.home, t(R.string.navbarfile_inicio)),
+    ItemNav(R.drawable.ic_graduation_cap, t(R.string.navbarfile_aprender)),
+    ItemNav(R.drawable.book_bookmark, t(R.string.navbarfile_diccionario)),
+    ItemNav(R.drawable.user, t(R.string.navbarfile_perfil))
 )
 
 @Composable
@@ -83,7 +86,7 @@ fun NavBar(
                     Text(
                         text = item.etiqueta,
                         color = color,
-                        fontSize = 11.sp,
+                        fontSize = 14.sp,
                         fontWeight = if (seleccionado) FontWeight.Bold else FontWeight.Normal
                     )
                 }

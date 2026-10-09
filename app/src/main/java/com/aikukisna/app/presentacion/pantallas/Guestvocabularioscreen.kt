@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -52,10 +55,6 @@ import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.presentacion.viewmodel.GuestLeccionViewModel
 import com.aikukisna.app.ui.theme.AikukisnaTheme
 import com.aikukisna.app.ui.theme.BorderStrong
-import com.aikukisna.app.ui.theme.BrandSubtle
-import com.aikukisna.app.ui.theme.CardSurface
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
 import com.aikukisna.app.ui.theme.OrangePressed
 
 @Composable
@@ -73,6 +72,7 @@ fun GuestVocabularioScreen(
         vocabulario = viewModel.vocabulario,
         indiceActual = viewModel.indiceActual,
         tarjetaVolteada = viewModel.tarjetaVolteada,
+        tarjetaRevelada = viewModel.tarjetaRevelada,
         autoevaluacion = viewModel.autoevaluacion,
         onVoltear = viewModel::voltearTarjeta,
         onAutoevaluar = viewModel::autoevaluar,
@@ -88,6 +88,7 @@ private fun GuestVocabularioScreenContenido(
     vocabulario: List<PalabraDemo>,
     indiceActual: Int,
     tarjetaVolteada: Boolean,
+    tarjetaRevelada: Boolean = tarjetaVolteada,
     autoevaluacion: Boolean?,
     onVoltear: () -> Unit,
     onAutoevaluar: (Boolean) -> Unit,
@@ -98,6 +99,7 @@ private fun GuestVocabularioScreenContenido(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
         Column {
@@ -111,7 +113,7 @@ private fun GuestVocabularioScreenContenido(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = "Volver",
+                    contentDescription = t(R.string.guestvocabulario_volver),
                     modifier = Modifier
                         .size(20.dp)
                         .clickable(onClick = onVolver)
@@ -122,7 +124,7 @@ private fun GuestVocabularioScreenContenido(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            HorizontalDivider(color = LightGray)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
 
         BannerRegistrate()
@@ -145,12 +147,12 @@ private fun GuestVocabularioScreenContenido(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Vocabulario",
+                    text = t(R.string.guestvocabulario_vocabulario),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "${indiceActual + 1}/$total",
+                    text = t(R.string.guestvocabulario_texto, indiceActual + 1, total),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -161,7 +163,7 @@ private fun GuestVocabularioScreenContenido(
                     .fillMaxWidth()
                     .height(11.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(BrandSubtle)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Box(
                     modifier = Modifier
@@ -182,7 +184,7 @@ private fun GuestVocabularioScreenContenido(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "¿Cómo se dice?",
+                text = t(R.string.guestvocabulario_como_se_dice),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
@@ -200,17 +202,17 @@ private fun GuestVocabularioScreenContenido(
                 TukiConPregunta(reaccionar = autoevaluacion == true)
             }
 
-            if (tarjetaVolteada) {
+            if (tarjetaRevelada) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     BotonAutoevaluacion(
-                        texto = "Sí",
+                        texto = t(R.string.guestvocabulario_si),
                         emoji = "\u2705",
                         relleno = autoevaluacion == true,
                         onClick = { onAutoevaluar(true) }
                     )
                     BotonAutoevaluacion(
-                        texto = "No",
+                        texto = t(R.string.guestvocabulario_no),
                         emoji = "\u274C",
                         relleno = autoevaluacion == false,
                         onClick = { onAutoevaluar(false) }
@@ -228,16 +230,16 @@ private fun GuestVocabularioScreenContenido(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "SALTAR",
+                text = t(R.string.guestvocabulario_saltar),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.clickable(onClick = onSiguienteClick)
             )
             Box(modifier = Modifier.width(160.dp)) {
                 AikukisnaButton(
-                    text = "Siguiente",
+                    text = t(R.string.guestvocabulario_siguiente),
                     onClick = onSiguienteClick,
-                    enabled = tarjetaVolteada,
+                    enabled = tarjetaRevelada,
                     trailingIcon = R.drawable.arrow_right
                 )
             }
@@ -253,12 +255,12 @@ private fun BannerRegistrate() {
             .fillMaxWidth()
             .padding(horizontal = 26.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(20.dp))
-            .background(BrandSubtle)
+            .background(MaterialTheme.colorScheme.primaryContainer)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "MODO INVITADO · Regístrate para guardar tu progreso",
+            text = t(R.string.guestvocabulario_modo_invitado_registrate_para_guardar),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
@@ -304,9 +306,9 @@ private fun TarjetaVocabulario(
                 cameraDistance = 12f * density.density
             }
             .clip(RoundedCornerShape(16.dp))
-            .border(width = 1.dp, color = LightGray, shape = RoundedCornerShape(16.dp))
-            .background(color = CardSurface, shape = RoundedCornerShape(16.dp))
-            .then(if (!volteada) Modifier.clickable(onClick = onVoltear) else Modifier)
+            .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = RoundedCornerShape(16.dp))
+            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
+            .clickable(onClick = onVoltear)
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -331,7 +333,7 @@ private fun TarjetaVocabulario(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = if (rotacion <= 90f) "Revelar traducción" else "Toca para voltear",
+                text = if (rotacion <= 90f) t(R.string.guestvocabulario_revelar_traduccion) else t(R.string.guestvocabulario_toca_para_voltear),
                 style = MaterialTheme.typography.labelLarge,
                 color = OrangePressed,
                 textAlign = TextAlign.Center
@@ -396,9 +398,9 @@ private fun BotonAutoevaluacion(
         Text(
             text = texto,
             style = MaterialTheme.typography.bodySmall,
-            color = if (relleno) Color.White else MediumGray
+            color = if (relleno) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Text(text = emoji, fontSize = 11.sp)
+        Text(text = emoji, fontSize = 14.sp)
     }
 }
 

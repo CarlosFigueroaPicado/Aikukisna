@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.viewmodel
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -27,21 +30,39 @@ class LeccionesViewModel @Inject constructor(
         private set
     var lecciones by mutableStateOf<List<LeccionConEstado>>(emptyList())
         private set
+    var nivelesDesbloqueados by mutableStateOf<Set<Int>>(emptySet())
+        private set
     var isLoading by mutableStateOf(true)
         private set
     var errorMessage by mutableStateOf<String?>(null)
+        private set
+    var idiomaMetaNombre by mutableStateOf("")
         private set
 
     private var idiomaMetaId: Int? = null
 
     init {
-        cargar()
+        // Recarga el mapa cada vez que cambia el idioma meta (incluida la primera emisión).
+        viewModelScope.launch {
+            usuarioRepository.observarIdiomaMeta().collect { idioma ->
+                if (idioma != null && idioma.id == idiomaMetaId) return@collect
+                if (idiomaMetaId != null) {
+                    nivelSeleccionado = NIVELES_CEFR.first().first
+                    lecciones = emptyList()
+                }
+                cargar()
+            }
+        }
     }
 
     fun seleccionarNivel(nivel: Int) {
-        if (nivel == nivelSeleccionado) return
+        if (nivel == nivelSeleccionado || nivel !in nivelesDesbloqueados) return
         nivelSeleccionado = nivel
         cargarLecciones()
+    }
+
+    fun recargar() {
+        if (idiomaMetaId == null) cargar() else cargarLecciones()
     }
 
     private fun cargar() {
@@ -50,14 +71,15 @@ class LeccionesViewModel @Inject constructor(
             errorMessage = null
             try {
                 val userId = authRepository.usuarioActualId()
-                    ?: throw IllegalStateException("Sesión no iniciada")
+                    ?: throw IllegalStateException(t(R.string.lecciones_sesion_no_iniciada))
                 val usuario = usuarioRepository.obtenerUsuario(userId)
-                    ?: throw IllegalStateException("No se encontró el perfil")
+                    ?: throw IllegalStateException(t(R.string.lecciones_no_se_encontro_el_perfil))
+                idiomaMetaNombre = usuario.idiomaMeta?.nombre.orEmpty()
                 idiomaMetaId = usuario.idiomaMeta?.id
-                    ?: throw IllegalStateException("Todavía no elegiste un idioma")
+                    ?: throw IllegalStateException(t(R.string.lecciones_todavia_no_elegiste_un_idioma))
                 cargarLecciones()
             } catch (e: Exception) {
-                errorMessage = e.message ?: "Error al cargar lecciones"
+                errorMessage = e.message ?: t(R.string.lecciones_error_al_cargar_lecciones)
                 isLoading = false
             }
         }
@@ -70,9 +92,11 @@ class LeccionesViewModel @Inject constructor(
             errorMessage = null
             try {
                 val userId = authRepository.usuarioActualId() ?: return@launch
-                lecciones = obtenerMapaLeccionesUseCase(userId, idioma, nivelSeleccionado)
+                val mapa = obtenerMapaLeccionesUseCase(userId, idioma, nivelSeleccionado)
+                lecciones = mapa.lecciones
+                nivelesDesbloqueados = mapa.nivelesDesbloqueados
             } catch (e: Exception) {
-                errorMessage = e.message ?: "Error al cargar lecciones"
+                errorMessage = e.message ?: t(R.string.lecciones_error_al_cargar_lecciones)
             } finally {
                 isLoading = false
             }

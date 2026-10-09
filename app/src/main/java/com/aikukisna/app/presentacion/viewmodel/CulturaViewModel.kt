@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.viewmodel
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -26,7 +29,7 @@ class CulturaViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching { obtenerContenidoCulturalUseCase() }
                 .onSuccess { contenido = it }
-                .onFailure { errorMessage = it.message ?: "No se pudo cargar la cultura" }
+                .onFailure { errorMessage = it.message ?: t(R.string.cultura_no_se_pudo_cargar_la) }
             isLoading = false
         }
     }

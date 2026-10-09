@@ -30,14 +30,26 @@ internal fun PalabraDto.toDomain() = Palabra(
     idioma = Idioma(idioma.id, idioma.codigo, idioma.nombre),
     texto = texto,
     categoria = categoria?.let { Categoria(it.id, it.nombre) },
-    fuente = fuente.toDomain()
+    fuente = fuente.toDomain(),
+    pronunciacion = pronunciacion,
+    pronunciacionFonetica = pronunciacionFonetica,
+    pronunciacionVerificada = pronunciacionVerificada,
+    textoNormalizado = textoNormalizado ?: com.aikukisna.app.domain.conocimiento.NormalizadorLinguistico.normalizar(texto),
+    estadoValidacion = estadoValidacion,
+    createdAtEpochMs = createdAt?.let { java.time.Instant.parse(it).toEpochMilli() } ?: 0,
+    updatedAtEpochMs = updatedAt?.let { java.time.Instant.parse(it).toEpochMilli() } ?: 0
 )
 
 internal fun TraduccionDto.toDomain() = Traduccion(
     id = id,
     palabraOrigen = palabraOrigen.toDomain(),
     palabraDestino = palabraDestino.toDomain(),
-    nota = nota
+    nota = nota,
+    estadoValidacion = estadoValidacion,
+    fuenteId = fuenteId,
+    nivelConfianza = nivelConfianza,
+    esPreferida = esPreferida,
+    updatedAtEpochMs = updatedAt?.let { java.time.Instant.parse(it).toEpochMilli() } ?: 0
 )
 
 internal fun LeccionDto.toDomain() = Leccion(

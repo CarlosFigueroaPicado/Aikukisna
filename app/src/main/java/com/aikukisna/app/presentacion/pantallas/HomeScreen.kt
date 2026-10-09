@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,10 +25,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,20 +37,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.componentes.FrasesIdioma
 import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.domain.model.Leccion
 import com.aikukisna.app.domain.model.Usuario
 import com.aikukisna.app.domain.usecase.ProximaLeccion
 import com.aikukisna.app.presentacion.viewmodel.HomeViewModel
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import com.aikukisna.app.ui.theme.BlueBorder
-import com.aikukisna.app.ui.theme.BlueDark
-import com.aikukisna.app.ui.theme.BlueDarkest
-import com.aikukisna.app.ui.theme.BluePrimary
-import com.aikukisna.app.ui.theme.BlueSubtle
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
-import com.aikukisna.app.ui.theme.OrangeBorder
 
 
 @Composable
@@ -63,6 +58,7 @@ fun HomeScreen(
     onRepaso: () -> Unit = {},
     onCambiarIdioma: () -> Unit = {}
 ) {
+    LaunchedEffect(Unit) { viewModel.cargarDatos() }
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     when (val s = state) {
@@ -118,43 +114,104 @@ private fun HomeScreenContenido(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 12.dp),
+                .padding(top = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = FrasesIdioma.saludo(usuario.idiomaMeta?.id),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = usuario.nombreUsuario ?: usuario.nombre ?: t(R.string.home_usuario),
+                    style = MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = t(R.string.home_comienza_tu_aprendizaje_hoy),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             Image(
-                painter = painterResource(id = R.drawable.ic_ak_mark),
+                painter = painterResource(id = R.drawable.tuki_flying),
                 contentDescription = null,
-                modifier = Modifier.size(width = 28.dp, height = 25.6.dp)
+                modifier = Modifier.size(76.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onCambiarIdioma)
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = usuario.idiomaMeta?.nombre ?: t(R.string.home_sin_idioma),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onBackground
             )
             Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .border(width = 1.dp, color = LightGray, shape = RoundedCornerShape(16.dp))
-                    .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(16.dp))
-                    .clickable(onClick = onCambiarIdioma)
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = usuario.idiomaMeta?.nombre ?: "Sin idioma",
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.SemiBold,
-                    color = BluePrimary
+                    text = t(R.string.home_cambiar),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.ic_chevron_down),
                     contentDescription = null,
-                    tint = BluePrimary,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(12.dp)
                 )
             }
         }
 
+        Spacer(modifier = Modifier.height(10.dp))
+
+        val nivelActual = usuario.xp / 500 + 1
+        val xpNivel = usuario.xp % 500
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(10.dp))
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(t(R.string.home_nivel, nivelActual), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                Text(t(R.string.home_500_xp, xpNivel), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth((xpNivel / 500f).coerceIn(0f, 1f))
+                        .height(8.dp)
+                        .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                TituloSeccion("Continúa aprendiendo")
+                TituloSeccion(t(R.string.home_continua_aprendiendo))
                 if (proximaLeccion != null) {
                     TarjetaContinuarLeccion(
                         leccion = proximaLeccion.leccion,
@@ -163,34 +220,34 @@ private fun HomeScreenContenido(
                     )
                 } else {
                     Text(
-                        text = "Todavía no hay lecciones cargadas para ${usuario.idiomaMeta?.nombre ?: "tu idioma"}.",
+                        text = t(R.string.home_todavia_no_hay_lecciones_cargadas, usuario.idiomaMeta?.nombre ?: t(R.string.home_tu_idioma)),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MediumGray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                TituloSeccion("Explorar")
+                TituloSeccion(t(R.string.home_explorar))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     TarjetaExplorar(
                         icono = R.drawable.ic_chat,
-                        etiqueta = "Chat IA",
+                        etiqueta = t(R.string.home_chat_ia),
                         onClick = onChatIA,
                         modifier = Modifier.weight(1f)
                     )
                     TarjetaExplorar(
                         icono = R.drawable.camera,
-                        etiqueta = "Cámara",
+                        etiqueta = t(R.string.home_camara),
                         onClick = onCamara,
                         modifier = Modifier.weight(1f)
                     )
                     TarjetaExplorar(
                         icono = R.drawable.ic_globe,
-                        etiqueta = "Traductor",
+                        etiqueta = t(R.string.home_traductor),
                         onClick = onTraductor,
                         modifier = Modifier.weight(1f)
                     )
@@ -198,49 +255,58 @@ private fun HomeScreenContenido(
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                TituloSeccion("Tu progreso")
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(BlueSubtle)
-                        .border(width = 1.dp, color = BlueBorder, shape = RoundedCornerShape(16.dp))
-                        .padding(horizontal = 20.dp, vertical = 18.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "Racha actual",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = BlueDark
-                        )
-                        Text(
-                            text = "${usuario.rachaActual} días",
-                            style = MaterialTheme.typography.labelMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp
-                            ),
-                            color = BlueDarkest
-                        )
-                    }
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_flame),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(26.dp)
-                    )
-                }
+                TituloSeccion(t(R.string.home_tu_progreso))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    BotonSecundarioHome(texto = "Logros", onClick = onLogros, modifier = Modifier.weight(1f))
-                    BotonSecundarioHome(texto = "Repaso", onClick = onRepaso, modifier = Modifier.weight(1f))
+                    TarjetaProgresoHome(
+                        titulo = t(R.string.home_racha),
+                        valor = if (usuario.rachaActual == 1) t(R.string.home_racha_un_dia, usuario.rachaActual) else t(R.string.home_racha_dias, usuario.rachaActual),
+                        icono = R.drawable.ic_flame,
+                        onClick = onRepaso,
+                        modifier = Modifier.weight(1f)
+                    )
+                    TarjetaProgresoHome(
+                        titulo = t(R.string.home_logros),
+                        valor = t(R.string.home_ver_todos),
+                        icono = R.drawable.trofeo,
+                        onClick = onLogros,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
+
+                BotonSecundarioHome(texto = t(R.string.home_repaso), onClick = onRepaso, modifier = Modifier.fillMaxWidth())
             }
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(10.dp))
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = t(R.string.home_sigue_adelante),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = t(R.string.home_cada_dia_que_aprendes_te, usuario.idiomaMeta?.nombre ?: t(R.string.home_tu_idioma)),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Image(
+                painter = painterResource(id = R.drawable.tuki_celebrating),
+                contentDescription = null,
+                modifier = Modifier.size(72.dp)
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -252,7 +318,7 @@ private fun TituloSeccion(texto: String) {
     Text(
         text = texto,
         style = MaterialTheme.typography.labelLarge.copy(fontSize = 18.sp),
-        color = BluePrimary
+        color = MaterialTheme.colorScheme.secondary
     )
 }
 
@@ -266,7 +332,8 @@ private fun TarjetaContinuarLeccion(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 18.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(14.dp),
@@ -275,20 +342,20 @@ private fun TarjetaContinuarLeccion(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = leccion.titulo,
-                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp),
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "$numPalabras palabras · Desde 20 XP",
-                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp),
-                color = OrangeBorder
+                text = t(R.string.home_palabras_desde_20_xp, numPalabras),
+                style = MaterialTheme.typography.labelMedium.copy(fontSize = 15.sp),
+                color = MaterialTheme.colorScheme.primary
             )
         }
         Icon(
             painter = painterResource(id = R.drawable.arrow_right),
             contentDescription = null,
-            tint = Color.White,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp)
         )
     }
@@ -304,7 +371,7 @@ private fun TarjetaExplorar(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(14.dp))
-            .border(width = 1.dp, color = LightGray, shape = RoundedCornerShape(14.dp))
+            .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = RoundedCornerShape(14.dp))
             .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(14.dp))
             .clickable(onClick = onClick)
             .padding(top = 16.dp, bottom = 12.dp),
@@ -320,7 +387,7 @@ private fun TarjetaExplorar(
         Text(
             text = etiqueta,
             style = MaterialTheme.typography.bodySmall,
-            color = MediumGray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -334,7 +401,7 @@ private fun BotonSecundarioHome(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .border(width = 1.dp, color = LightGray, shape = RoundedCornerShape(12.dp))
+            .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = RoundedCornerShape(12.dp))
             .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(vertical = 14.dp),
@@ -344,7 +411,7 @@ private fun BotonSecundarioHome(
             text = texto,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold,
-            color = BluePrimary,
+            color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Center
         )
     }
@@ -408,5 +475,44 @@ private fun HomeScreenContenidoVacioPreview() {
             onRepaso = {},
             onCambiarIdioma = {}
         )
+    }
+}
+
+@Composable
+private fun TarjetaProgresoHome(
+    titulo: String,
+    valor: String,
+    icono: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 14.dp, vertical = 14.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = icono),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(22.dp)
+        )
+        Column {
+            Text(
+                text = titulo,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = valor,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }

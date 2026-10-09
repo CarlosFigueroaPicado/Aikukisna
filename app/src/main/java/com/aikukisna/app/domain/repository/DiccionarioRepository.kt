@@ -1,6 +1,7 @@
 package com.aikukisna.app.domain.repository
 
 import com.aikukisna.app.domain.model.Palabra
+import com.aikukisna.app.domain.model.OracionEjemplo
 import com.aikukisna.app.domain.model.Traduccion
 
 interface DiccionarioRepository {
@@ -13,4 +14,13 @@ interface DiccionarioRepository {
     ): List<Palabra>
     suspend fun obtenerPalabraPorId(id: Int): Palabra?
     suspend fun obtenerTraducciones(palabraId: Int): List<Traduccion>
+    suspend fun buscarOracionExacta(
+        texto: String,
+        idiomaOrigenId: Int,
+        idiomaDestinoId: Int
+    ): String?
+    suspend fun obtenerOracionesPorIdiomas(
+        idiomaOrigenId: Int,
+        idiomaDestinoId: Int
+    ): List<OracionEjemplo>
 }

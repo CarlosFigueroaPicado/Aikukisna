@@ -7,12 +7,14 @@ import com.aikukisna.app.domain.repository.LeccionRepository
 import javax.inject.Inject
 
 private const val IDIOMA_MISKITO = 1
+// La lección 17 mezcla palabras en Miskito y sus glosas en español; para la muestra se toman
+// cinco palabras Miskitas de esa lección (alineada con Segunda Lengua, 3.er grado EIB).
 private val PALABRAS_SALUDO_MISKITO = listOf(
-    57006, // tingki (tengki, taiki) -> gracias
-    2089,  // lî -> agua
+    60231, // witin -> él/ella
     48554, // ¿nahki sma? -> ¿cómo está usted?
-    41570, // kaiki was -> adiós
-    555    // aihwa -> bien
+    851,   // pain -> bien
+    22732, // yang -> yo
+    53680  // siknis ai daukisa -> estoy enfermo
 )
 
 class ObtenerPalabrasDemoUseCase @Inject constructor(
@@ -24,9 +26,10 @@ class ObtenerPalabrasDemoUseCase @Inject constructor(
         const val PALABRAS_DEMO = 5
 
         private val LECCION_DEMO_POR_IDIOMA = mapOf(
+            IDIOMA_MISKITO to 17, // Miskito -> Saludos, bienestar y presentación
             2 to 38, // Español -> Saludos e Integración Escolar (5 palabras)
-            3 to 48, // Inglés Kriol -> Gradiin an Wiidops / Saludos y Despedidas (5 palabras)
-            4 to 60  // Inglés Estándar -> Greetings and Polite Expressions (5 palabras)
+            3 to 48, // Inglés Kriol -> Saludos y despedidas (5 palabras)
+            4 to 60  // Inglés Estándar -> Saludos y expresiones de cortesía (5 palabras)
         )
 
 

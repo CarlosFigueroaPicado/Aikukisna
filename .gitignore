@@ -23,3 +23,9 @@ local.properties
 /scripts/tests/__pycache__/
 /entregas/
 fuentes_audio/
+
+# Datos de entrenamiento (se regeneran con scripts/)
+modelos/traduccion/**/*.jsonl
+modelos/traduccion/**/*.zip
+modelos/traduccion/corpus/
+modelos/traduccion/validaciones/

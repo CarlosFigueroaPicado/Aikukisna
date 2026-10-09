@@ -17,3 +17,7 @@ KEYSTORE_FILE=<RUTA_AL_KEYSTORE>
 KEYSTORE_PASSWORD=<PASSWORD_DEL_KEYSTORE>
 KEY_ALIAS=<ALIAS_DEL_KEYSTORE>
 KEY_PASSWORD=<PASSWORD_DE_LA_CLAVE>
+
+# true cuando el Release modelo-tuki-v2 (Gemma ajustado con Miskito y Kriol) esté publicado en GitHub.
+# Ver modelos/traduccion/gemma/entrenar_gemma_aikukisna.ipynb
+TUKI_MODELO_AJUSTADO=false
