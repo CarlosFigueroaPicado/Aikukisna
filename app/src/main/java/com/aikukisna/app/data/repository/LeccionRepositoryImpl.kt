@@ -24,7 +24,11 @@ class LeccionRepositoryImpl @Inject constructor(
     private val cache: CacheEscritor
 ) : LeccionRepository {
 
+    // Primero la copia local: el teléfono ya trae todas las lecciones (réplica incluida en la app) y el
+    // SyncWorker las actualiza en segundo plano. Con señal débil, ir antes a la red hacía esperar cada
+    // pantalla hasta el tiempo límite y descargaba todas las lecciones en cada visita.
     override suspend fun obtenerLecciones(nivel: Int?): List<Leccion> {
+        cache.leerLecciones(nivel).takeIf { it.isNotEmpty() }?.let { return it }
         if (conectividad.hayConexion()) {
             try {
                 val resultado = client.from("leccion")
@@ -45,6 +49,7 @@ class LeccionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun obtenerLeccionPorId(id: Int): Leccion? {
+        cache.leerLeccion(id)?.let { return it }
         if (conectividad.hayConexion()) {
             try {
                 val resultado = client.from("leccion")
@@ -126,6 +131,9 @@ class LeccionRepositoryImpl @Inject constructor(
     override suspend fun contarLeccionesPendientes(): Int = cache.contarLeccionesPendientes()
 
     private suspend fun obtenerVocabulario(leccionId: Int): List<com.aikukisna.app.domain.model.Palabra> {
+        // Si la lección está guardada, su vocabulario local es el válido (aunque esté vacío).
+        val local = cache.leerVocabularioLeccion(leccionId)
+        if (local.isNotEmpty() || cache.leerLeccion(leccionId) != null) return local
         if (conectividad.hayConexion()) {
             try {
                 val palabras = client.from("leccion_palabra")
@@ -145,6 +153,8 @@ class LeccionRepositoryImpl @Inject constructor(
     }
 
     private suspend fun obtenerFrases(leccionId: Int): List<OracionEjemplo> {
+        val local = cache.leerOracionesLeccion(leccionId)
+        if (local.isNotEmpty() || cache.leerLeccion(leccionId) != null) return local
         if (conectividad.hayConexion()) {
             try {
                 val oraciones = client.from("oracion_ejemplo")

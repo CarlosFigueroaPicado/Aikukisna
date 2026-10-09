@@ -15,6 +15,9 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 /** Progreso de descarga del modelo; [total] es 0 cuando el servidor no informa el tamaño. */
 data class ProgresoModelo(val descargados: Long, val total: Long) {
@@ -35,12 +38,42 @@ class ModeloTukiLocal @Inject constructor(
 
     fun estaDisponible(): Boolean = archivo.isFile && archivo.length() >= TAMANO_MINIMO_BYTES
 
+    private val rutaIncluida = "$CARPETA_INCLUIDA/$NOMBRE_ARCHIVO"
+    private val candadoCopia = Mutex()
+
+    /**
+     * true cuando el APK trae el modelo (Gradle lo descarga al compilar, ver app/build.gradle.kts): en zonas
+     * con poca señal bajar ~550 MB no es viable, así que la app ya llega con Tuki sin conexión.
+     */
+    fun incluidoEnApp(): Boolean =
+        runCatching { context.assets.list(CARPETA_INCLUIDA).orEmpty().contains(NOMBRE_ARCHIVO) }.getOrDefault(false)
+
+    /**
+     * MediaPipe necesita una ruta de archivo, no un asset: la primera vez se copia el modelo incluido al
+     * almacenamiento interno (sin red). Devuelve false si el APK no lo trae.
+     */
+    suspend fun prepararDesdeApp(): Boolean = withContext(Dispatchers.IO) {
+        candadoCopia.withLock {
+            if (estaDisponible()) return@withLock true
+            if (!incluidoEnApp()) return@withLock false
+            carpeta.mkdirs()
+            context.assets.open(rutaIncluida).use { entrada ->
+                FileOutputStream(parcial, false).use { salida -> entrada.copyTo(salida, 1024 * 1024) }
+            }
+            check(parcial.length() >= TAMANO_MINIMO_BYTES) { "El modelo incluido en la app está incompleto" }
+            archivo.delete()
+            check(parcial.renameTo(archivo)) { "No se pudo preparar el modelo de Tuki" }
+            carpeta.listFiles { f -> f.name.endsWith(".task") && f != archivo }?.forEach { it.delete() }
+            true
+        }
+    }
+
     // Supabase gratis limita los archivos a 50 MB, por eso el modelo vive en un Release de GitHub.
     fun urlDescarga(): String = BuildConfig.TUKI_MODELO_URL.ifBlank { URL_PREDETERMINADA }
 
     /** Descarga reanudable: si se corta, el siguiente intento continúa desde el archivo parcial. */
     fun descargar(): Flow<ProgresoModelo> = flow {
-        if (estaDisponible()) {
+        if (estaDisponible() || prepararDesdeApp()) {
             emit(ProgresoModelo(archivo.length(), archivo.length()))
             return@flow
         }
@@ -116,6 +149,8 @@ class ModeloTukiLocal @Inject constructor(
                     BuildConfig.TUKI_MODELO_AJUSTADO -> "modelo-tuki-v2"
                     else -> "modelo-tuki-v1"
                 }) + "/$NOMBRE_ARCHIVO"
+        /** Carpeta de assets donde Gradle deja el modelo incluido. */
+        const val CARPETA_INCLUIDA = "modelos_llm"
         // El modelo int4 pesa ~550 MB; algo mucho menor indica una descarga rota.
         private const val TAMANO_MINIMO_BYTES = 300L * 1024 * 1024
     }
