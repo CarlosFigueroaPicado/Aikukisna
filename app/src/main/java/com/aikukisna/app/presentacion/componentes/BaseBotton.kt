@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.componentes
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +28,7 @@ fun BaseBotton(
 
     ){
         Column {
-            Text (text = "Login")
+            Text (text = t(R.string.basebotton_login))
         }
     }
 

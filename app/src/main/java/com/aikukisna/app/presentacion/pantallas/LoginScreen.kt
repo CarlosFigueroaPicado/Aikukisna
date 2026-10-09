@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,8 +40,6 @@ import com.aikukisna.app.presentacion.componentes.InputStyle
 import com.aikukisna.app.presentacion.viewmodel.LoginViewModel
 import com.aikukisna.app.ui.theme.AikukisnaTheme
 import com.aikukisna.app.ui.theme.BluePressed
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
 
 
 @Composable
@@ -108,7 +108,7 @@ private fun LoginScreenContenido(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Iniciar sesión",
+            text = t(R.string.login_iniciar_sesion),
             style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
@@ -117,9 +117,9 @@ private fun LoginScreenContenido(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "¡Bienvenido de vuelta!",
+            text = t(R.string.login_bienvenido_de_vuelta),
             style = MaterialTheme.typography.bodySmall,
-            color = MediumGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
 
@@ -141,20 +141,20 @@ private fun LoginScreenContenido(
             AikukisnaTextField(
                 value = identificador,
                 onValueChange = onIdentificadorChange,
-                label = "Correo o nombre de usuario",
+                label = t(R.string.login_usuario_o_correo_electronico),
                 style = InputStyle.Compact,
                 leadingIcon = R.drawable.mail
             )
             AikukisnaTextField(
                 value = password,
                 onValueChange = onPasswordChange,
-                label = "Contraseña",
+                label = t(R.string.login_contrasena),
                 isPassword = true,
                 style = InputStyle.Compact,
                 leadingIcon = R.drawable.lock
             )
             Text(
-                text = "¿Olvidaste tu contraseña?",
+                text = t(R.string.login_olvidaste_tu_contrasena),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
@@ -170,7 +170,7 @@ private fun LoginScreenContenido(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AikukisnaButton(
-                text = "Iniciar sesión",
+                text = t(R.string.login_iniciar_sesion),
                 onClick = onLoginClick,
                 isLoading = isLoading,
                 style = ButtonStyle.Secondary,
@@ -184,12 +184,12 @@ private fun LoginScreenContenido(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "¿No tienes cuenta?",
+                    text = t(R.string.login_no_tienes_cuenta),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "Regístrate",
+                    text = t(R.string.login_registrate),
                     style = MaterialTheme.typography.labelLarge,
                     color = BluePressed,
                     modifier = Modifier
@@ -205,13 +205,13 @@ private fun LoginScreenContenido(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HorizontalDivider(modifier = Modifier.weight(1f), color = LightGray)
+                HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
                 Text(
-                    text = "ó",
+                    text = t(R.string.login_o),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MediumGray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                HorizontalDivider(modifier = Modifier.weight(1f), color = LightGray)
+                HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -219,13 +219,13 @@ private fun LoginScreenContenido(
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
                 AikukisnaButton(
-                    text = "Entrar como invitado",
+                    text = t(R.string.login_entrar_como_invitado),
                     onClick = onEntrarComoInvitadoClick,
                     style = ButtonStyle.SecondaryGhost,
                     trailingIcon = R.drawable.clock_dashed
                 )
                 AikukisnaButton(
-                    text = "Continuar con Google",
+                    text = t(R.string.login_continuar_con_google),
                     onClick = onGoogleClick,
                     isLoading = isLoadingGoogle,
                     style = ButtonStyle.SecondaryGhost,

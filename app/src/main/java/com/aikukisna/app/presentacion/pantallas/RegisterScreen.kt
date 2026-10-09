@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,8 +38,6 @@ import com.aikukisna.app.presentacion.componentes.ButtonStyle
 import com.aikukisna.app.presentacion.componentes.InputStyle
 import com.aikukisna.app.presentacion.viewmodel.RegisterViewModel
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
 import com.aikukisna.app.ui.theme.OrangePressed
 
 
@@ -54,6 +54,12 @@ fun RegisterScreen(
     LaunchedEffect(viewModel.registroExitoso, onRegistroExitoso) {
         if (viewModel.registroExitoso) {
             onRegistroExitoso()
+        }
+    }
+
+    LaunchedEffect(viewModel.requiereSeleccionIdioma) {
+        if (viewModel.requiereSeleccionIdioma) {
+            onCamposValidos()
         }
     }
 
@@ -107,7 +113,7 @@ private fun RegisterScreenContenido(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Crear cuenta",
+            text = t(R.string.register_crear_cuenta),
             style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
@@ -116,9 +122,9 @@ private fun RegisterScreenContenido(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Comienza tu viaje",
+            text = t(R.string.register_comienza_tu_viaje),
             style = MaterialTheme.typography.bodySmall,
-            color = MediumGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
 
@@ -139,29 +145,29 @@ private fun RegisterScreenContenido(
             AikukisnaTextField(
                 value = nombre,
                 onValueChange = onNombreChange,
-                label = "Nombres y apellidos",
+                label = t(R.string.register_nombres_y_apellidos),
                 style = InputStyle.Compact,
                 leadingIcon = R.drawable.user
             )
             AikukisnaTextField(
                 value = nombreUsuario,
                 onValueChange = onNombreUsuarioChange,
-                label = "Nombre de usuario",
+                label = t(R.string.register_nombre_de_usuario),
                 style = InputStyle.Compact,
                 leadingIcon = R.drawable.user_square
             )
             AikukisnaTextField(
                 value = email,
                 onValueChange = onEmailChange,
-                label = "Correo electrónico",
+                label = t(R.string.register_correo_electronico),
                 style = InputStyle.Compact,
                 leadingIcon = R.drawable.mail
             )
             AikukisnaTextField(
                 value = password,
                 onValueChange = onPasswordChange,
-                label = "Contraseña",
-                placeholder = "8+ caract., mayúscula, número y símbolo",
+                label = t(R.string.register_contrasena),
+                placeholder = t(R.string.register_8_caract_mayuscula_numero_y),
                 isPassword = true,
                 style = InputStyle.Compact,
                 leadingIcon = R.drawable.lock
@@ -169,7 +175,7 @@ private fun RegisterScreenContenido(
             AikukisnaTextField(
                 value = confirmarPassword,
                 onValueChange = onConfirmarPasswordChange,
-                label = "Repetir contraseña",
+                label = t(R.string.register_repetir_contrasena),
                 isPassword = true,
                 style = InputStyle.Compact,
                 leadingIcon = R.drawable.lock
@@ -183,7 +189,7 @@ private fun RegisterScreenContenido(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AikukisnaButton(
-                text = "Registrarse",
+                text = t(R.string.register_registrarse),
                 onClick = onRegistrarClick,
                 isLoading = isLoading,
                 trailingIcon = R.drawable.arrow_right
@@ -196,12 +202,12 @@ private fun RegisterScreenContenido(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "¿Ya tienes cuenta?",
+                    text = t(R.string.register_ya_tienes_cuenta),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "Iniciar sesión",
+                    text = t(R.string.register_iniciar_sesion),
                     style = MaterialTheme.typography.labelLarge,
                     color = OrangePressed,
                     modifier = Modifier
@@ -217,19 +223,19 @@ private fun RegisterScreenContenido(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HorizontalDivider(modifier = Modifier.weight(1f), color = LightGray)
+                HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
                 Text(
-                    text = "ó",
+                    text = t(R.string.register_o),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MediumGray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                HorizontalDivider(modifier = Modifier.weight(1f), color = LightGray)
+                HorizontalDivider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             AikukisnaButton(
-                text = "Continuar con Google",
+                text = t(R.string.register_continuar_con_google),
                 onClick = onGoogleClick,
                 isLoading = isLoadingGoogle,
                 style = ButtonStyle.PrimaryGhost,

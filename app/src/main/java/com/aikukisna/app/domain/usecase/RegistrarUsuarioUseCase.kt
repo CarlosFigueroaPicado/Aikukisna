@@ -3,12 +3,14 @@ package com.aikukisna.app.domain.usecase
 import com.aikukisna.app.domain.model.Idioma
 import com.aikukisna.app.domain.model.Usuario
 import com.aikukisna.app.domain.repository.AuthRepository
+import com.aikukisna.app.domain.repository.UsuarioRepository
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 class RegistrarUsuarioUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val usuarioRepository: UsuarioRepository
 ) {
     private companion object {
 
@@ -52,11 +54,6 @@ class RegistrarUsuarioUseCase @Inject constructor(
         }
 
 
-        val yaExiste = authRepository.obtenerCorreoPorNombreUsuario(nombreUsuario) != null
-        require(!yaExiste) {
-            "Ese nombre de usuario ya está en uso"
-        }
-
         val metadatos = buildJsonObject {
             put("nombre", nombre)
             put("apellido", apellido)
@@ -68,7 +65,7 @@ class RegistrarUsuarioUseCase @Inject constructor(
 
         val id = authRepository.registrarse(correo, contrasena, metadatos)
 
-        return Usuario(
+        val usuario = Usuario(
             id = id,
             nombre = nombre,
             apellido = apellido,
@@ -83,5 +80,7 @@ class RegistrarUsuarioUseCase @Inject constructor(
             rachaMaxima = 0,
             ultimaActividad = null
         )
+        usuarioRepository.actualizarUsuario(usuario)
+        return usuario
     }
 }

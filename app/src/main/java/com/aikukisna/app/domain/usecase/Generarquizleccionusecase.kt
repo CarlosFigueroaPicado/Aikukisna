@@ -3,35 +3,28 @@ package com.aikukisna.app.domain.usecase
 import com.aikukisna.app.domain.model.Palabra
 import com.aikukisna.app.domain.model.PreguntaQuiz
 import com.aikukisna.app.domain.repository.ContenidoLeccion
-import com.aikukisna.app.domain.repository.DiccionarioRepository
 import com.aikukisna.app.domain.repository.LeccionRepository
 import javax.inject.Inject
-
-private const val IDIOMA_ESPANOL = 2
 
 private const val DISTRACTORES_DESEADOS = 2
 
 class GenerarQuizLeccionUseCase @Inject constructor(
     private val leccionRepository: LeccionRepository,
-    private val diccionarioRepository: DiccionarioRepository
+    private val traduccionParaLeccion: TraduccionParaLeccionUseCase
 ) {
     suspend operator fun invoke(leccionId: Int): List<PreguntaQuiz> {
         return when (val contenido = leccionRepository.obtenerContenidoLeccion(leccionId)) {
             is ContenidoLeccion.Vocabulario -> generarDesdePalabras(contenido.palabras)
-            is ContenidoLeccion.Frases -> generarDeFrases(contenido)
+            is ContenidoLeccion.Frases -> generarDeFrases(leccionId, contenido)
         }
     }
 
 
     suspend fun generarDesdePalabras(palabras: List<Palabra>): List<PreguntaQuiz> {
-        // Cada palabra necesita su traducción real al español — no se
-        // adivina, se busca la misma que usaría el diccionario.
+        // Cada palabra necesita su traducción real del diccionario (al español, o a la
+        // lengua de apoyo si la lección es de Español); no se adivina.
         val traduccionPorPalabraId = palabras.associate { palabra ->
-            val traduccion = diccionarioRepository.obtenerTraducciones(palabra.id)
-                .firstOrNull { it.palabraDestino.idioma.id == IDIOMA_ESPANOL }
-                ?.palabraDestino
-                ?.texto
-            palabra.id to traduccion
+            palabra.id to traduccionParaLeccion(palabra)
         }
 
         val todasLasRespuestas = traduccionPorPalabraId.values.filterNotNull().distinct()
@@ -50,10 +43,16 @@ class GenerarQuizLeccionUseCase @Inject constructor(
         }
     }
 
-    private fun generarDeFrases(contenido: ContenidoLeccion.Frases): List<PreguntaQuiz> {
-        val todasLasRespuestas = contenido.oraciones.map { it.textoDestino }.distinct()
+    private suspend fun generarDeFrases(leccionId: Int, contenido: ContenidoLeccion.Frases): List<PreguntaQuiz> {
+        val idiomaMeta = leccionRepository.obtenerLeccionPorId(leccionId)?.idiomaMeta?.id
+        val oraciones = idiomaMeta?.let { id ->
+            traduccionParaLeccion.idiomasDestino(id).firstNotNullOfOrNull { destino ->
+                contenido.oraciones.filter { it.idiomaDestinoId == destino }.takeIf { it.isNotEmpty() }
+            }
+        } ?: contenido.oraciones
+        val todasLasRespuestas = oraciones.map { it.textoDestino }.distinct()
 
-        return contenido.oraciones.map { oracion ->
+        return oraciones.map { oracion ->
             val opciones = armarOpciones(
                 respuestaCorrecta = oracion.textoDestino,
                 pool = todasLasRespuestas

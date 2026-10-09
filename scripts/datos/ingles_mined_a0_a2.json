@@ -1,0 +1,2307 @@
+{
+ "nota": "Lecciones de Inglés alineadas a los libros oficiales del MINED. Las palabras son vocabulario básico; las frases fueron escritas por el equipo de Aikukisna siguiendo el tema de cada lección oficial (no son texto del libro). Traducciones al español pendientes de revisión docente.",
+ "fuentes": {
+  "ab3": {
+   "titulo": "Activity Book 3rd Grade — Let's Practice Together! English (Primaria Regular)",
+   "anio": 2025,
+   "grado": 3,
+   "etapa": "tercero_regular",
+   "url": "https://www.mined.gob.ni/biblioteca/product/ingles-activity-book-3/"
+  },
+  "ab4": {
+   "titulo": "Activity Book 4th Grade — English (Primaria Regular)",
+   "anio": 2025,
+   "grado": 4,
+   "etapa": "cuarto_regular",
+   "url": "https://www.mined.gob.ni/biblioteca/product/ingles-activity-book-4/"
+  },
+  "s7": {
+   "titulo": "Secondary English Book 7th Grade (Lengua Extranjera, Educación Secundaria)",
+   "anio": 2018,
+   "grado": 7,
+   "etapa": "septimo_regular",
+   "url": "https://www.mined.gob.ni/biblioteca/product/englis-book-7-grado/"
+  }
+ },
+ "lecciones": [
+  {
+   "libro": "ab3",
+   "unidad": "Unit 1: The Alphabet",
+   "oficial": "The Alphabet — personal information, spelling, body parts",
+   "pagina": 4,
+   "nivel": 1,
+   "capitulo": 101,
+   "titulo": "El alfabeto y mis datos",
+   "categoria": 19,
+   "palabras": [
+    [
+     "name",
+     "nombre"
+    ],
+    [
+     "age",
+     "edad"
+    ],
+    [
+     "phone number",
+     "número de teléfono"
+    ],
+    [
+     "classroom",
+     "aula"
+    ],
+    [
+     "letter",
+     "letra"
+    ],
+    [
+     "spell",
+     "deletrear"
+    ],
+    [
+     "head",
+     "cabeza"
+    ],
+    [
+     "hand",
+     "mano"
+    ]
+   ],
+   "frases": [
+    [
+     "My name is Ana.",
+     "Me llamo Ana."
+    ],
+    [
+     "How do you spell your name?",
+     "¿Cómo se deletrea tu nombre?"
+    ],
+    [
+     "I am eight years old.",
+     "Tengo ocho años."
+    ],
+    [
+     "This is my head.",
+     "Esta es mi cabeza."
+    ]
+   ]
+  },
+  {
+   "libro": "ab3",
+   "unidad": "Unit 2: Let's do it",
+   "oficial": "Let's do it — imperative verbs and parts of the room",
+   "pagina": 11,
+   "nivel": 1,
+   "capitulo": 102,
+   "titulo": "¡Hagámoslo! Órdenes sencillas",
+   "categoria": 11,
+   "palabras": [
+    [
+     "jump",
+     "saltar"
+    ],
+    [
+     "run",
+     "correr"
+    ],
+    [
+     "walk",
+     "caminar"
+    ],
+    [
+     "touch",
+     "tocar"
+    ],
+    [
+     "floor",
+     "piso"
+    ],
+    [
+     "wall",
+     "pared"
+    ],
+    [
+     "door",
+     "puerta"
+    ],
+    [
+     "window",
+     "ventana"
+    ]
+   ],
+   "frases": [
+    [
+     "Touch the floor.",
+     "Toca el piso."
+    ],
+    [
+     "Open the door, please.",
+     "Abre la puerta, por favor."
+    ],
+    [
+     "Don't run in the classroom.",
+     "No corras en el aula."
+    ],
+    [
+     "Walk to the window.",
+     "Camina hacia la ventana."
+    ]
+   ]
+  },
+  {
+   "libro": "ab3",
+   "unidad": "Unit 3: I want to be a/an...",
+   "oficial": "I want to be a/an... — professions and the verb to be",
+   "pagina": 15,
+   "nivel": 1,
+   "capitulo": 103,
+   "titulo": "Quiero ser… Profesiones",
+   "categoria": 11,
+   "palabras": [
+    [
+     "teacher",
+     "maestro"
+    ],
+    [
+     "doctor",
+     "doctor"
+    ],
+    [
+     "nurse",
+     "enfermera"
+    ],
+    [
+     "farmer",
+     "agricultor"
+    ],
+    [
+     "fisherman",
+     "pescador"
+    ],
+    [
+     "police officer",
+     "policía"
+    ],
+    [
+     "firefighter",
+     "bombero"
+    ],
+    [
+     "cook",
+     "cocinero"
+    ]
+   ],
+   "frases": [
+    [
+     "I want to be a teacher.",
+     "Quiero ser maestro."
+    ],
+    [
+     "She is a nurse.",
+     "Ella es enfermera."
+    ],
+    [
+     "He isn't a doctor.",
+     "Él no es doctor."
+    ],
+    [
+     "My father is a fisherman.",
+     "Mi papá es pescador."
+    ]
+   ]
+  },
+  {
+   "libro": "ab3",
+   "unidad": "Unit 4: At School",
+   "oficial": "At School — school supplies, have / has",
+   "pagina": 22,
+   "nivel": 1,
+   "capitulo": 104,
+   "titulo": "En la escuela: tengo y tiene",
+   "categoria": 11,
+   "palabras": [
+    [
+     "backpack",
+     "mochila"
+    ],
+    [
+     "notebook",
+     "cuaderno"
+    ],
+    [
+     "pencil",
+     "lápiz"
+    ],
+    [
+     "eraser",
+     "borrador"
+    ],
+    [
+     "ruler",
+     "regla"
+    ],
+    [
+     "crayon",
+     "crayón"
+    ],
+    [
+     "scissors",
+     "tijeras"
+    ],
+    [
+     "glue",
+     "pegamento"
+    ]
+   ],
+   "frases": [
+    [
+     "I have a red backpack.",
+     "Tengo una mochila roja."
+    ],
+    [
+     "She has two pencils.",
+     "Ella tiene dos lápices."
+    ],
+    [
+     "They have new notebooks.",
+     "Ellos tienen cuadernos nuevos."
+    ],
+    [
+     "These are my crayons.",
+     "Estos son mis crayones."
+    ]
+   ]
+  },
+  {
+   "libro": "ab3",
+   "unidad": "Unit 5: My toys",
+   "oficial": "My toys — toys, do / does have",
+   "pagina": 28,
+   "nivel": 1,
+   "capitulo": 105,
+   "titulo": "Mis juguetes",
+   "categoria": 1,
+   "palabras": [
+    [
+     "toy",
+     "juguete"
+    ],
+    [
+     "ball",
+     "pelota"
+    ],
+    [
+     "doll",
+     "muñeca"
+    ],
+    [
+     "kite",
+     "papalote"
+    ],
+    [
+     "puzzle",
+     "rompecabezas"
+    ],
+    [
+     "skateboard",
+     "patineta"
+    ],
+    [
+     "bicycle",
+     "bicicleta"
+    ],
+    [
+     "video game",
+     "videojuego"
+    ]
+   ],
+   "frases": [
+    [
+     "Do you have a kite?",
+     "¿Tienes un papalote?"
+    ],
+    [
+     "Yes, I do.",
+     "Sí, tengo."
+    ],
+    [
+     "Does she have a doll?",
+     "¿Ella tiene una muñeca?"
+    ],
+    [
+     "My brother has a new ball.",
+     "Mi hermano tiene una pelota nueva."
+    ]
+   ]
+  },
+  {
+   "libro": "ab3",
+   "unidad": "Unit 6: Feelings and appearance",
+   "oficial": "Feelings and appearance — adjectives",
+   "pagina": 36,
+   "nivel": 1,
+   "capitulo": 106,
+   "titulo": "Sentimientos y apariencia",
+   "categoria": 1,
+   "palabras": [
+    [
+     "happy",
+     "feliz"
+    ],
+    [
+     "sad",
+     "triste"
+    ],
+    [
+     "clean",
+     "limpio"
+    ],
+    [
+     "dirty",
+     "sucio"
+    ],
+    [
+     "big",
+     "grande"
+    ],
+    [
+     "small",
+     "pequeño"
+    ],
+    [
+     "tall",
+     "alto"
+    ],
+    [
+     "short",
+     "bajo"
+    ]
+   ],
+   "frases": [
+    [
+     "The girl is happy.",
+     "La niña está feliz."
+    ],
+    [
+     "The dog is dirty.",
+     "El perro está sucio."
+    ],
+    [
+     "My monster has three eyes.",
+     "Mi monstruo tiene tres ojos."
+    ],
+    [
+     "The elephant is big.",
+     "El elefante es grande."
+    ]
+   ]
+  },
+  {
+   "libro": "ab3",
+   "unidad": "Unit 7: Animals (zoo)",
+   "oficial": "Animals at the zoo — describing animals",
+   "pagina": 44,
+   "nivel": 1,
+   "capitulo": 107,
+   "titulo": "Los animales del zoológico",
+   "categoria": 17,
+   "palabras": [
+    [
+     "snake",
+     "serpiente"
+    ],
+    [
+     "parrot",
+     "loro"
+    ],
+    [
+     "monkey",
+     "mono"
+    ],
+    [
+     "zebra",
+     "cebra"
+    ],
+    [
+     "elephant",
+     "elefante"
+    ],
+    [
+     "fast",
+     "rápido"
+    ],
+    [
+     "strong",
+     "fuerte"
+    ],
+    [
+     "colorful",
+     "colorido"
+    ]
+   ],
+   "frases": [
+    [
+     "The parrot is colorful.",
+     "El loro es colorido."
+    ],
+    [
+     "The snake has no legs.",
+     "La serpiente no tiene patas."
+    ],
+    [
+     "Monkeys can climb trees.",
+     "Los monos pueden trepar árboles."
+    ],
+    [
+     "The zebra is fast.",
+     "La cebra es rápida."
+    ]
+   ]
+  },
+  {
+   "libro": "ab3",
+   "unidad": "Unit 8: School Subject",
+   "oficial": "School subjects — favorite subjects",
+   "pagina": 50,
+   "nivel": 1,
+   "capitulo": 108,
+   "titulo": "Las materias de la escuela",
+   "categoria": 11,
+   "palabras": [
+    [
+     "math",
+     "matemáticas"
+    ],
+    [
+     "science",
+     "ciencias"
+    ],
+    [
+     "English",
+     "inglés"
+    ],
+    [
+     "Spanish",
+     "español"
+    ],
+    [
+     "art",
+     "arte"
+    ],
+    [
+     "music",
+     "música"
+    ],
+    [
+     "history",
+     "historia"
+    ],
+    [
+     "subject",
+     "materia"
+    ]
+   ],
+   "frases": [
+    [
+     "My favorite subject is math.",
+     "Mi materia favorita es matemáticas."
+    ],
+    [
+     "I like science.",
+     "Me gusta ciencias."
+    ],
+    [
+     "We have English on Monday.",
+     "Tenemos inglés el lunes."
+    ],
+    [
+     "Do you like art?",
+     "¿Te gusta arte?"
+    ]
+   ]
+  },
+  {
+   "libro": "ab3",
+   "unidad": "Unit 9: Places",
+   "oficial": "Places in town — describing places",
+   "pagina": 57,
+   "nivel": 1,
+   "capitulo": 109,
+   "titulo": "Lugares de mi comunidad",
+   "categoria": 14,
+   "palabras": [
+    [
+     "hospital",
+     "hospital"
+    ],
+    [
+     "school",
+     "escuela"
+    ],
+    [
+     "park",
+     "parque"
+    ],
+    [
+     "fire station",
+     "estación de bomberos"
+    ],
+    [
+     "toy store",
+     "juguetería"
+    ],
+    [
+     "movie theater",
+     "cine"
+    ],
+    [
+     "church",
+     "iglesia"
+    ],
+    [
+     "market",
+     "mercado"
+    ]
+   ],
+   "frases": [
+    [
+     "You go to the hospital when you are sick.",
+     "Vas al hospital cuando estás enfermo."
+    ],
+    [
+     "Firefighters work at the fire station.",
+     "Los bomberos trabajan en la estación de bomberos."
+    ],
+    [
+     "The park is near my house.",
+     "El parque está cerca de mi casa."
+    ],
+    [
+     "We buy fruit at the market.",
+     "Compramos fruta en el mercado."
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 1: Special Days",
+   "oficial": "Special Days — holidays and celebrations",
+   "pagina": 4,
+   "nivel": 2,
+   "capitulo": 111,
+   "titulo": "Días especiales",
+   "categoria": 13,
+   "palabras": [
+    [
+     "birthday",
+     "cumpleaños"
+    ],
+    [
+     "Christmas",
+     "Navidad"
+    ],
+    [
+     "Easter",
+     "Semana Santa"
+    ],
+    [
+     "Mother's Day",
+     "Día de las Madres"
+    ],
+    [
+     "Father's Day",
+     "Día del Padre"
+    ],
+    [
+     "Independence Day",
+     "Día de la Independencia"
+    ],
+    [
+     "celebrate",
+     "celebrar"
+    ],
+    [
+     "gift",
+     "regalo"
+    ]
+   ],
+   "frases": [
+    [
+     "My birthday is in May.",
+     "Mi cumpleaños es en mayo."
+    ],
+    [
+     "We celebrate Mother's Day on May 30.",
+     "Celebramos el Día de las Madres el 30 de mayo."
+    ],
+    [
+     "I give my mom a gift.",
+     "Le doy un regalo a mi mamá."
+    ],
+    [
+     "When is your birthday?",
+     "¿Cuándo es tu cumpleaños?"
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 2: The Weather",
+   "oficial": "The Weather — weather and clothes",
+   "pagina": 11,
+   "nivel": 2,
+   "capitulo": 112,
+   "titulo": "El clima y la ropa",
+   "categoria": 12,
+   "palabras": [
+    [
+     "sunny",
+     "soleado"
+    ],
+    [
+     "rainy",
+     "lluvioso"
+    ],
+    [
+     "cloudy",
+     "nublado"
+    ],
+    [
+     "windy",
+     "ventoso"
+    ],
+    [
+     "hot",
+     "caluroso"
+    ],
+    [
+     "cold",
+     "frío"
+    ],
+    [
+     "umbrella",
+     "paraguas"
+    ],
+    [
+     "sweater",
+     "suéter"
+    ]
+   ],
+   "frases": [
+    [
+     "It is sunny today.",
+     "Hoy está soleado."
+    ],
+    [
+     "It is raining. Take your umbrella.",
+     "Está lloviendo. Lleva tu paraguas."
+    ],
+    [
+     "What's the weather like?",
+     "¿Cómo está el clima?"
+    ],
+    [
+     "I wear a sweater when it is cold.",
+     "Me pongo un suéter cuando hace frío."
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 3: Leisure time",
+   "oficial": "Leisure time — free-time activities, can",
+   "pagina": 18,
+   "nivel": 2,
+   "capitulo": 113,
+   "titulo": "Tiempo libre",
+   "categoria": 1,
+   "palabras": [
+    [
+     "play soccer",
+     "jugar fútbol"
+    ],
+    [
+     "sing",
+     "cantar"
+    ],
+    [
+     "dance",
+     "bailar"
+    ],
+    [
+     "skate",
+     "patinar"
+    ],
+    [
+     "draw",
+     "dibujar"
+    ],
+    [
+     "read",
+     "leer"
+    ],
+    [
+     "laugh",
+     "reír"
+    ],
+    [
+     "free time",
+     "tiempo libre"
+    ]
+   ],
+   "frases": [
+    [
+     "I can play soccer.",
+     "Puedo jugar fútbol."
+    ],
+    [
+     "Can you sing?",
+     "¿Puedes cantar?"
+    ],
+    [
+     "In my free time I draw.",
+     "En mi tiempo libre dibujo."
+    ],
+    [
+     "She can't skate.",
+     "Ella no puede patinar."
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 4: On vacation time",
+   "oficial": "On vacation time — at the beach, action verbs",
+   "pagina": 26,
+   "nivel": 2,
+   "capitulo": 114,
+   "titulo": "De vacaciones en la playa",
+   "categoria": 12,
+   "palabras": [
+    [
+     "vacation",
+     "vacaciones"
+    ],
+    [
+     "beach",
+     "playa"
+    ],
+    [
+     "ocean",
+     "océano"
+    ],
+    [
+     "swim",
+     "nadar"
+    ],
+    [
+     "sandcastle",
+     "castillo de arena"
+    ],
+    [
+     "sleep",
+     "dormir"
+    ],
+    [
+     "buy",
+     "comprar"
+    ],
+    [
+     "shell",
+     "concha"
+    ]
+   ],
+   "frases": [
+    [
+     "We go to the beach on vacation.",
+     "Vamos a la playa en vacaciones."
+    ],
+    [
+     "The children swim in the ocean.",
+     "Los niños nadan en el océano."
+    ],
+    [
+     "I make a sandcastle.",
+     "Hago un castillo de arena."
+    ],
+    [
+     "My sister buys shells.",
+     "Mi hermana compra conchas."
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 5: On vacation time",
+   "oficial": "On vacation time — activities at home, present continuous",
+   "pagina": 33,
+   "nivel": 2,
+   "capitulo": 115,
+   "titulo": "¿Qué estás haciendo?",
+   "categoria": 1,
+   "palabras": [
+    [
+     "do homework",
+     "hacer la tarea"
+    ],
+    [
+     "watch television",
+     "ver televisión"
+    ],
+    [
+     "listen to music",
+     "escuchar música"
+    ],
+    [
+     "clean your room",
+     "limpiar tu cuarto"
+    ],
+    [
+     "call a friend",
+     "llamar a un amigo"
+    ],
+    [
+     "water a plant",
+     "regar una planta"
+    ],
+    [
+     "make a snack",
+     "preparar una merienda"
+    ],
+    [
+     "ride a bicycle",
+     "andar en bicicleta"
+    ]
+   ],
+   "frases": [
+    [
+     "I'm watching television.",
+     "Estoy viendo televisión."
+    ],
+    [
+     "She's doing her homework.",
+     "Ella está haciendo su tarea."
+    ],
+    [
+     "What are you doing?",
+     "¿Qué estás haciendo?"
+    ],
+    [
+     "He's listening to music.",
+     "Él está escuchando música."
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 6: Taking Care",
+   "oficial": "Taking care — health and hygiene",
+   "pagina": 41,
+   "nivel": 2,
+   "capitulo": 116,
+   "titulo": "Cuidar la salud",
+   "categoria": 2,
+   "palabras": [
+    [
+     "wash your hands",
+     "lavarse las manos"
+    ],
+    [
+     "brush your teeth",
+     "cepillarse los dientes"
+    ],
+    [
+     "take a shower",
+     "bañarse"
+    ],
+    [
+     "fever",
+     "fiebre"
+    ],
+    [
+     "headache",
+     "dolor de cabeza"
+    ],
+    [
+     "medicine",
+     "medicina"
+    ],
+    [
+     "rest",
+     "descansar"
+    ],
+    [
+     "healthy",
+     "saludable"
+    ]
+   ],
+   "frases": [
+    [
+     "Wash your hands before you eat.",
+     "Lávate las manos antes de comer."
+    ],
+    [
+     "I have a headache.",
+     "Tengo dolor de cabeza."
+    ],
+    [
+     "You should rest and drink water.",
+     "Deberías descansar y tomar agua."
+    ],
+    [
+     "Brush your teeth after meals.",
+     "Cepíllate los dientes después de comer."
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 7: At The Restaurant",
+   "oficial": "At the restaurant — food and drinks, ordering",
+   "pagina": 50,
+   "nivel": 2,
+   "capitulo": 117,
+   "titulo": "En el restaurante",
+   "categoria": 7,
+   "palabras": [
+    [
+     "milk",
+     "leche"
+    ],
+    [
+     "lemonade",
+     "limonada"
+    ],
+    [
+     "juice",
+     "jugo"
+    ],
+    [
+     "salad",
+     "ensalada"
+    ],
+    [
+     "sandwich",
+     "sándwich"
+    ],
+    [
+     "menu",
+     "menú"
+    ],
+    [
+     "waiter",
+     "mesero"
+    ],
+    [
+     "order",
+     "pedir"
+    ]
+   ],
+   "frases": [
+    [
+     "I would like a sandwich, please.",
+     "Quisiera un sándwich, por favor."
+    ],
+    [
+     "Can I see the menu?",
+     "¿Puedo ver el menú?"
+    ],
+    [
+     "The waiter brings the juice.",
+     "El mesero trae el jugo."
+    ],
+    [
+     "How much is the salad?",
+     "¿Cuánto cuesta la ensalada?"
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 8: The Concert",
+   "oficial": "The concert / party — party vocabulary",
+   "pagina": 57,
+   "nivel": 2,
+   "capitulo": 118,
+   "titulo": "La fiesta y el concierto",
+   "categoria": 13,
+   "palabras": [
+    [
+     "party",
+     "fiesta"
+    ],
+    [
+     "band",
+     "banda"
+    ],
+    [
+     "invitation",
+     "invitación"
+    ],
+    [
+     "balloon",
+     "globo"
+    ],
+    [
+     "fireworks",
+     "fuegos artificiales"
+    ],
+    [
+     "cake",
+     "pastel"
+    ],
+    [
+     "candles",
+     "velas"
+    ],
+    [
+     "candy",
+     "dulces"
+    ]
+   ],
+   "frases": [
+    [
+     "We need balloons for the party.",
+     "Necesitamos globos para la fiesta."
+    ],
+    [
+     "The band plays music.",
+     "La banda toca música."
+    ],
+    [
+     "There are ten candles on the cake.",
+     "Hay diez velas en el pastel."
+    ],
+    [
+     "Here is your invitation.",
+     "Aquí está tu invitación."
+    ]
+   ]
+  },
+  {
+   "libro": "ab4",
+   "unidad": "Unit 9: The Time",
+   "oficial": "The time — times of the day",
+   "pagina": 65,
+   "nivel": 2,
+   "capitulo": 119,
+   "titulo": "Momentos del día",
+   "categoria": 18,
+   "palabras": [
+    [
+     "morning",
+     "mañana"
+    ],
+    [
+     "afternoon",
+     "tarde"
+    ],
+    [
+     "evening",
+     "anochecer"
+    ],
+    [
+     "night",
+     "noche"
+    ],
+    [
+     "noon",
+     "mediodía"
+    ],
+    [
+     "midnight",
+     "medianoche"
+    ],
+    [
+     "early",
+     "temprano"
+    ],
+    [
+     "late",
+     "tarde (hora)"
+    ]
+   ],
+   "frases": [
+    [
+     "I go to school in the morning.",
+     "Voy a la escuela en la mañana."
+    ],
+    [
+     "We eat lunch at noon.",
+     "Almorzamos al mediodía."
+    ],
+    [
+     "He sleeps at night.",
+     "Él duerme en la noche."
+    ],
+    [
+     "Don't be late!",
+     "¡No llegues tarde!"
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 1: The Classroom",
+   "oficial": "Lesson 1: Classroom objects",
+   "pagina": 2,
+   "existente": 61
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 1: The Classroom",
+   "oficial": "Lesson 2: Classroom instructions",
+   "pagina": 5,
+   "nivel": 2,
+   "capitulo": 202,
+   "titulo": "Instrucciones en el aula",
+   "categoria": 11,
+   "palabras": [
+    [
+     "open",
+     "abrir"
+    ],
+    [
+     "close",
+     "cerrar"
+    ],
+    [
+     "listen",
+     "escuchar"
+    ],
+    [
+     "repeat",
+     "repetir"
+    ],
+    [
+     "sit down",
+     "sentarse"
+    ],
+    [
+     "stand up",
+     "ponerse de pie"
+    ],
+    [
+     "write",
+     "escribir"
+    ],
+    [
+     "raise your hand",
+     "levantar la mano"
+    ]
+   ],
+   "frases": [
+    [
+     "Open your book, please.",
+     "Abre tu libro, por favor."
+    ],
+    [
+     "Listen and repeat.",
+     "Escucha y repite."
+    ],
+    [
+     "Raise your hand to speak.",
+     "Levanta la mano para hablar."
+    ],
+    [
+     "Please sit down.",
+     "Por favor, siéntate."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 1: The Classroom",
+   "oficial": "Lesson 3: Numbers from 1 to 10",
+   "pagina": 8,
+   "existente": 62
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 1: The Classroom",
+   "oficial": "Lesson 4: Articles a / an",
+   "pagina": 11,
+   "nivel": 2,
+   "capitulo": 204,
+   "titulo": "Los artículos a y an",
+   "categoria": 10,
+   "palabras": [
+    [
+     "a book",
+     "un libro"
+    ],
+    [
+     "an apple",
+     "una manzana"
+    ],
+    [
+     "an eraser",
+     "un borrador"
+    ],
+    [
+     "a desk",
+     "un pupitre"
+    ],
+    [
+     "an orange",
+     "una naranja"
+    ],
+    [
+     "a chair",
+     "una silla"
+    ],
+    [
+     "an umbrella",
+     "un paraguas"
+    ],
+    [
+     "a pen",
+     "un lapicero"
+    ]
+   ],
+   "frases": [
+    [
+     "It's an apple.",
+     "Es una manzana."
+    ],
+    [
+     "I have a pen and an eraser.",
+     "Tengo un lapicero y un borrador."
+    ],
+    [
+     "Is it a chair?",
+     "¿Es una silla?"
+    ],
+    [
+     "She has an umbrella.",
+     "Ella tiene un paraguas."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 2: Personal Information",
+   "oficial": "Lesson 5: Numbers from 10 to 20",
+   "pagina": 21,
+   "existente": 94
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 2: Personal Information",
+   "oficial": "Lesson 6: The alphabet",
+   "pagina": 26,
+   "nivel": 2,
+   "capitulo": 206,
+   "titulo": "El alfabeto en inglés",
+   "categoria": 19,
+   "palabras": [
+    [
+     "alphabet",
+     "alfabeto"
+    ],
+    [
+     "letter",
+     "letra"
+    ],
+    [
+     "vowel",
+     "vocal"
+    ],
+    [
+     "consonant",
+     "consonante"
+    ],
+    [
+     "capital letter",
+     "letra mayúscula"
+    ],
+    [
+     "spell",
+     "deletrear"
+    ],
+    [
+     "word",
+     "palabra"
+    ],
+    [
+     "first name",
+     "nombre"
+    ]
+   ],
+   "frases": [
+    [
+     "How do you spell 'school'?",
+     "¿Cómo se deletrea 'school'?"
+    ],
+    [
+     "S-C-H-O-O-L.",
+     "S-C-H-O-O-L."
+    ],
+    [
+     "A, E, I, O and U are vowels.",
+     "A, E, I, O y U son vocales."
+    ],
+    [
+     "Write your name with capital letters.",
+     "Escribe tu nombre con mayúsculas."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 2: Personal Information",
+   "oficial": "Lesson 7: Introductions",
+   "pagina": 29,
+   "nivel": 2,
+   "capitulo": 207,
+   "titulo": "Presentarse",
+   "categoria": 5,
+   "palabras": [
+    [
+     "hello",
+     "hola"
+    ],
+    [
+     "nice to meet you",
+     "mucho gusto"
+    ],
+    [
+     "my name is",
+     "me llamo"
+    ],
+    [
+     "I'm from",
+     "soy de"
+    ],
+    [
+     "friend",
+     "amigo"
+    ],
+    [
+     "classmate",
+     "compañero de clase"
+    ],
+    [
+     "introduce",
+     "presentar"
+    ],
+    [
+     "goodbye",
+     "adiós"
+    ]
+   ],
+   "frases": [
+    [
+     "Hi, my name is Carlos. What's your name?",
+     "Hola, me llamo Carlos. ¿Cómo te llamas?"
+    ],
+    [
+     "Nice to meet you.",
+     "Mucho gusto."
+    ],
+    [
+     "Where are you from?",
+     "¿De dónde eres?"
+    ],
+    [
+     "I'm from Bluefields.",
+     "Soy de Bluefields."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 2: Personal Information",
+   "oficial": "Lesson 8: Addresses",
+   "pagina": 37,
+   "nivel": 2,
+   "capitulo": 208,
+   "titulo": "Mi dirección",
+   "categoria": 14,
+   "palabras": [
+    [
+     "address",
+     "dirección"
+    ],
+    [
+     "street",
+     "calle"
+    ],
+    [
+     "neighborhood",
+     "barrio"
+    ],
+    [
+     "town",
+     "pueblo"
+    ],
+    [
+     "city",
+     "ciudad"
+    ],
+    [
+     "live",
+     "vivir"
+    ],
+    [
+     "next to",
+     "al lado de"
+    ],
+    [
+     "across from",
+     "enfrente de"
+    ]
+   ],
+   "frases": [
+    [
+     "Where do you live?",
+     "¿Dónde vives?"
+    ],
+    [
+     "I live in Puerto Cabezas.",
+     "Vivo en Puerto Cabezas."
+    ],
+    [
+     "What's your address?",
+     "¿Cuál es tu dirección?"
+    ],
+    [
+     "My house is across from the school.",
+     "Mi casa está enfrente de la escuela."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 2: Personal Information",
+   "oficial": "Lesson 9: Family members",
+   "pagina": 39,
+   "existente": 76
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 2: Personal Information",
+   "oficial": "Lesson 10: Popular jobs in my town",
+   "pagina": 42,
+   "nivel": 2,
+   "capitulo": 210,
+   "titulo": "Trabajos de mi pueblo",
+   "categoria": 11,
+   "palabras": [
+    [
+     "job",
+     "trabajo"
+    ],
+    [
+     "carpenter",
+     "carpintero"
+    ],
+    [
+     "mechanic",
+     "mecánico"
+    ],
+    [
+     "baker",
+     "panadero"
+    ],
+    [
+     "driver",
+     "conductor"
+    ],
+    [
+     "seller",
+     "vendedor"
+    ],
+    [
+     "work",
+     "trabajar"
+    ],
+    [
+     "store",
+     "tienda"
+    ]
+   ],
+   "frases": [
+    [
+     "What does your mother do?",
+     "¿A qué se dedica tu mamá?"
+    ],
+    [
+     "She is a seller at the market.",
+     "Ella es vendedora en el mercado."
+    ],
+    [
+     "My uncle works in a store.",
+     "Mi tío trabaja en una tienda."
+    ],
+    [
+     "The baker makes bread every day.",
+     "El panadero hace pan todos los días."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 3: Usual Activities",
+   "oficial": "Lesson 11: Numbers from 20 to 100",
+   "pagina": 50,
+   "existente": 95
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 3: Usual Activities",
+   "oficial": "Lesson 12: Time to go to school",
+   "pagina": 53,
+   "existente": 75
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 3: Usual Activities",
+   "oficial": "Lesson 13: School subjects",
+   "pagina": 57,
+   "nivel": 2,
+   "capitulo": 213,
+   "titulo": "Horario de clases",
+   "categoria": 11,
+   "palabras": [
+    [
+     "schedule",
+     "horario"
+    ],
+    [
+     "social studies",
+     "estudios sociales"
+    ],
+    [
+     "physical education",
+     "educación física"
+    ],
+    [
+     "biology",
+     "biología"
+    ],
+    [
+     "geography",
+     "geografía"
+    ],
+    [
+     "homework",
+     "tarea"
+    ],
+    [
+     "test",
+     "examen"
+    ],
+    [
+     "break",
+     "recreo"
+    ]
+   ],
+   "frases": [
+    [
+     "What time is your English class?",
+     "¿A qué hora es tu clase de inglés?"
+    ],
+    [
+     "We have a test on Friday.",
+     "Tenemos un examen el viernes."
+    ],
+    [
+     "I don't have homework today.",
+     "Hoy no tengo tarea."
+    ],
+    [
+     "Physical education is on Tuesday.",
+     "Educación física es el martes."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 3: Usual Activities",
+   "oficial": "Lesson 14: Sharing housework",
+   "pagina": 67,
+   "nivel": 2,
+   "capitulo": 214,
+   "titulo": "Compartir las tareas de la casa",
+   "categoria": 6,
+   "palabras": [
+    [
+     "sweep",
+     "barrer"
+    ],
+    [
+     "wash the dishes",
+     "lavar los platos"
+    ],
+    [
+     "make the bed",
+     "tender la cama"
+    ],
+    [
+     "cook",
+     "cocinar"
+    ],
+    [
+     "take out the trash",
+     "sacar la basura"
+    ],
+    [
+     "feed the chickens",
+     "dar de comer a las gallinas"
+    ],
+    [
+     "help",
+     "ayudar"
+    ],
+    [
+     "housework",
+     "tareas de la casa"
+    ]
+   ],
+   "frases": [
+    [
+     "I sweep the floor every morning.",
+     "Barro el piso todas las mañanas."
+    ],
+    [
+     "My brother washes the dishes.",
+     "Mi hermano lava los platos."
+    ],
+    [
+     "Who takes out the trash?",
+     "¿Quién saca la basura?"
+    ],
+    [
+     "We help our parents at home.",
+     "Ayudamos a nuestros padres en casa."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 4: The Time",
+   "oficial": "Lesson 15: The time",
+   "pagina": 80,
+   "existente": 96,
+   "palabras": [
+    [
+     "What time is it?",
+     "¿Qué hora es?"
+    ],
+    [
+     "o'clock",
+     "en punto"
+    ],
+    [
+     "half past",
+     "y media"
+    ],
+    [
+     "quarter past",
+     "y cuarto"
+    ],
+    [
+     "quarter to",
+     "menos cuarto"
+    ],
+    [
+     "hour",
+     "hora"
+    ],
+    [
+     "minute",
+     "minuto"
+    ],
+    [
+     "clock",
+     "reloj"
+    ]
+   ],
+   "frases": [
+    [
+     "What time is it?",
+     "¿Qué hora es?"
+    ],
+    [
+     "It's seven o'clock.",
+     "Son las siete en punto."
+    ],
+    [
+     "It's half past two.",
+     "Son las dos y media."
+    ],
+    [
+     "It's a quarter to nine.",
+     "Son las nueve menos cuarto."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 4: The Time",
+   "oficial": "Lesson 16: Coins and currency",
+   "pagina": 86,
+   "nivel": 3,
+   "capitulo": 216,
+   "titulo": "Monedas y dinero",
+   "categoria": 4,
+   "palabras": [
+    [
+     "money",
+     "dinero"
+    ],
+    [
+     "coin",
+     "moneda"
+    ],
+    [
+     "bill",
+     "billete"
+    ],
+    [
+     "price",
+     "precio"
+    ],
+    [
+     "cheap",
+     "barato"
+    ],
+    [
+     "expensive",
+     "caro"
+    ],
+    [
+     "pay",
+     "pagar"
+    ],
+    [
+     "change",
+     "vuelto"
+    ]
+   ],
+   "frases": [
+    [
+     "How much is it?",
+     "¿Cuánto cuesta?"
+    ],
+    [
+     "It's twenty córdobas.",
+     "Cuesta veinte córdobas."
+    ],
+    [
+     "That's too expensive.",
+     "Eso es muy caro."
+    ],
+    [
+     "Here is your change.",
+     "Aquí está su vuelto."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 4: The Time",
+   "oficial": "Lesson 17: Ordinal numbers",
+   "pagina": 95,
+   "nivel": 3,
+   "capitulo": 217,
+   "titulo": "Números ordinales",
+   "categoria": 4,
+   "palabras": [
+    [
+     "first",
+     "primero"
+    ],
+    [
+     "second",
+     "segundo"
+    ],
+    [
+     "third",
+     "tercero"
+    ],
+    [
+     "fourth",
+     "cuarto"
+    ],
+    [
+     "fifth",
+     "quinto"
+    ],
+    [
+     "tenth",
+     "décimo"
+    ],
+    [
+     "last",
+     "último"
+    ],
+    [
+     "floor (level)",
+     "piso (nivel)"
+    ]
+   ],
+   "frases": [
+    [
+     "I'm in the seventh grade.",
+     "Estoy en séptimo grado."
+    ],
+    [
+     "She was the first in the race.",
+     "Ella fue la primera en la carrera."
+    ],
+    [
+     "My birthday is on the third of June.",
+     "Mi cumpleaños es el tres de junio."
+    ],
+    [
+     "The office is on the second floor.",
+     "La oficina está en el segundo piso."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 4: The Time",
+   "oficial": "Lesson 18: Celebrating holidays",
+   "pagina": 102,
+   "nivel": 3,
+   "capitulo": 218,
+   "titulo": "Celebrar los días festivos",
+   "categoria": 13,
+   "palabras": [
+    [
+     "holiday",
+     "día festivo"
+    ],
+    [
+     "parade",
+     "desfile"
+    ],
+    [
+     "drum",
+     "tambor"
+    ],
+    [
+     "flag",
+     "bandera"
+    ],
+    [
+     "festival",
+     "festival"
+    ],
+    [
+     "traditional dance",
+     "baile tradicional"
+    ],
+    [
+     "date",
+     "fecha"
+    ],
+    [
+     "month",
+     "mes"
+    ]
+   ],
+   "frases": [
+    [
+     "September 15 is Independence Day.",
+     "El 15 de septiembre es el Día de la Independencia."
+    ],
+    [
+     "Students march in the parade.",
+     "Los estudiantes desfilan en el desfile."
+    ],
+    [
+     "We dance Palo de Mayo in May.",
+     "Bailamos el Palo de Mayo en mayo."
+    ],
+    [
+     "What's your favorite holiday?",
+     "¿Cuál es tu día festivo favorito?"
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 5: Home",
+   "oficial": "Lesson 19: Rooms at home",
+   "pagina": 108,
+   "nivel": 3,
+   "capitulo": 219,
+   "titulo": "Las partes de la casa",
+   "categoria": 6,
+   "palabras": [
+    [
+     "living room",
+     "sala"
+    ],
+    [
+     "kitchen",
+     "cocina"
+    ],
+    [
+     "bedroom",
+     "dormitorio"
+    ],
+    [
+     "bathroom",
+     "baño"
+    ],
+    [
+     "yard",
+     "patio"
+    ],
+    [
+     "porch",
+     "corredor"
+    ],
+    [
+     "roof",
+     "techo"
+    ],
+    [
+     "house",
+     "casa"
+    ]
+   ],
+   "frases": [
+    [
+     "My house has two bedrooms.",
+     "Mi casa tiene dos dormitorios."
+    ],
+    [
+     "Mom is cooking in the kitchen.",
+     "Mamá está cocinando en la cocina."
+    ],
+    [
+     "Where is the bathroom?",
+     "¿Dónde está el baño?"
+    ],
+    [
+     "We play in the yard.",
+     "Jugamos en el patio."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 5: Home",
+   "oficial": "Lesson 20: Home appliances and features",
+   "pagina": 117,
+   "nivel": 3,
+   "capitulo": 220,
+   "titulo": "Aparatos y muebles de la casa",
+   "categoria": 6,
+   "palabras": [
+    [
+     "stove",
+     "cocina (estufa)"
+    ],
+    [
+     "refrigerator",
+     "refrigeradora"
+    ],
+    [
+     "fan",
+     "abanico"
+    ],
+    [
+     "bed",
+     "cama"
+    ],
+    [
+     "table",
+     "mesa"
+    ],
+    [
+     "hammock",
+     "hamaca"
+    ],
+    [
+     "lamp",
+     "lámpara"
+    ],
+    [
+     "radio",
+     "radio"
+    ]
+   ],
+   "frases": [
+    [
+     "There is a hammock on the porch.",
+     "Hay una hamaca en el corredor."
+    ],
+    [
+     "The refrigerator is in the kitchen.",
+     "La refrigeradora está en la cocina."
+    ],
+    [
+     "Turn on the fan, please.",
+     "Enciende el abanico, por favor."
+    ],
+    [
+     "Is there a lamp in your bedroom?",
+     "¿Hay una lámpara en tu dormitorio?"
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 5: Home",
+   "oficial": "Lesson 21: Types of buildings",
+   "pagina": 123,
+   "nivel": 3,
+   "capitulo": 221,
+   "titulo": "Tipos de edificios",
+   "categoria": 14,
+   "palabras": [
+    [
+     "building",
+     "edificio"
+    ],
+    [
+     "wooden house",
+     "casa de madera"
+    ],
+    [
+     "apartment",
+     "apartamento"
+    ],
+    [
+     "hut",
+     "choza"
+    ],
+    [
+     "church",
+     "iglesia"
+    ],
+    [
+     "school",
+     "escuela"
+    ],
+    [
+     "old",
+     "viejo"
+    ],
+    [
+     "new",
+     "nuevo"
+    ]
+   ],
+   "frases": [
+    [
+     "Many houses in the Caribbean are made of wood.",
+     "Muchas casas del Caribe son de madera."
+    ],
+    [
+     "The church is an old building.",
+     "La iglesia es un edificio viejo."
+    ],
+    [
+     "They live in an apartment.",
+     "Ellos viven en un apartamento."
+    ],
+    [
+     "Our school is new.",
+     "Nuestra escuela es nueva."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 6: My Community",
+   "oficial": "Lesson 22: Places and people in the community",
+   "pagina": 134,
+   "nivel": 3,
+   "capitulo": 222,
+   "titulo": "Lugares y personas de la comunidad",
+   "categoria": 11,
+   "palabras": [
+    [
+     "community",
+     "comunidad"
+    ],
+    [
+     "health center",
+     "centro de salud"
+    ],
+    [
+     "bank",
+     "banco"
+    ],
+    [
+     "post office",
+     "correo"
+    ],
+    [
+     "drugstore",
+     "farmacia"
+    ],
+    [
+     "bus station",
+     "terminal de buses"
+    ],
+    [
+     "neighbor",
+     "vecino"
+    ],
+    [
+     "leader",
+     "líder"
+    ]
+   ],
+   "frases": [
+    [
+     "The nurse works at the health center.",
+     "La enfermera trabaja en el centro de salud."
+    ],
+    [
+     "Where is the drugstore?",
+     "¿Dónde está la farmacia?"
+    ],
+    [
+     "My neighbor is very kind.",
+     "Mi vecino es muy amable."
+    ],
+    [
+     "The bus station is downtown.",
+     "La terminal de buses está en el centro."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 6: My Community",
+   "oficial": "Lesson 23: Our country",
+   "pagina": 140,
+   "nivel": 3,
+   "capitulo": 223,
+   "titulo": "Nuestro país",
+   "categoria": 13,
+   "palabras": [
+    [
+     "country",
+     "país"
+    ],
+    [
+     "lake",
+     "lago"
+    ],
+    [
+     "volcano",
+     "volcán"
+    ],
+    [
+     "river",
+     "río"
+    ],
+    [
+     "coast",
+     "costa"
+    ],
+    [
+     "island",
+     "isla"
+    ],
+    [
+     "capital",
+     "capital"
+    ],
+    [
+     "region",
+     "región"
+    ]
+   ],
+   "frases": [
+    [
+     "Nicaragua is the land of lakes and volcanoes.",
+     "Nicaragua es la tierra de lagos y volcanes."
+    ],
+    [
+     "The capital of Nicaragua is Managua.",
+     "La capital de Nicaragua es Managua."
+    ],
+    [
+     "Corn Island is in the Caribbean Sea.",
+     "Corn Island está en el mar Caribe."
+    ],
+    [
+     "The Coco River is very long.",
+     "El río Coco es muy largo."
+    ]
+   ]
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 6: My Community",
+   "oficial": "Lesson 24: Asking for and giving directions",
+   "pagina": 147,
+   "existente": 74
+  },
+  {
+   "libro": "s7",
+   "unidad": "Unit 6: My Community",
+   "oficial": "Lesson 25: Famous people in our country",
+   "pagina": 155,
+   "nivel": 3,
+   "capitulo": 225,
+   "titulo": "Personas famosas de nuestro país",
+   "categoria": 13,
+   "observacion": "Adaptada: el libro incluye figuras políticas; Aikukisna usa personajes de la cultura, el arte y el deporte.",
+   "palabras": [
+    [
+     "famous",
+     "famoso"
+    ],
+    [
+     "poet",
+     "poeta"
+    ],
+    [
+     "singer",
+     "cantante"
+    ],
+    [
+     "writer",
+     "escritor"
+    ],
+    [
+     "baseball player",
+     "beisbolista"
+    ],
+    [
+     "painter",
+     "pintor"
+    ],
+    [
+     "born",
+     "nacido"
+    ],
+    [
+     "occupation",
+     "ocupación"
+    ]
+   ],
+   "frases": [
+    [
+     "Rubén Darío is a famous Nicaraguan poet.",
+     "Rubén Darío es un famoso poeta nicaragüense."
+    ],
+    [
+     "Who is your favorite singer?",
+     "¿Quién es tu cantante favorito?"
+    ],
+    [
+     "He was born in Ciudad Darío.",
+     "Él nació en Ciudad Darío."
+    ],
+    [
+     "What's her occupation?",
+     "¿Cuál es su ocupación?"
+    ]
+   ]
+  }
+ ]
+}

@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,10 +34,10 @@ fun DetallePalabraScreen(
     onVolver: () -> Unit
 ) {
     LaunchedEffect(palabraId) { viewModel.cargar(palabraId) }
-    Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(20.dp)) {
+    Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).statusBarsPadding().padding(20.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Detalle", style = MaterialTheme.typography.titleSmall)
-            Text("Volver", color = MaterialTheme.colorScheme.primary, modifier = Modifier.clickable(onClick = onVolver))
+            Text(t(R.string.detallepalabra_detalle), style = MaterialTheme.typography.titleSmall)
+            Text(t(R.string.detallepalabra_volver), color = MaterialTheme.colorScheme.primary, modifier = Modifier.clickable(onClick = onVolver))
         }
         Spacer(Modifier.height(24.dp))
         when {
@@ -44,15 +48,15 @@ fun DetallePalabraScreen(
                 Text(detalle.palabra.texto, style = MaterialTheme.typography.displaySmall)
                 Text(detalle.palabra.idioma.nombre, style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    if (viewModel.esFavorita) "Quitar de favoritos" else "Agregar a favoritos",
+                    if (viewModel.esFavorita) t(R.string.detallepalabra_quitar_de_favoritos) else t(R.string.detallepalabra_agregar_a_favoritos),
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(top = 12.dp).clickable { viewModel.cambiarFavorito() }
                 )
                 Spacer(Modifier.height(20.dp))
-                Text("Traducciones", style = MaterialTheme.typography.titleMedium)
+                Text(t(R.string.detallepalabra_traducciones), style = MaterialTheme.typography.titleMedium)
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(detalle.traducciones) { traduccion ->
-                        Text("${traduccion.palabraDestino.texto} (${traduccion.palabraDestino.idioma.nombre})")
+                        Text(t(R.string.detallepalabra_texto, traduccion.palabraDestino.texto, traduccion.palabraDestino.idioma.nombre))
                     }
                 }
             }

@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.componentes
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -35,9 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aikukisna.app.R
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import com.aikukisna.app.ui.theme.BorderStrong
-import com.aikukisna.app.ui.theme.CardSurface
-import com.aikukisna.app.ui.theme.MediumGray
 
 
 enum class InputStyle { Default, Outlined, Compact }
@@ -54,6 +53,8 @@ fun AikukisnaTextField(
     isError: Boolean = false,
     isPassword: Boolean = false,
     leadingIcon: Int? = null,
+    leadingIconContentDescription: String? = null,
+    onLeadingIconClick: (() -> Unit)? = null,
     trailingIcon: Int? = null,
     onDisabled: (() -> Unit)? = null,
     onFocused: (() -> Unit)? = null
@@ -69,11 +70,21 @@ fun AikukisnaTextField(
 
     val leadingIconLambda: (@Composable () -> Unit)? = leadingIcon?.let { iconRes ->
         {
-            Icon(
-                painter = painterResource(id = iconRes),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
+            if (onLeadingIconClick != null) {
+                IconButton(onClick = onLeadingIconClick, enabled = enabled) {
+                    Icon(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = leadingIconContentDescription,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            } else {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = leadingIconContentDescription,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 
@@ -85,7 +96,7 @@ fun AikukisnaTextField(
                     painter = painterResource(
                         id = if (mostrarPassword) R.drawable.eye_open else R.drawable.eye
                     ),
-                    contentDescription = if (mostrarPassword) "Ocultar contraseña" else "Mostrar contraseña",
+                    contentDescription = if (mostrarPassword) t(R.string.aikukisnatextfield_ocultar_contrasena) else t(R.string.aikukisnatextfield_mostrar_contrasena),
                     tint = if (mostrarPassword) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
@@ -176,8 +187,8 @@ fun AikukisnaTextField(
                 singleLine = true,
                 shape = MaterialTheme.shapes.small,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -201,19 +212,19 @@ fun AikukisnaTextField(
             val interactionSource = remember { MutableInteractionSource() }
 
             val colores = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                focusedContainerColor = CardSurface,
-                unfocusedContainerColor = CardSurface,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = BorderStrong,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                 errorBorderColor = MaterialTheme.colorScheme.error,
                 focusedLabelColor = MaterialTheme.colorScheme.primary,
-                unfocusedLabelColor = MediumGray,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
-                unfocusedLeadingIconColor = MediumGray,
+                unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
-                unfocusedTrailingIconColor = MediumGray,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 cursorColor = MaterialTheme.colorScheme.primary
             )
 
@@ -224,7 +235,7 @@ fun AikukisnaTextField(
                 enabled = enabled,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onSurface
                 ),
                 visualTransformation = visualTransformation,
                 interactionSource = interactionSource,

@@ -19,6 +19,9 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import kotlinx.serialization.json.JsonObject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import com.aikukisna.app.data.remote.dto.MemoriaTukiInsertDto
@@ -34,10 +37,33 @@ import com.aikukisna.app.data.local.OfflineUserDataCache
 class UsuarioRepositoryImpl @Inject constructor(
     private val client: SupabaseClient,
     private val perfilLocalCache: PerfilLocalCache,
-    private val offlineUserDataCache: OfflineUserDataCache
+    private val offlineUserDataCache: OfflineUserDataCache,
+    private val conectividad: com.aikukisna.app.data.local.ConectividadHelper
 ) : UsuarioRepository {
 
+    override fun observarIdiomaMeta(): Flow<Idioma?> =
+        perfilLocalCache.perfil.map { it?.idiomaMeta }.distinctUntilChanged()
+
+    private fun esReciente(descargadoEn: Long?): Boolean =
+        descargadoEn != null && System.currentTimeMillis() - descargadoEn < VIGENCIA_COPIA_MS
+
+    private companion object {
+        const val VIGENCIA_COPIA_MS = 2 * 60 * 1000L
+        // El repositorio no es singleton; las marcas viven mientras viva el proceso.
+        val perfilDescargado = java.util.concurrent.ConcurrentHashMap<UUID, Long>()
+        val progresoDescargado = java.util.concurrent.ConcurrentHashMap<UUID, Long>()
+    }
+
     override suspend fun obtenerUsuario(id: UUID): Usuario? {
+        val perfilGuardado = perfilLocalCache.leer(id)
+        if (!conectividad.hayConexion()) return perfilGuardado
+        // Cada pantalla y cada mensaje a Tuki piden el perfil: esperar a la red cada vez hacía
+        // sentir lenta toda la app. Los cambios locales se guardan antes, así que la copia es fiable.
+        if (perfilGuardado != null && esReciente(perfilDescargado[id])) return perfilGuardado
+        // Un cambio hecho sin conexión manda sobre el perfil remoto hasta subirse.
+        if (perfilLocalCache.hayCambiosPendientes(id) && !sincronizarPerfilPendiente(id)) {
+            return perfilGuardado
+        }
         return try {
             client.from("usuario")
                 .select(Columns.raw("*, idioma_meta:idioma_meta_id(*)")) {
@@ -46,23 +72,45 @@ class UsuarioRepositoryImpl @Inject constructor(
                 .decodeSingleOrNull<UsuarioDto>()
                 ?.toDomain()
                 ?.conNombreUsuarioGoogleSiFalta(client.auth.currentUserOrNull()?.userMetadata)
-                ?.also(perfilLocalCache::guardar)
+                ?.copy(fotoPerfilUri = perfilGuardado?.fotoPerfilUri)
+                ?.also {
+                    perfilLocalCache.guardar(it)
+                    perfilDescargado[id] = System.currentTimeMillis()
+                }
+                ?: perfilGuardado
         } catch (_: Exception) {
             perfilLocalCache.leer(id)
         }
     }
 
     override suspend fun actualizarUsuario(usuario: Usuario) {
-        try {
+        // Offline-first: el cambio queda vigente localmente al instante y se sube después.
+        perfilLocalCache.guardar(usuario, pendienteSincronizar = true)
+        if (conectividad.hayConexion()) sincronizarPerfilPendiente(usuario.id)
+    }
+
+    override suspend fun sincronizarPerfilPendiente(id: UUID): Boolean {
+        if (!perfilLocalCache.hayCambiosPendientes(id)) return true
+        val local = perfilLocalCache.leer(id) ?: return true
+        return try {
             client.from("usuario")
-                .update(usuario.toUpdateDto()) {
-                    filter { eq("id", usuario.id.toString()) }
+                .update(local.toUpdateDto()) {
+                    filter { eq("id", id.toString()) }
                 }
-        } finally {
-            perfilLocalCache.guardar(usuario)
+            perfilLocalCache.marcarSincronizado(id)
+            true
+        } catch (_: Exception) {
+            false
         }
     }
+
+    override suspend fun guardarUsuarioLocal(usuario: Usuario) {
+        perfilLocalCache.guardar(usuario)
+    }
+
     override suspend fun obtenerProgreso(usuarioId: UUID): List<ProgresoLeccion> {
+        if (!conectividad.hayConexion()) return offlineUserDataCache.leerProgreso(usuarioId)
+        if (esReciente(progresoDescargado[usuarioId])) return offlineUserDataCache.leerProgreso(usuarioId)
         return try {
             client.from("progreso_leccion")
                 .select(Columns.raw("*, leccion(*, categoria(*), idioma_meta:idioma_meta_id(*))")) {
@@ -70,20 +118,35 @@ class UsuarioRepositoryImpl @Inject constructor(
                 }
                 .decodeList<ProgresoLeccionDto>()
                 .map { it.toDomain() }
-                .also { offlineUserDataCache.guardarProgreso(it) }
+                .also {
+                    offlineUserDataCache.guardarProgreso(it)
+                    progresoDescargado[usuarioId] = System.currentTimeMillis()
+                }
         } catch (_: Exception) {
             offlineUserDataCache.leerProgreso(usuarioId)
         }
     }
 
+    override suspend fun obtenerProgresoLocal(usuarioId: UUID): List<ProgresoLeccion> =
+        offlineUserDataCache.leerProgreso(usuarioId)
+
     override suspend fun actualizarProgreso(progreso: ProgresoLeccion) {
-        client.from("progreso_leccion")
-            .upsert(progreso.toUpsertDto()) {
-                onConflict = "usuario_id,leccion_id"
-            }
+        offlineUserDataCache.guardarProgresoLocal(progreso)
+        if (!conectividad.hayConexion()) return
+        runCatching {
+            client.from("progreso_leccion")
+                .upsert(progreso.toUpsertDto()) {
+                    onConflict = "usuario_id,leccion_id"
+                }
+        }
+    }
+
+    override suspend fun guardarProgresoLocal(progreso: ProgresoLeccion) {
+        offlineUserDataCache.guardarProgresoLocal(progreso)
     }
 
     override suspend fun obtenerFavoritos(usuarioId: UUID): List<PalabraFavorita> {
+        if (!conectividad.hayConexion()) return offlineUserDataCache.leerFavoritos(usuarioId)
         return try {
             client.from("palabra_favorita")
                 .select(Columns.raw("*, palabra(*, idioma(*), categoria(*), fuente_documento(*))")) {

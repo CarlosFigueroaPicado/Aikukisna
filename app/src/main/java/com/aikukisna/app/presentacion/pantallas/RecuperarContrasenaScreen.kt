@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +46,7 @@ fun RecuperarContrasenaScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Recuperar contraseña",
+            text = t(R.string.recuperarcontrasena_recuperar_contrasena),
             style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
@@ -52,9 +54,9 @@ fun RecuperarContrasenaScreen(
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = if (viewModel.enviado) {
-                "Revisa tu correo para continuar con el cambio de contraseña."
+                t(R.string.recuperarcontrasena_revisa_tu_correo_para_continuar)
             } else {
-                "Te enviaremos un enlace para crear una nueva contraseña."
+                t(R.string.recuperarcontrasena_te_enviaremos_un_enlace_para)
             },
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -67,20 +69,20 @@ fun RecuperarContrasenaScreen(
             AikukisnaTextField(
                 value = viewModel.correo,
                 onValueChange = viewModel::onCorreoChange,
-                label = "Correo electrónico",
+                label = t(R.string.recuperarcontrasena_correo_electronico),
                 style = InputStyle.Compact,
                 leadingIcon = R.drawable.mail
             )
             Spacer(modifier = Modifier.height(18.dp))
             AikukisnaButton(
-                text = "Enviar enlace",
+                text = t(R.string.recuperarcontrasena_enviar_enlace),
                 onClick = viewModel::solicitar,
                 isLoading = viewModel.isLoading,
                 style = ButtonStyle.Secondary
             )
         } else {
             AikukisnaButton(
-                text = "Volver a iniciar sesión",
+                text = t(R.string.recuperarcontrasena_volver_a_iniciar_sesion),
                 onClick = onVolver,
                 style = ButtonStyle.Secondary
             )
@@ -97,7 +99,7 @@ fun RecuperarContrasenaScreen(
         }
         Spacer(modifier = Modifier.height(18.dp))
         Text(
-            text = "Volver",
+            text = t(R.string.recuperarcontrasena_volver),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier

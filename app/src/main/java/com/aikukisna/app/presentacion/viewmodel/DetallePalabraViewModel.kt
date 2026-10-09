@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.viewmodel
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -39,11 +42,11 @@ class DetallePalabraViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 detalle = obtenerPalabraDetalleUseCase(palabraId)
-                if (detalle == null) errorMessage = "No se encontró la palabra"
+                if (detalle == null) errorMessage = t(R.string.detallepalabra_no_se_encontro_la_palabra)
                 val userId = authRepository.usuarioActualId()
                 esFavorita = userId?.let { id -> obtenerFavoritosUseCase(id).any { it.palabra.id == palabraId } } == true
             } catch (e: Exception) {
-                errorMessage = e.message ?: "No se pudo cargar el detalle"
+                errorMessage = e.message ?: t(R.string.detallepalabra_no_se_pudo_cargar_el)
             } finally {
                 isLoading = false
             }
@@ -59,7 +62,7 @@ class DetallePalabraViewModel @Inject constructor(
                 else marcarFavoritoUseCase(userId, palabraId)
                 esFavorita = !esFavorita
             } catch (e: Exception) {
-                errorMessage = e.message ?: "No se pudo actualizar el favorito"
+                errorMessage = e.message ?: t(R.string.detallepalabra_no_se_pudo_actualizar_el)
             }
         }
     }

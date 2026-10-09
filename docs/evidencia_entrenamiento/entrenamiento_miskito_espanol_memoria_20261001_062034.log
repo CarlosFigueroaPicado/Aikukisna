@@ -1,0 +1,10 @@
+usage: entrenar_traductor_byt5.py [-h] --origen ORIGEN --destino DESTINO
+                                  [--corpus CORPUS] [--salida SALIDA]
+                                  [--modelo-base MODELO_BASE]
+                                  [--epocas EPOCAS] [--semilla SEMILLA]
+                                  [--proporcion-lexico PROPORCION_LEXICO]
+                                  [--bidireccional | --no-bidireccional]
+                                  [--verificar-corpus] [--ensayo-cpu]
+                                  [--lote LOTE] [--acumulacion ACUMULACION]
+                                  [--ahorrar-memoria]
+entrenar_traductor_byt5.py: error: RAM libre insuficiente para este entrenamiento CPU: 5.44 GiB; reserva estimada mínima 6.46 GiB. Libera memoria o utiliza otro equipo. La estimación no garantiza que todas las secuencias quepan.

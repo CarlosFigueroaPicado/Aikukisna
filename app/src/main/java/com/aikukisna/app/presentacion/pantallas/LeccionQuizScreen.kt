@@ -1,5 +1,7 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,6 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -39,18 +45,16 @@ import com.aikukisna.app.domain.model.PreguntaQuiz
 import com.aikukisna.app.presentacion.componentes.AikukisnaButton
 import com.aikukisna.app.presentacion.viewmodel.LeccionViewModel
 import com.aikukisna.app.ui.theme.AikukisnaTheme
-import com.aikukisna.app.ui.theme.BrandSubtle
 import com.aikukisna.app.ui.theme.GreenSecondary
-import com.aikukisna.app.ui.theme.LightGray
-import com.aikukisna.app.ui.theme.MediumGray
 import com.aikukisna.app.ui.theme.RedSecondary
+import com.aikukisna.app.domain.usecase.ObtenerMapaLeccionesUseCase
 import androidx.compose.runtime.getValue
 
 @Composable
 fun LeccionQuizScreen(
     viewModel: LeccionViewModel = hiltViewModel(),
     leccionId: Int,
-    onCompletado: (correctas: Int, total: Int) -> Unit,
+    onCompletado: (correctas: Int, total: Int, palabras: Int, aprobado: Boolean) -> Unit,
     onVolver: () -> Unit
 ) {
     LaunchedEffect(leccionId) {
@@ -62,14 +66,24 @@ fun LeccionQuizScreen(
         isLoading = viewModel.isLoadingQuiz,
         errorMessage = viewModel.errorMessage,
         preguntas = viewModel.preguntas,
+        tituloLeccion = viewModel.tituloLeccion,
         indicePregunta = viewModel.indicePregunta,
         opcionSeleccionada = viewModel.opcionSeleccionada,
         onSeleccionarOpcion = viewModel::seleccionarOpcion,
         onSiguienteClick = {
             val total = viewModel.preguntas.size
             if (viewModel.siguientePregunta()) {
-                viewModel.completarLeccion()
-                onCompletado(viewModel.respuestasCorrectas, total)
+                val porcentaje = if (total == 0) 0 else (viewModel.respuestasCorrectas * 100) / total
+                val aprobado = porcentaje >= ObtenerMapaLeccionesUseCase.PORCENTAJE_APROBACION
+                if (aprobado) {
+                    viewModel.completarLeccion(porcentaje) {
+                        onCompletado(viewModel.respuestasCorrectas, total, viewModel.vocabulario.size, true)
+                    }
+                } else {
+                    viewModel.registrarIntento(porcentaje) {
+                        onCompletado(viewModel.respuestasCorrectas, total, viewModel.vocabulario.size, false)
+                    }
+                }
             }
         },
         onVolver = onVolver
@@ -81,6 +95,7 @@ private fun LeccionQuizScreenContenido(
     isLoading: Boolean,
     errorMessage: String?,
     preguntas: List<PreguntaQuiz>,
+    tituloLeccion: String,
     indicePregunta: Int,
     opcionSeleccionada: String?,
     onSeleccionarOpcion: (String) -> Unit,
@@ -91,6 +106,7 @@ private fun LeccionQuizScreenContenido(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
         Row(
@@ -103,10 +119,10 @@ private fun LeccionQuizScreenContenido(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_back),
-                contentDescription = "Volver",
+                contentDescription = t(R.string.leccionquiz_volver),
                 modifier = Modifier.size(20.dp).clickable(onClick = onVolver)
             )
-            Text("QUIZ", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            Text(tituloLeccion.uppercase().ifBlank { t(R.string.leccionquiz_leccion) }, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
         }
 
         when {
@@ -122,7 +138,7 @@ private fun LeccionQuizScreenContenido(
             }
             preguntas.isEmpty() -> {
                 Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Text("No se pudo generar el quiz.", color = MediumGray, style = MaterialTheme.typography.bodyMedium)
+                    Text(t(R.string.leccionquiz_no_se_pudo_generar_el), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
                 }
             }
             else -> {
@@ -136,11 +152,11 @@ private fun LeccionQuizScreenContenido(
 
                 Column(modifier = Modifier.weight(1f).fillMaxWidth().padding(horizontal = 26.dp, vertical = 16.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Quiz", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onBackground)
-                        Text("${indicePregunta + 1}/$total", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
+                        Text(t(R.string.leccionquiz_quiz), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onBackground)
+                        Text(t(R.string.leccionquiz_texto, indicePregunta + 1, total), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onBackground)
                     }
                     Spacer(modifier = Modifier.height(4.dp))
-                    Box(modifier = Modifier.fillMaxWidth().height(11.dp).background(BrandSubtle, RoundedCornerShape(8.dp))) {
+                    Box(modifier = Modifier.fillMaxWidth().height(11.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp))) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth(fraccionProgreso)
@@ -150,12 +166,14 @@ private fun LeccionQuizScreenContenido(
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))
-                    Text("Selecciona la opción correcta", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onBackground)
+                    Text(t(R.string.leccionquiz_selecciona_la_opcion_correcta), style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onBackground)
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
+                        // El texto con estilos no llegaba a los lectores de pantalla: se declara completo.
+                        modifier = Modifier.semantics { contentDescription = pregunta.textoPregunta; heading() },
                         text = preguntaAnotadaLeccion(pregunta, MaterialTheme.colorScheme.primary),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MediumGray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -182,7 +200,7 @@ private fun LeccionQuizScreenContenido(
                 ) {
                     Box(modifier = Modifier.width(200.dp)) {
                         AikukisnaButton(
-                            text = "Siguiente",
+                            text = t(R.string.leccionquiz_siguiente),
                             onClick = onSiguienteClick,
                             enabled = opcionSeleccionada != null,
                             trailingIcon = R.drawable.arrow_right
@@ -217,12 +235,12 @@ private fun OpcionQuizLeccion(
     val colorBorde = when (estado) {
         EstadoOpcionLeccion.Correcta -> GreenSecondary
         EstadoOpcionLeccion.Incorrecta -> RedSecondary
-        EstadoOpcionLeccion.Neutral -> LightGray
+        EstadoOpcionLeccion.Neutral -> MaterialTheme.colorScheme.outlineVariant
     }
     val colorTexto = when (estado) {
         EstadoOpcionLeccion.Correcta -> GreenSecondary
         EstadoOpcionLeccion.Incorrecta -> RedSecondary
-        EstadoOpcionLeccion.Neutral -> MediumGray
+        EstadoOpcionLeccion.Neutral -> MaterialTheme.colorScheme.onSurfaceVariant
     }
     val colorFondo = when (estado) {
         EstadoOpcionLeccion.Correcta -> GreenSecondary.copy(alpha = 0.1f)
@@ -263,7 +281,7 @@ private val preguntaDeMuestra = PreguntaQuiz(
 private fun LeccionQuizScreenContenidoPreview() {
     AikukisnaTheme {
         LeccionQuizScreenContenido(
-            isLoading = false, errorMessage = null, preguntas = listOf(preguntaDeMuestra),
+            isLoading = false, errorMessage = null, preguntas = listOf(preguntaDeMuestra), tituloLeccion = "Saludos y despedidas",
             indicePregunta = 0, opcionSeleccionada = null,
             onSeleccionarOpcion = {}, onSiguienteClick = {}, onVolver = {}
         )
@@ -275,7 +293,7 @@ private fun LeccionQuizScreenContenidoPreview() {
 private fun LeccionQuizScreenContenidoRespondidaPreview() {
     AikukisnaTheme {
         LeccionQuizScreenContenido(
-            isLoading = false, errorMessage = null, preguntas = listOf(preguntaDeMuestra),
+            isLoading = false, errorMessage = null, preguntas = listOf(preguntaDeMuestra), tituloLeccion = "Saludos y despedidas",
             indicePregunta = 0, opcionSeleccionada = "Gracias",
             onSeleccionarOpcion = {}, onSiguienteClick = {}, onVolver = {}
         )
@@ -287,7 +305,7 @@ private fun LeccionQuizScreenContenidoRespondidaPreview() {
 private fun LeccionQuizScreenContenidoCargandoPreview() {
     AikukisnaTheme {
         LeccionQuizScreenContenido(
-            isLoading = true, errorMessage = null, preguntas = emptyList(),
+            isLoading = true, errorMessage = null, preguntas = emptyList(), tituloLeccion = "Saludos y despedidas",
             indicePregunta = 0, opcionSeleccionada = null,
             onSeleccionarOpcion = {}, onSiguienteClick = {}, onVolver = {}
         )

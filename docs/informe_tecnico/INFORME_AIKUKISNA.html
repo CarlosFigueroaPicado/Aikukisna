@@ -1,0 +1,971 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Informe técnico de Aikukisna</title><style>
+:root { color-scheme: light; --ink:#172332; --accent:#175d8e; }
+* { box-sizing:border-box; }
+body { margin:0; color:var(--ink); background:#edf1f5; font:16px/1.65 'Segoe UI',Arial,sans-serif; }
+.layout { max-width:1440px; margin:auto; display:grid; grid-template-columns:265px minmax(0,1fr); }
+nav { padding:30px 20px; position:sticky; top:0; height:100vh; overflow:auto; font-size:13px; }
+nav a { display:block; margin:0 0 9px; text-decoration:none; color:#244d70; }
+nav strong { display:block; margin-bottom:18px; }
+main { padding:50px 62px 80px; background:white; min-width:0; }
+h1 { color:#111; font-size:38px; line-height:1.18; margin:0 0 28px; }
+h2 { font-size:25px; margin-top:46px; line-height:1.3; color:#173951; scroll-margin-top:20px; }
+h3 { font-size:19px; margin-top:30px; color:#244d70; }
+p { margin:12px 0; }
+a { color:#175d8e; overflow-wrap:anywhere; }
+table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13px; line-height:1.45; table-layout:auto; }
+th,td { border:1px solid #cbd5df; padding:9px 10px; text-align:left; vertical-align:top; overflow-wrap:anywhere; }
+th { background:#e8f0f6; color:#143650; }
+tr:nth-child(even) td { background:#f8fafc; }
+pre { background:#f2f5f8; padding:18px; white-space:pre-wrap; overflow-wrap:anywhere; font:13px/1.6 Consolas,monospace; }
+code { font:0.88em Consolas,monospace; overflow-wrap:anywhere; }
+li { margin:8px 0; }
+.meta { font-size:13px; color:#4c6275; margin-bottom:24px; }
+.related { border:1px solid #ccd8e2; padding:14px; background:#f6f9fb; }
+@media(max-width:950px){ .layout{display:block;} nav{position:static;height:auto;} main{padding:28px 22px;} }
+@media print {
+ @page { size:A4; margin:16mm 16mm 18mm; }
+ body { background:white; font:10pt/1.45 Arial,sans-serif; }
+ .layout { display:block; max-width:none; }
+ nav { display:none; }
+ main { padding:0; }
+ h1 { font-size:25pt; }
+ h2 { font-size:16pt; margin-top:24pt; break-after:avoid; }
+ h3 { font-size:12pt; break-after:avoid; }
+ p,li { orphans:3; widows:3; }
+ table { font-size:8pt; margin:10pt 0; }
+ th,td { padding:5pt; }
+ tr { break-inside:avoid; }
+ thead { display:table-header-group; }
+ pre { font-size:8pt; break-inside:avoid; }
+ a { text-decoration:none; }
+ .meta { font-size:9pt; }
+}
+</style></head><body><div class="layout"><nav aria-label="Contenido"><strong>AIKUKISNA<br>Documentación técnica</strong><a href="#seccion-1">1 Propósito y alcance</a><a href="#seccion-2">2 Qué problema atiende la aplicación</a><a href="#seccion-3">3 Inventario de tecnologías</a><a href="#seccion-4">4 Arquitectura y organización del desarrollo</a><a href="#seccion-5">5 Diseño de interfaz y experiencia</a><a href="#seccion-6">6 Backend Supabase y conexión con Android</a><a href="#seccion-7">7 Diseño real de la base de datos remota</a><a href="#seccion-8">8 Cómo explicar la primera segunda y tercera forma normal</a><a href="#seccion-9">9 Persistencia local y operación offline</a><a href="#seccion-10">10 Implementación de los módulos inteligentes</a><a href="#seccion-11">11 Seguridad e integridad</a><a href="#seccion-12">12 Pruebas y proceso de construcción</a><a href="#seccion-13">13 Fortalezas y aspectos pendientes</a><a href="#seccion-14">14 Argumentos para defender las decisiones</a><a href="#seccion-15">15 Preguntas de defensa y respuestas sugeridas</a><a href="#seccion-16">16 Glosario para estudiar</a><a href="#seccion-17">17 Evidencias y referencias</a></nav><main><p class="meta">Corte técnico 1 de octubre de 2026 · Diseño y desarrollo · Lectura y defensa</p><h1>Informe técnico de Aikukisna</h1>
+<h2 id="seccion-1">1 Propósito y alcance</h2>
+<p>Este informe explica el diseño, la implementación Android, el backend Supabase, el modelo relacional, la normalización y el funcionamiento sin conexión de Aikukisna. Está orientado al equipo que necesita estudiar y defender las decisiones del proyecto ante un jurado o una revisión técnica.</p>
+<p><strong>Fecha de corte: 1 de octubre de 2026, zona America/Guatemala.</strong> Se revisó el código de trabajo existente, incluidos cambios aún no confirmados en Git, y se consultaron en modo lectura los metadatos del proyecto Supabase activo Aikukisna. No se realizaron cambios en la base remota ni una nueva compilación para producir este informe.</p>
+<p>La explicación separa tres niveles: <strong>implementado</strong>, cuando hay código o estructura verificable; <strong>validado</strong>, cuando existe evidencia de una prueba; y <strong>pendiente</strong>, cuando la capacidad todavía no está terminada o requiere comprobación. Tener una tabla, una dependencia o una pantalla no demuestra por sí solo que todo su flujo esté operativo.</p>
+<p><strong>Conclusión central:</strong> Aikukisna es una aplicación Android nativa desarrollada principalmente en Kotlin, con interfaz Jetpack Compose, separación por capas, contenido local en Room sobre SQLite y backend administrado Supabase sobre PostgreSQL. Tiene funciones educativas, diccionario, traducción documentada, cámara, voz, tutoría y gamificación. La operación offline es real para determinados flujos, pero no toda la aplicación aplica una política estricta de lectura local primero. Tampoco incorpora todavía un traductor neuronal libre Miskito/Kriol en el APK.</p>
+<p>El README histórico menciona 16 tablas y Gemini 2.5 Flash. Esa descripción no representa íntegramente el estado inspeccionado. Este informe utiliza el esquema vivo y el código actual, no esas cifras antiguas.</p>
+<h2 id="seccion-2">2 Qué problema atiende la aplicación</h2>
+<p>Aikukisna aborda el aprendizaje de lenguas y el acceso a contenido cultural en un contexto donde la conexión puede ser intermitente. La motivación documentada incluye estudiantes de comunidades miskitas y su transición a entornos escolares hispanohablantes, sin perder la lengua de origen. El modelo también incorpora Kriol e inglés estándar.</p>
+<p>Los cuatro registros actuales de idioma son Miskito, español, inglés Kriol e inglés estándar. Los códigos internos son <code>mi</code>, <code>es</code>, <code>bzk</code> y <code>en</code>, respectivamente (antes <code>jam</code>, código del criollo jamaicano; corregido en octubre de 2026). Estos identificadores son convenciones observadas del proyecto: no deben presentarse automáticamente como una clasificación lingüística universal ni como prueba de soporte de un proveedor externo.</p>
+<p>El producto reúne aprendizaje estructurado, consulta lingüística, práctica y seguimiento. Las lecciones organizan contenidos; el diccionario recupera entradas; el Traductor busca equivalencias; Cámara vincula objetos o texto con conocimiento; Tuki orienta al estudiante; perfil, favoritos, XP, rachas y logros conservan su actividad.</p>
+<p><strong>Objetivo no equivale a capacidad entregada.</strong> La meta de traducción conversacional bidireccional es más amplia que el motor actual, que recupera palabras, expresiones y oraciones registradas. Una interfaz con dos idiomas y botón de intercambio no implica traducción libre de cualquier frase.</p>
+<h2 id="seccion-3">3 Inventario de tecnologías</h2>
+<p>Las versiones siguientes se leen del catálogo Gradle y de la configuración del proyecto; no son una recomendación de versiones más recientes.</p>
+<table>
+<thead>
+<tr>
+<th>Tecnología</th>
+<th>Versión o configuración observada</th>
+<th>Función concreta</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kotlin</td>
+<td>2.2.10 en el catálogo</td>
+<td>Pantallas, ViewModels, dominio, repositorios y utilidades</td>
+</tr>
+<tr>
+<td>Android Gradle Plugin</td>
+<td>9.2.1</td>
+<td>Construcción de la aplicación Android</td>
+</tr>
+<tr>
+<td>Gradle Wrapper</td>
+<td>9.4.1</td>
+<td>Ejecución reproducible de tareas de construcción</td>
+</tr>
+<tr>
+<td>Android SDK</td>
+<td>minSdk 26, compileSdk 37, targetSdk 37</td>
+<td>Compatibilidad mínima y nivel objetivo configurado</td>
+</tr>
+<tr>
+<td>Compatibilidad Java</td>
+<td>VERSION_11</td>
+<td>Compatibilidad del código JVM; no es la versión del JDK que ejecuta Gradle</td>
+</tr>
+<tr>
+<td>Jetpack Compose</td>
+<td>BOM 2026.02.01</td>
+<td>Interfaz declarativa nativa</td>
+</tr>
+<tr>
+<td>Material 3</td>
+<td>Gestionado por Compose BOM</td>
+<td>Componentes y tema visual</td>
+</tr>
+<tr>
+<td>Navigation Compose</td>
+<td>2.9.8</td>
+<td>Rutas y navegación entre pantallas</td>
+</tr>
+<tr>
+<td>Lifecycle</td>
+<td>2.11.0</td>
+<td>Integración de estado y ciclo de vida</td>
+</tr>
+<tr>
+<td>Hilt</td>
+<td>2.60.1</td>
+<td>Inyección de dependencias</td>
+</tr>
+<tr>
+<td>KSP</td>
+<td>2.2.10-2.0.2</td>
+<td>Generación de código de Room e Hilt</td>
+</tr>
+<tr>
+<td>Room</td>
+<td>2.8.4, esquema local versión 12</td>
+<td>Persistencia estructurada sobre SQLite</td>
+</tr>
+<tr>
+<td>Supabase Kotlin</td>
+<td>BOM 3.6.0</td>
+<td>Auth, PostgREST y Functions</td>
+</tr>
+<tr>
+<td>Ktor con motor OkHttp</td>
+<td>3.5.0</td>
+<td>Transporte HTTP del cliente</td>
+</tr>
+<tr>
+<td>Kotlin Serialization</td>
+<td>Dependencia declarada</td>
+<td>Conversión JSON y DTO</td>
+</tr>
+<tr>
+<td>CameraX</td>
+<td>1.5.3</td>
+<td>Captura y vista previa de cámara</td>
+</tr>
+<tr>
+<td>ML Kit OCR</td>
+<td>16.0.1</td>
+<td>Reconocimiento local de texto latino</td>
+</tr>
+<tr>
+<td>ML Kit Image Labeling</td>
+<td>17.0.9</td>
+<td>Etiquetas visuales locales</td>
+</tr>
+<tr>
+<td>ML Kit Object Detection</td>
+<td>17.0.2</td>
+<td>Regiones de objetos</td>
+</tr>
+<tr>
+<td>Vosk Android</td>
+<td>0.3.75</td>
+<td>Reconocimiento de voz local con modelos español e inglés</td>
+</tr>
+<tr>
+<td>JNA</td>
+<td>5.18.1</td>
+<td>Interoperabilidad nativa requerida por dependencias de voz</td>
+</tr>
+<tr>
+<td>WorkManager</td>
+<td>2.11.2</td>
+<td>Trabajo persistente condicionado por conectividad</td>
+</tr>
+<tr>
+<td>Credential Manager</td>
+<td>1.5.0</td>
+<td>Integración de credenciales Android</td>
+</tr>
+<tr>
+<td>Google ID</td>
+<td>1.1.1</td>
+<td>Inicio de sesión Google</td>
+</tr>
+<tr>
+<td>JUnit</td>
+<td>4.13.2</td>
+<td>Pruebas unitarias</td>
+</tr>
+<tr>
+<td>AndroidX JUnit y Espresso</td>
+<td>1.3.0 y 3.7.0</td>
+<td>Infraestructura declarada de pruebas Android</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>17.6.1.141 reportado por Supabase</td>
+<td>Base relacional central</td>
+</tr>
+<tr>
+<td>TypeScript y Deno</td>
+<td>Edge Functions desplegadas</td>
+<td>Autenticación auxiliar y proxies de IA/voz</td>
+</tr>
+<tr>
+<td>Gemini</td>
+<td>Endpoint configurado <code>gemini-3.5-flash-lite</code></td>
+<td>IA remota mediante <code>gemini-proxy</code></td>
+</tr>
+<tr>
+<td>ElevenLabs</td>
+<td>Modelo configurado <code>eleven_multilingual_v2</code></td>
+<td>Síntesis remota mediante <code>sintetizar-voz</code></td>
+</tr>
+</tbody></table>
+<p>El identificador de Gemini se verificó en el código desplegado del proxy, no mediante una nueva inferencia. Su presencia no demuestra disponibilidad, cuotas o calidad actual del proveedor.</p>
+<p>El directorio <code>app/src/main</code> contiene 247 archivos Kotlin y ningún archivo <code>.java</code> en el corte observado. Aunque Android utiliza herramientas del ecosistema Java/JVM, no es correcto describir el código propio principal como una aplicación escrita en Java. Kotlin se compila a código compatible con la cadena Android y finalmente a DEX, ejecutado por Android Runtime; no se ejecuta en una JVM de escritorio dentro del teléfono.</p>
+<p>No se encontró una implementación Kotlin Multiplatform ni un frontend Flutter, React Native o web. <code>settings.gradle.kts</code> incluye un único módulo Gradle <code>:app</code>: la separación es principalmente por paquetes, no por múltiples módulos compilables ni microservicios propios.</p>
+<h3>3.1 Tecnologías de preparación y entrenamiento</h3>
+<p>Fuera del APK existen scripts Python para extracción, revisión de corpus y entrenamiento. <code>requirements-traduccion.txt</code> fija PyTorch 2.9.1, Transformers 4.57.6, Datasets 4.8.5, Accelerate 1.12.0, SacreBLEU 2.6.0 y psutil 7.2.2. El experimento usa <code>google/byt5-small</code> y contempla entrenamiento bidireccional, particiones independientes y evaluación por dirección.</p>
+<p>Estas herramientas no son motores integrados en Android. No debe afirmarse que la app ya ejecuta ByT5, llama.cpp, Whisper, YOLO, MediaPipe, ONNX Runtime o un LLM local porque se hayan considerado en una propuesta. La implementación visible usa ML Kit, Vosk y motores de respuesta locales basados en conocimiento y reglas, además de servicios remotos.</p>
+<h2 id="seccion-4">4 Arquitectura y organización del desarrollo</h2>
+<h3>4.1 Capas y responsabilidades</h3>
+<pre><code class="language-text">Persona usuaria
+      ↓ eventos y acciones
+Jetpack Compose y navegación
+      ↕ estado observable
+ViewModels
+      ↓ casos de uso y contratos
+Dominio  modelos  reglas  interfaces
+      ↑ implementaciones inyectadas por Hilt
+Datos  repositorios  mapeadores
+      ├── Room y SQLite
+      ├── preferencias y archivos locales
+      └── Supabase Auth  REST  RPC  Edge Functions
+</code></pre>
+<p><code>presentacion/pantallas</code> contiene los composables; <code>presentacion/viewmodel</code> coordina acciones y estado; <code>domain/model</code>, <code>domain/repository</code> y <code>domain/usecase</code> expresan conceptos, contratos y operaciones; <code>data/local</code> implementa persistencia y capacidades del dispositivo; <code>data/remote/dto</code> representa mensajes remotos; <code>data/repository</code> combina las fuentes; <code>data/sync</code> gestiona sincronización; <code>di</code> conecta implementaciones con interfaces.</p>
+<p>Es una arquitectura inspirada en Clean Architecture y MVVM. MVVM separa la vista del estado y las acciones del ViewModel. Clean Architecture intenta que las reglas no dependan de detalles de infraestructura. En Aikukisna esa separación existe, pero no es absoluta: por ejemplo, <code>TranscribirAudioUseCase</code> importa clases concretas de <code>data.local</code>, y algunos ViewModels conocen el sembrador local. La defensa precisa es «separación por capas con contratos y casos de uso, con acoplamientos concretos todavía presentes», no «independencia perfecta de frameworks».</p>
+<p>Hilt evita construir manualmente la cadena de dependencias en cada pantalla. <code>NetworkModule</code> proporciona un cliente Supabase singleton; <code>DatabaseModule</code> proporciona Room; <code>RepositoryModule</code> vincula interfaces con clases concretas mediante <code>@Binds</code>. El ViewModel puede pedir un caso de uso sin crear por su cuenta un cliente HTTP o una base de datos.</p>
+<h3>4.2 Por qué hay tres representaciones del dato</h3>
+<p>Un DTO representa el JSON remoto, por ejemplo <code>idioma_id</code> y relaciones embebidas de PostgREST. Una Entity representa las columnas locales de Room. Un modelo de dominio expresa el objeto que consume el negocio o la interfaz. Los mapeadores traducen entre estas formas.</p>
+<p>No es duplicación sin propósito: cada forma tiene un contrato distinto. Si PostgreSQL cambia un campo o Room necesita un índice, se puede adaptar la capa de datos sin rediseñar todas las pantallas. El costo es mantener mapeadores y comprobar que los campos no se pierden.</p>
+<h3>4.3 Concurrencia y presentación</h3>
+<p>Se usan funciones <code>suspend</code>, coroutines, <code>viewModelScope</code>, <code>Dispatchers.IO</code> y estado observable. La aplicación inicializa contenido con <code>SupervisorJob</code> y comunica <code>Preparando</code>, <code>Disponible</code> o <code>NoDisponible</code>. No toda pantalla usa exclusivamente <code>StateFlow</code>: <code>TraductorViewModel</code>, por ejemplo, utiliza <code>mutableStateOf</code>.</p>
+<p>El Traductor captura texto e idiomas al iniciar una consulta y descarta el resultado si ya no corresponde a la selección actual. Esto evita mostrar una respuesta vieja después de cambiar de idioma. La cancelación se vuelve a lanzar en ese flujo para no tratarla como un error lingüístico.</p>
+<h2 id="seccion-5">5 Diseño de interfaz y experiencia</h2>
+<p>La UI es nativa declarativa. Las pantallas describen qué mostrar según el estado, en vez de modificar manualmente cada vista. <code>GrafoNavegacion.kt</code> organiza las rutas y el punto de entrada según el estado de la aplicación.</p>
+<p>Existen pantallas de inicio, onboarding, autenticación, recuperación de contraseña, selección de idioma, perfil, lecciones, vocabulario, cuestionario, resultados, diccionario, detalle de palabra, favoritos, logros, cultura, Tuki, Traductor, Cámara y descarga offline. También hay un recorrido de invitado. La existencia de estos archivos documenta componentes implementados, no una aprobación funcional total de cada recorrido.</p>
+<p>El tema define modo claro y oscuro, naranja principal <code>#FD8B23</code>, azul <code>#1579D1</code>, colores semánticos y tipografías Nunito, Agu Display y JetBrains Mono. Los comentarios del tema mencionan referencias de Figma; el archivo de diseño original no se inspeccionó en este informe. Por tanto, se puede explicar la implementación de tokens visuales, no certificar fidelidad completa al prototipo.</p>
+<p>Tuki, mapas de lecciones, ilustraciones, XP y rachas articulan la experiencia educativa. El propósito defendible es facilitar orientación y continuidad del aprendizaje. No hay evidencia aquí para atribuir mejoras porcentuales de aprendizaje, accesibilidad certificada o eficacia pedagógica validada experimentalmente.</p>
+<p>La app solicita permisos de cámara y micrófono para esas funciones, además de acceso a red y estado de conectividad. La cámara está declarada como hardware no obligatorio, de modo que no define por sí sola la compatibilidad de instalación. La calidad de OCR, voz y detección depende del dispositivo, iluminación, audio y disponibilidad de modelos.</p>
+<h2 id="seccion-6">6 Backend Supabase y conexión con Android</h2>
+<h3>6.1 Qué es frontend y qué es backend en este proyecto</h3>
+<p>El frontend es la aplicación instalada: Compose, ViewModels y la interacción de la persona. La capa <code>data</code> de Android es infraestructura del cliente, no el servidor remoto. El backend está compuesto por Supabase Auth, PostgreSQL, PostgREST, funciones SQL y Edge Functions.</p>
+<p>No se requiere que Android abra una conexión PostgreSQL directa ni que reciba credenciales de administración de la base. El SDK Supabase realiza peticiones HTTPS. PostgREST expone operaciones autorizadas sobre tablas, vistas y funciones; Auth emite la sesión; PostgreSQL aplica políticas y restricciones. Este mecanismo de API generada está documentado por <a href="https://supabase.com/docs/guides/api">Supabase Data REST API</a>.</p>
+<pre><code class="language-text">Compose → ViewModel → caso de uso → repositorio
+                                       ↓
+                          Supabase Kotlin y Ktor
+                                       ↓ HTTPS
+             ┌─────────────────────────┼───────────────────────┐
+           Auth                     PostgREST              Functions
+      sesión y JWT              tablas vistas RPC        TypeScript Deno
+                                     ↓                      ↓
+                              PostgreSQL y RLS        Gemini ElevenLabs
+</code></pre>
+<p><code>NetworkModule</code> instala <code>Postgrest</code>, <code>Auth</code> y <code>Functions</code>, configura un tiempo de espera de 30 segundos y el retorno de autenticación <code>aikukisna://auth-callback</code>. <code>SUPABASE_URL</code> y <code>SUPABASE_ANON_KEY</code> se obtienen de <code>local.properties</code> durante la construcción y se exponen en <code>BuildConfig</code>.</p>
+<p>La clave pública identifica el proyecto; no convierte al cliente en administrador. El JWT de la sesión identifica a la persona. No son intercambiables y no sustituyen las políticas RLS. Ningún ejemplo de este informe contiene claves, contraseñas o tokens reales.</p>
+<h3>6.2 Ejemplo de consulta y respuesta</h3>
+<p>En <code>LeccionRepositoryImpl</code>, una lectura usa <code>client.from(&quot;leccion&quot;).select(...)</code>, solicita datos de categoría e idioma relacionados, aplica filtros y decodifica <code>LeccionDto</code>. Después convierte a dominio y guarda una copia local. Las relaciones embebidas de PostgREST aprovechan las claves foráneas de PostgreSQL.</p>
+<p>Representación conceptual de la petición:</p>
+<pre><code class="language-http">GET /rest/v1/leccion?select=*,categoria(*),idioma_meta:idioma_meta_id(*)&amp;nivel=eq.1
+apikey: &lt;clave_publica_del_proyecto&gt;
+Authorization: Bearer &lt;jwt_de_la_sesion_cuando_corresponda&gt;
+</code></pre>
+<p>La respuesta JSON vuelve al repositorio, se transforma en modelos y se publica como estado. La pantalla no debe decidir las reglas de integridad remota ni contener SQL de PostgreSQL.</p>
+<h3>6.3 Autenticación</h3>
+<p>El repositorio implementa correo y contraseña mediante Supabase Auth, Google mediante ID token, recuperación y cambio de contraseña, cierre de sesión e importación de sesión. Para nombre de usuario utiliza <code>login-usuario</code>: el servidor resuelve internamente el correo y valida la contraseña con Auth; el cliente recibe tokens tras un inicio válido, no una API pública de búsqueda de correos.</p>
+<p>La Edge Function de login está desplegada con <code>verify_jwt=false</code>, coherente con su uso antes de iniciar sesión. Esto no significa que deba confiar en cualquier petición: su código comprueba el formato, la clave pública del cliente, longitudes y credenciales, y usa una respuesta genérica ante fallos. La clave pública no es un secreto ni una defensa contra abuso por sí sola; la resistencia a intentos masivos requiere controles adicionales y no fue certificada aquí.</p>
+<p><code>public.usuario.id</code> referencia <code>auth.users.id</code>. Auth gestiona identidad y credenciales; <code>usuario</code> contiene el perfil educativo. La función <code>crear_usuario_nuevo</code> inserta el perfil a partir de la identidad creada. La relación evita usar el correo como clave estable y permite relacionar progreso y favoritos con el mismo UUID.</p>
+<h3>6.4 Funciones de backend presentes</h3>
+<p>Se observaron tres Edge Functions activas: <code>gemini-proxy</code> versión 15, <code>sintetizar-voz</code> versión 5 y <code>login-usuario</code> versión 4. Los dos proxies exigen autenticación y comprueban un usuario real con Auth. Las claves de proveedores se leen de variables del servidor. El proxy de IA valida tamaños, roles del historial y tipos MIME; el de voz limita el texto a 1000 caracteres.</p>
+<p>Hay 19 funciones SQL propias en <code>public</code>, sin contar las de extensiones. Entre ellas están <code>completar_leccion</code>, <code>desbloquear_logro</code>, <code>resolver_consulta_linguistica</code>, <code>traducir_texto_seguro</code>, <code>responder_tuki</code>, <code>obtener_contexto_tuki_usuario</code> y <code>obtener_paquete_leccion</code>. Que una función esté disponible en Supabase no implica que una pantalla Android la invoque: el Traductor actual resuelve localmente; Tuki remoto sí tiene un proxy que consulta RPC documentales.</p>
+<p>No se observó instalación del módulo Realtime en <code>NetworkModule</code>: la sincronización descrita es mediante solicitudes y trabajo programado, no suscripciones en tiempo real. Tampoco se confirmó aquí una arquitectura propia de almacenamiento con Supabase Storage. No deben atribuirse todos los productos de Supabase a la aplicación solo por usar la plataforma.</p>
+<h2 id="seccion-7">7 Diseño real de la base de datos remota</h2>
+<h3>7.1 Tamaño y naturaleza del esquema</h3>
+<p>La consulta de catálogo encontró <strong>44 tablas públicas, 78 restricciones FK, 22 vistas, 135 índices y 47 políticas RLS</strong>. Las 44 tablas tienen RLS habilitada. Los esquemas internos administrados por Supabase, como <code>auth</code>, no están incluidos en el número de tablas públicas.</p>
+<p>Conteos exactos de registros al consultar: 4 idiomas, 54 fuentes documentales, 72 111 palabras, 132 350 traducciones, 72 925 acepciones, 8 896 expresiones, 1 010 oraciones y 93 lecciones. No son conteos de datos certificados: incluyen los estados almacenados y no miden por sí mismos cobertura, calidad o ausencia de duplicados semánticos. Tampoco equivalen al número de ejemplos aptos para entrenar un traductor.</p>
+<h3>7.2 Por qué existen tantas tablas</h3>
+<p>Las tablas representan hechos con identidad, cardinalidad y ciclo de vida distintos. Una palabra no es una traducción; una traducción no es una acepción; una lección no es el avance de una persona; una fuente bibliográfica no es la evidencia específica que respalda una entrada.</p>
+<p>Guardar todo en una sola tabla multiplicaría datos: el título de una fuente se repetiría por cada palabra, el nombre de idioma por cada traducción y la descripción de una lección por cada estudiante. Además, limitaría las relaciones a un número fijo de columnas, como <code>traduccion_1</code>, <code>traduccion_2</code> o <code>idioma_3</code>.</p>
+<p>La descomposición permite agregar idiomas, reutilizar contenido, relacionar varias fuentes y conservar distintos sentidos sin rediseñar cada pantalla. El costo es más joins, restricciones, migraciones y sincronización. Por ello, <strong>más tablas no significa automáticamente mejor normalización</strong>: cada una debe tener una responsabilidad y una relación justificables.</p>
+<h3>7.3 Catálogo funcional de las 44 tablas</h3>
+<table>
+<thead>
+<tr>
+<th>Tabla</th>
+<th>Qué representa y por qué está separada</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>idioma</code></td>
+<td>Catálogo común de lenguas; evita repetir código y nombre en cada recurso</td>
+</tr>
+<tr>
+<td><code>categoria</code></td>
+<td>Clasificación reutilizable de palabras, lecciones y logros</td>
+</tr>
+<tr>
+<td><code>fuente_documento</code></td>
+<td>Identidad bibliográfica, URL, licencia y notas de uso</td>
+</tr>
+<tr>
+<td><code>palabra</code></td>
+<td>Entrada léxica de una lengua, pronunciación y estado documental</td>
+</tr>
+<tr>
+<td><code>acepcion</code></td>
+<td>Un sentido de una palabra; permite polisemia sin duplicar toda la entrada</td>
+</tr>
+<tr>
+<td><code>variante_palabra</code></td>
+<td>Forma ortográfica, dialectal, histórica u otra variante vinculada</td>
+</tr>
+<tr>
+<td><code>palabra_canonica</code></td>
+<td>Vinculación de una entrada con una forma canónica y su motivo</td>
+</tr>
+<tr>
+<td><code>palabra_fuente</code></td>
+<td>Relación palabra–documento con páginas y nota de evidencia</td>
+</tr>
+<tr>
+<td><code>traduccion</code></td>
+<td>Equivalencia entre dos palabras con estado, confianza y preferencia</td>
+</tr>
+<tr>
+<td><code>traduccion_acepcion</code></td>
+<td>Equivalencia entre sentidos concretos, no solo grafías</td>
+</tr>
+<tr>
+<td><code>traduccion_fuente</code></td>
+<td>Documento y tipo de respaldo de una traducción</td>
+</tr>
+<tr>
+<td><code>expresion</code></td>
+<td>Unidad de varias palabras con significado propio y lengua definida</td>
+</tr>
+<tr>
+<td><code>traduccion_expresion</code></td>
+<td>Equivalencia entre expresiones completas</td>
+</tr>
+<tr>
+<td><code>oracion_ejemplo</code></td>
+<td>Par textual contextualizado con idiomas, fuente y lección opcional</td>
+</tr>
+<tr>
+<td><code>regla_gramatical</code></td>
+<td>Explicación estructurada de una regla por idioma</td>
+</tr>
+<tr>
+<td><code>ejemplo_regla_gramatical</code></td>
+<td>Ejemplo de aplicación de una regla, con evidencia</td>
+</tr>
+<tr>
+<td><code>regla_pronunciacion</code></td>
+<td>Patrón y descripción fonética u ortográfica documentada</td>
+</tr>
+<tr>
+<td><code>cultura_contenido</code></td>
+<td>Texto cultural con procedencia y rango de páginas</td>
+</tr>
+<tr>
+<td><code>expresion_contexto_cultural</code></td>
+<td>Asocia una expresión con contexto cultural; su PK actual es solo <code>expresion_id</code></td>
+</tr>
+<tr>
+<td><code>revision_linguistica</code></td>
+<td>Seguimiento de revisión de recursos y persona revisora</td>
+</tr>
+<tr>
+<td><code>leccion</code></td>
+<td>Identidad educativa base, nivel, capítulo, categoría e idioma meta</td>
+</tr>
+<tr>
+<td><code>leccion_palabra</code></td>
+<td>Reutilización de palabras en distintas lecciones</td>
+</tr>
+<tr>
+<td><code>leccion_expresion</code></td>
+<td>Expresiones usadas en una lección y tipo de vínculo</td>
+</tr>
+<tr>
+<td><code>leccion_oracion</code></td>
+<td>Reutilización de oraciones entre lecciones</td>
+</tr>
+<tr>
+<td><code>leccion_fuente</code></td>
+<td>Bibliografía asociada a una lección</td>
+</tr>
+<tr>
+<td><code>leccion_cultura</code></td>
+<td>Contenido cultural asociado a una lección</td>
+</tr>
+<tr>
+<td><code>leccion_regla_gramatical</code></td>
+<td>Reglas que se enseñan en la lección y orden</td>
+</tr>
+<tr>
+<td><code>leccion_regla_pronunciacion</code></td>
+<td>Reglas de pronunciación que se practican y orden</td>
+</tr>
+<tr>
+<td><code>leccion_experiencia_gamificada</code></td>
+<td>Presentación de la lección, mundo, mensajes y capacidades visibles</td>
+</tr>
+<tr>
+<td><code>actividad_leccion</code></td>
+<td>Pasos de una lección: tipo, orden, habilidad, mecánica y XP</td>
+</tr>
+<tr>
+<td><code>actividad_recurso</code></td>
+<td>Recursos que usa una actividad y papel de cada uno</td>
+</tr>
+<tr>
+<td><code>mundo_gamificado</code></td>
+<td>Organización visual y temática de conjuntos de lecciones</td>
+</tr>
+<tr>
+<td><code>etapa_ruta_curricular</code></td>
+<td>Etapas curriculares, modalidad y grados</td>
+</tr>
+<tr>
+<td><code>leccion_ruta_curricular</code></td>
+<td>Ubicación de una lección en una etapa y justificación</td>
+</tr>
+<tr>
+<td><code>alineacion_curricular</code></td>
+<td>Correspondencia temática y documental con referencias curriculares</td>
+</tr>
+<tr>
+<td><code>evidencia_curricular_leccion</code></td>
+<td>Evidencia detallada de competencias, indicadores y adecuación</td>
+</tr>
+<tr>
+<td><code>usuario</code></td>
+<td>Perfil educativo vinculado a Auth, idioma objetivo y agregados de actividad</td>
+</tr>
+<tr>
+<td><code>progreso_leccion</code></td>
+<td>Estado y resultado de una lección para una persona</td>
+</tr>
+<tr>
+<td><code>palabra_favorita</code></td>
+<td>Relación personal entre usuario y palabra</td>
+</tr>
+<tr>
+<td><code>logro</code></td>
+<td>Definición de una recompensa y su condición</td>
+</tr>
+<tr>
+<td><code>logro_desbloqueado</code></td>
+<td>Obtención de un logro por una persona y fecha</td>
+</tr>
+<tr>
+<td><code>memoria_tuki</code></td>
+<td>Resúmenes de interacción asociados a usuario</td>
+</tr>
+<tr>
+<td><code>tuki_respuesta_sistema</code></td>
+<td>Respuestas configurables, activación, prioridad e idioma</td>
+</tr>
+<tr>
+<td><code>super_administrador</code></td>
+<td>Membresía explícita del rol de administración de contenido</td>
+</tr>
+</tbody></table>
+<p>No todas las tablas son de aprendizaje visible. Algunas existen para procedencia documental, administración, trazabilidad o composición curricular. Tampoco todas se replican directamente en Android: <code>revision_linguistica</code> y <code>super_administrador</code>, por ejemplo, no forman parte del mapa de contenido público importado por el sembrador principal.</p>
+<h3>7.4 Relaciones y cardinalidades que conviene defender</h3>
+<pre><code class="language-text">idioma 1 ── N palabra 1 ── N acepcion
+                  │                 │
+                  └─ traduccion ────┘  dos niveles de equivalencia separados
+
+palabra N ── M fuente_documento     mediante palabra_fuente
+leccion N ── M palabra              mediante leccion_palabra
+leccion N ── M expresion            mediante leccion_expresion
+leccion 1 ── N actividad_leccion
+actividad_leccion 1 ── N actividad_recurso
+mundo_gamificado 1 ── N leccion_experiencia_gamificada
+
+auth.users 1 ── 0..1 usuario
+usuario N ── M leccion              mediante progreso_leccion
+usuario N ── M palabra              mediante palabra_favorita
+usuario N ── M logro                mediante logro_desbloqueado
+usuario 1 ── N memoria_tuki
+</code></pre>
+<p>La primera sección del dibujo resume dos niveles: <code>traduccion</code> tiene dos FK a <code>palabra</code>; <code>traduccion_acepcion</code> tiene dos FK a <code>acepcion</code>. No hay una FK de <code>traduccion</code> a <code>acepcion</code>.</p>
+<p>En <code>traduccion</code>, origen y destino son roles diferentes de la misma entidad. Una palabra puede participar en muchas relaciones en ambos roles. El índice único del par impide repetir exactamente la misma pareja orientada; no impide almacenar también la relación inversa ni asegura que ambas tengan la misma interpretación lingüística.</p>
+<p><code>leccion_experiencia_gamificada</code> y <code>leccion_ruta_curricular</code> tienen <code>leccion_id</code> como PK: son extensiones de una lección con como máximo una fila por lección. <code>expresion_contexto_cultural</code> tiene PK <code>expresion_id</code>, por lo que actualmente admite como máximo un contexto registrado por expresión en esa tabla; no es una tabla N:M general pese a su nombre.</p>
+<p>Las FK con <code>ON DELETE CASCADE</code> eliminan dependencias sin identidad independiente, como un vínculo de lección. <code>SET NULL</code> permite conservar información cuyo padre opcional se elimina. Las FK sin acción de borrado especial impiden dejar referencias inválidas bajo las reglas ordinarias de PostgreSQL. Estas decisiones deben revisarse antes de borrar fuentes o contenido central; no constituyen una invitación a hacer borrados en producción.</p>
+<h3>7.5 Vistas e índices</h3>
+<p>Las 22 vistas ofrecen proyecciones de lectura, como <code>vista_diccionario_respuestas</code>, <code>vista_tuki_conocimiento</code>, <code>vista_actividad_recurso_resuelto</code> y <code>vista_catalogo_offline_lecciones</code>. Una vista ordinaria guarda una consulta, no necesariamente una copia física de sus resultados. Todas las vistas inspeccionadas tienen <code>security_invoker=true</code>, por lo que se evalúan con los permisos del invocador en lugar de usar indiscriminadamente los del propietario.</p>
+<p>Hay índices B-tree de identidad, unicidad, relaciones y búsqueda, además de un GIN trigram sobre <code>palabra.texto</code>. <code>usuario_nombre_usuario_unico</code> es un índice único sobre <code>lower(nombre_usuario)</code>: impide nombres iguales salvo capitalización. Los índices aceleran determinados accesos y tienen un costo de escritura y espacio; no hacen rápidas todas las consultas automáticamente.</p>
+<p>La búsqueda local revisada usa texto normalizado, igualdad, <code>LIKE</code>, prefijos y distancia de Levenshtein para sugerencias. No se encontró una tabla Room FTS5 implementada. No debe confundirse el GIN trigram remoto con una búsqueda FTS5 local.</p>
+<h2 id="seccion-8">8 Cómo explicar la primera segunda y tercera forma normal</h2>
+<h3>8.1 Qué se puede demostrar</h3>
+<p>La normalización se explica mediante dependencias funcionales, claves y semántica, no por el número de tablas. El esquema observado permite reconstruir una descomposición razonada del núcleo. No se encontró una memoria histórica completa que pruebe cada paso original de diseño; el ejemplo siguiente es una reconstrucción didáctica fiel a las estructuras actuales, no una cronología inventada.</p>
+<p>Una dependencia <code>X → Y</code> significa que cada valor de X determina un único valor de Y según las reglas del dominio. Una clave candidata identifica una fila sin atributos sobrantes. La clave primaria es la candidata elegida; pueden existir otras, expresadas con UNIQUE o índices únicos.</p>
+<h3>8.2 Primera forma normal</h3>
+<p>Imaginemos un registro inicial con una palabra, una lista de traducciones, varias fuentes y una lista de lecciones. Las listas dentro de una celda dificultan relacionar y restringir cada elemento. Para llegar a 1FN se representan valores del dominio en columnas y cada relación repetible en filas propias.</p>
+<p>En Aikukisna una traducción es una fila de <code>traduccion</code>; una fuente adicional es una fila de <code>palabra_fuente</code>; una asociación educativa es una fila de <code>leccion_palabra</code>. No hacen falta columnas <code>fuente1</code>, <code>fuente2</code> o <code>traduccion3</code>.</p>
+<p>«Atómico» no significa una sola palabra escrita: el texto de una oración puede ser un valor textual atómico para el propósito de la tabla. Tampoco un JSON es automáticamente incorrecto; depende del modelo y las operaciones, aunque dificulta restricciones relacionales sobre sus componentes.</p>
+<h3>8.3 Segunda forma normal</h3>
+<p>En una relación hipotética <code>DetalleLeccion(leccion_id, palabra_id, titulo_leccion, texto_palabra, idioma_id)</code>, la clave es el par de identificadores. Sin embargo, <code>titulo_leccion</code> depende solo de <code>leccion_id</code>, y <code>texto_palabra</code> e <code>idioma_id</code> dependen solo de <code>palabra_id</code>. Son dependencias parciales de una clave compuesta.</p>
+<p>La descomposición correcta es:</p>
+<pre><code class="language-text">leccion(leccion_id, titulo, ...)
+palabra(palabra_id, texto, idioma_id, ...)
+leccion_palabra(leccion_id, palabra_id)
+</code></pre>
+<p>Ahora la tabla puente solo guarda la asociación. Este mismo argumento justifica <code>palabra_favorita(usuario_id, palabra_id)</code> y <code>logro_desbloqueado(usuario_id, logro_id, fecha)</code>. La fecha de desbloqueo pertenece al par, no al catálogo de logros ni a todos los usuarios.</p>
+<h3>8.4 Tercera forma normal</h3>
+<p>Si <code>palabra</code> incluyera <code>idioma_id</code>, <code>nombre_idioma</code> y <code>codigo_idioma</code>, existiría <code>palabra.id → idioma_id → nombre_idioma, codigo_idioma</code>. Los datos de idioma dependerían transitivamente de la palabra. Se separan en <code>idioma</code> y se conserva la FK.</p>
+<p>Lo mismo ocurre con <code>fuente_id → titulo, autor, anio, institucion</code> y <code>categoria_id → nombre</code>. La palabra necesita la referencia, no repetir los metadatos de la fuente o la categoría en cada fila.</p>
+<p>Formalmente, una relación está en 3FN si para cada dependencia funcional no trivial <code>X → A</code>, X es superclave o A es un atributo primo, es decir, parte de alguna clave candidata. La explicación simplificada «cada atributo depende de la clave, de toda la clave y de nada más que la clave» es útil para exposición, pero no sustituye la definición formal en casos especiales.</p>
+<h3>8.5 Aplicación a entidades del proyecto</h3>
+<table>
+<thead>
+<tr>
+<th>Relación</th>
+<th>Dependencia principal</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>idioma</code></td>
+<td><code>id → codigo, nombre</code>; <code>codigo</code> también es único</td>
+<td>Catálogo con identidad propia</td>
+</tr>
+<tr>
+<td><code>fuente_documento</code></td>
+<td><code>id → titulo, autor, anio, institucion, url, licencia, nota_uso</code></td>
+<td>La bibliografía depende del documento</td>
+</tr>
+<tr>
+<td><code>acepcion</code></td>
+<td><code>id → palabra_id, numero_acepcion, definicion, contexto...</code></td>
+<td>Hay UNIQUE sobre palabra y número de sentido</td>
+</tr>
+<tr>
+<td><code>traduccion</code></td>
+<td><code>id → origen, destino, nota, estado...</code>; el par es único</td>
+<td>El dato describe la relación, no solo una de las palabras</td>
+</tr>
+<tr>
+<td><code>palabra_fuente</code></td>
+<td><code>(palabra_id, fuente_id) → paginas, nota...</code></td>
+<td>La ubicación documental pertenece al vínculo</td>
+</tr>
+<tr>
+<td><code>progreso_leccion</code></td>
+<td><code>(usuario_id, leccion_id) → estado, puntaje, fecha</code></td>
+<td>El progreso depende de persona y lección conjuntamente</td>
+</tr>
+<tr>
+<td><code>leccion_regla_gramatical</code></td>
+<td><code>(leccion_id, regla_id) → orden, nota...</code></td>
+<td>El orden depende del contexto de enseñanza</td>
+</tr>
+<tr>
+<td><code>logro_desbloqueado</code></td>
+<td><code>(usuario_id, logro_id) → fecha</code></td>
+<td>Evita duplicar la definición del logro</td>
+</tr>
+</tbody></table>
+<h3>8.6 Anomalías que evita</h3>
+<p>Actualización: cambiar el nombre de idioma en un solo catálogo evita recorrer miles de palabras. Inserción: se puede registrar una fuente antes de asociarla a una lección. Eliminación: quitar un favorito no elimina la palabra; quitar un vínculo de lección no elimina automáticamente la definición del idioma. La combinación de descomposición y FK conserva referencias válidas.</p>
+<p>En el ejemplo de <code>leccion_palabra</code>, las tablas se pueden volver a unir por PK/FK para recuperar título y texto sin almacenar esos atributos en la asociación. Esta propiedad hace útil la descomposición; separar campos arbitrariamente sin preservar significado y relaciones no es normalizar correctamente.</p>
+<h3>8.7 Límites de la afirmación de 3FN</h3>
+<p><strong>No es riguroso certificar que las 44 tablas están estrictamente en 3FN solo por inspeccionar sus PK y FK.</strong> Hace falta acordar todas las dependencias de negocio. Se observaron decisiones de compatibilidad y datos derivados que deben explicarse:</p>
+<ul>
+<li><code>texto_normalizado</code> y <code>texto_busqueda</code> materializan transformaciones del texto para consulta. Introducen redundancia controlada y requieren reglas de actualización.</li>
+<li><code>usuario.xp</code>, rachas y última actividad son agregados operativos. Guardarlos mejora lecturas, pero obliga a mantener coherencia con eventos de progreso; un agregado no viola automáticamente 3FN dentro de una tabla, aunque sí puede duplicar información derivable entre tablas.</li>
+<li><code>palabra.fuente_id</code> coexiste con <code>palabra_fuente</code>, y <code>traduccion.fuente_id</code> con <code>traduccion_fuente</code>. Se pueden interpretar como fuente principal frente a fuentes adicionales, pero esa semántica debe definirse y mantenerse: la existencia de ambas estructuras no la garantiza.</li>
+<li><code>palabra.palabra_canonica_id</code> coexiste con <code>palabra_canonica</code>; hay dos representaciones del vínculo que necesitan consistencia.</li>
+<li><code>oracion_ejemplo.leccion_id</code> coexiste con <code>leccion_oracion</code>: relación histórica directa frente a reutilización múltiple. Es necesario decidir cuál gobierna cada consulta.</li>
+<li><code>actividad_recurso(tipo_recurso, recurso_id)</code> y <code>revision_linguistica(tipo_entidad, entidad_id)</code> son referencias polimórficas. No tienen una FK convencional a todas las tablas posibles. La normalización y la integridad referencial son problemas relacionados, pero distintos.</li>
+<li>No puede asumirse <code>ciudad → pais</code> sin un catálogo y una identidad geográfica inequívoca: hay ciudades homónimas. Tampoco se debe declarar una violación de 3FN basándose solo en nombres de columnas.</li>
+</ul>
+<p><strong>Frase para defensa:</strong> «Normalizamos el núcleo por entidades y relaciones, eliminando grupos repetidos y dependencias parciales y transitivas claras. El esquema evolucionado conserva campos derivados y relaciones de compatibilidad; los documentamos en lugar de afirmar una pureza de 3FN que no está demostrada para cada atributo».</p>
+<h2 id="seccion-9">9 Persistencia local y operación offline</h2>
+<h3>9.1 Dos bases con responsabilidades distintas</h3>
+<p>PostgreSQL es el repositorio central compartido. SQLite es el almacenamiento instalado en cada teléfono. Room es la biblioteca que mapea entidades y consultas sobre SQLite; no es un servidor ni otro producto de nube. Esta función de Room está descrita en <a href="https://developer.android.com/training/data-storage/room">Android Room</a>.</p>
+<p><code>AikukisnaDatabase</code> declara 55 entidades y versión 12. El archivo local es <code>aikukisna.db</code>; <code>DatabaseModule</code> registra migraciones. El número es mayor que el de tablas remotas porque hay cachés, colas, estado de sincronización, audios y estructuras de evidencia locales. No se trata de dos esquemas idénticos replicados automáticamente por Supabase.</p>
+<p>Entre las entidades locales están <code>palabra_cache</code>, <code>traduccion_cache</code>, <code>acepcion_cache</code>, <code>expresion_cache</code>, lecciones, cultura, reglas, memoria de Tuki, <code>completar_leccion_pendiente</code>, selección de traducciones de Cámara y cursores de sincronización. Además, el código activo conserva perfil, favoritos, progreso y otros estados en SharedPreferences serializados como JSON. Aunque existan entidades Room relacionadas con usuario, no corresponde afirmar que toda persistencia personal ya migró a Room.</p>
+<h3>9.2 Cómo arranca sin descargar primero todo el corpus</h3>
+<p>El APK incluye <code>supabase_completa.ndjson.gzip</code>, de 10 923 916 bytes comprimidos en el corte revisado. Es NDJSON comprimido, no una base SQLite preempaquetada que se copie mediante <code>createFromAsset</code>.</p>
+<p>Al arrancar, <code>AikukisnaApplication</code> llama a <code>SembradorReplicaSupabase</code>. Este abre el gzip, lee una fila JSON por línea, identifica la tabla remota y la transforma a una tabla local autorizada. Inserta lotes de 500 dentro de transacciones y usa un mutex para serializar el sembrado. En carga inicial ignora filas ya existentes; en actualización remota puede modificar por PK. Un marcador de versión en preferencias se guarda después de comprobar que hay contenido en las tablas esenciales.</p>
+<p>El mapa de importación cubre 37 tablas de contenido. No importa indiscriminadamente todas las tablas del servidor ni perfiles de otras personas. Hay además políticas de evidencia Kriol y pobladores de evidencia gramatical y corpus de Cámara.</p>
+<p>Este diseño permite disponer del corpus en el primer arranque sin red, a cambio de un APK más grande y un tiempo de preparación local. La disponibilidad de corpus no equivale a iniciar una nueva cuenta sin internet: registro, login remoto y recuperación de contraseña siguen dependiendo de Auth.</p>
+<h3>9.3 Qué significa offline first en la práctica</h3>
+<p>La guía oficial de Android recomienda que las lecturas esenciales puedan resolverse localmente y que la red actualice la persistencia sin bloquear ese acceso. <a href="https://developer.android.com/topic/architecture/data-layer/offline-first">Arquitectura offline first de Android</a>.</p>
+<p>En Aikukisna hay una combinación concreta de políticas:</p>
+<table>
+<thead>
+<tr>
+<th>Flujo</th>
+<th>Sin conexión</th>
+<th>Cuando hay red</th>
+<th>Observación</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Diccionario</td>
+<td>Lee Room</td>
+<td>Sigue leyendo Room; la sincronización actualiza contenido</td>
+<td>Lectura local primero verificable</td>
+</tr>
+<tr>
+<td>Traducción textual</td>
+<td>Busca oraciones, expresiones y léxico locales</td>
+<td>El caso de uso no consulta por sí mismo un traductor remoto</td>
+<td>Depende de cobertura del corpus</td>
+</tr>
+<tr>
+<td>Cámara de objetos</td>
+<td>ML Kit y resolución documental local</td>
+<td>El caso de uso intenta primero identificación remota</td>
+<td>No es estrictamente local primero en identificación</td>
+</tr>
+<tr>
+<td>OCR</td>
+<td>Reconocedor local ML Kit</td>
+<td>Puede convivir con otras capacidades remotas</td>
+<td>Texto reconocido no implica traducción disponible</td>
+</tr>
+<tr>
+<td>Tuki</td>
+<td>Intenciones, reglas, memoria y contenido local</td>
+<td>Usa motor remoto en determinados casos</td>
+<td>No hay LLM offline integrado</td>
+</tr>
+<tr>
+<td>Dictado español e inglés</td>
+<td>Vosk con modelos incluidos</td>
+<td>Respaldo remoto si falla la ruta local</td>
+<td>Calidad depende del audio y modelo</td>
+</tr>
+<tr>
+<td>Dictado Miskito y Kriol</td>
+<td>No implementado como reconocimiento local</td>
+<td>Transcripción remota mediante proxy</td>
+<td>No confundir con traducción textual offline</td>
+</tr>
+<tr>
+<td>Pronunciación</td>
+<td>Audio local verificado o caché disponible</td>
+<td>Puede sintetizar y guardar audio, salvo restricción Miskito</td>
+<td>No todo texto tiene audio</td>
+</tr>
+<tr>
+<td>Lecciones</td>
+<td>Copia local</td>
+<td>Varias lecturas intentan red y luego caché</td>
+<td>Soporte offline con estrategia híbrida</td>
+</tr>
+<tr>
+<td>Perfil y progreso</td>
+<td>Datos locales previos</td>
+<td>Algunas lecturas intentan servidor primero</td>
+<td>No todo cambio tiene cola durable</td>
+</tr>
+<tr>
+<td>Finalización de lección</td>
+<td>Encola operación y conserva avance</td>
+<td>Llama RPC y reintenta pendientes</td>
+<td>Requiere endurecer idempotencia y asociación de usuario</td>
+</tr>
+<tr>
+<td>Favoritos</td>
+<td>Guarda estado y pendientes</td>
+<td>Inserta o elimina en servidor</td>
+<td>Cola en preferencias</td>
+</tr>
+<tr>
+<td>Nuevo login o registro</td>
+<td>No autentica nuevas credenciales localmente</td>
+<td>Supabase Auth</td>
+<td>La sesión previa permite continuar ciertos usos</td>
+</tr>
+</tbody></table>
+<p>La afirmación defendible es «la aplicación incluye datos y motores locales para funciones centrales y sincroniza cuando puede». No debe convertirse en «toda función es independiente de internet» ni «siempre se consulta Room antes de cualquier red».</p>
+<h3>9.4 Cómo se sincroniza</h3>
+<p><code>SyncWorker</code> registra una tarea periódica única cada 30 minutos y otra solicitud inmediata, con requisito de red conectada. Android decide el momento efectivo según sus restricciones: 30 minutos no es una garantía de ejecución puntual.</p>
+<p>El worker intenta actualizar contenido, enviar lecciones pendientes, enviar favoritos y sincronizar memorias. Si falla, solicita reintento mientras <code>runAttemptCount &lt; 3</code>. El flujo de contenido consulta tablas base y sincronizadores especializados, y solo marca la descarga como completa al terminar.</p>
+<p><code>SincronizadorConocimientoLinguistico</code> usa <code>updated_at</code> e identificadores como cursor para seis recursos, con páginas de 250. <code>SincronizadorContenidoLecciones</code> sustituye conjuntos locales relacionados dentro de una transacción. <code>SincronizadorReplicaSupabase</code> descarga páginas de 500 de una lista de contenido, 36 tablas públicas y una adicional autenticada. Esa descarga completa no es una suscripción Realtime ni una réplica física PostgreSQL–SQLite.</p>
+<p>Los distintos sincronizadores se superponen parcialmente. Esto facilita cubrir estructuras incorporadas en diferentes etapas, pero puede aumentar tráfico y trabajo redundante. La réplica paginada no muestra un protocolo general de tombstones para borrados ni un orden explícito de paginación en ese método. No se puede prometer consistencia exacta ante cambios concurrentes del servidor sin pruebas adicionales.</p>
+<h3>9.5 Qué ocurre al completar una lección offline</h3>
+<pre><code class="language-text">Resultado del cuestionario
+      ↓
+CompletarLeccionUseCase
+      ↓
+Repositorio intenta RPC si detecta conexión
+      ├── éxito → servidor actualiza progreso y XP
+      └── sin red o fallo → completar_leccion_pendiente
+      ↓
+Actualización local de avance perfil y logros
+      ↓ vuelve la red
+SyncWorker → RPC completar_leccion → borrar pendiente tras éxito
+</code></pre>
+<p>La operación remota usa la identidad de <code>auth.uid()</code>, hace upsert de progreso y actualiza XP y rachas en una función. La fórmula observada es <code>20 + max(puntaje, 0) * 5</code>; la UI de perfil calcula nivel con bloques de 500 XP. Son decisiones del producto, no estándares educativos.</p>
+<p>Hay aspectos que requieren atención: la cola local de lecciones contiene ID, lección, puntaje y fecha, pero no UUID de propietario. La RPC agrega XP en cada invocación y no recibe una clave única de operación. Si el servidor aplica una llamada y se pierde la respuesta, reintentar puede agregar XP otra vez. Por eso, conservar operaciones es útil, pero no demuestra entrega exactamente una vez ni corrección multiusuario en el mismo dispositivo.</p>
+<h2 id="seccion-10">10 Implementación de los módulos inteligentes</h2>
+<h3>10.1 Diccionario y Traductor</h3>
+<p><code>DiccionarioRepositoryImpl</code> depende de <code>CacheEscritor</code> y lee datos locales. <code>RepositorioConocimientoImpl</code> consulta coincidencia exacta normalizada, variantes, acepciones y sus relaciones. Para sugerencias calcula Levenshtein sobre candidatas; una sugerencia no se convierte automáticamente en traducción aceptada.</p>
+<p>El orden principal de <code>resolverTraduccion</code> es oración exacta registrada, expresión exacta con equivalencia, palabra exacta o variante y traducciones por acepción o léxicas. El caso de uso devuelve una equivalencia única, alternativas si hay ambigüedad o un mensaje de ausencia. Rechaza presentar una composición de segmentos como traducción completa.</p>
+<p>La bidireccionalidad se implementa consultando relaciones desde cualquiera de sus extremos y reorientando origen/destino. Al intercambiar idiomas, la UI copia el resultado no ambiguo a la entrada. No se entrena otro modelo al pulsar el botón ni se garantiza contenido para los doce pares dirigidos posibles entre cuatro idiomas.</p>
+<p>Existe una política de prioridad por estados: validada, documentada, importada, pendiente y rechazada. Algunas consultas excluyen solo lo rechazado y permiten contenido importado. Por tanto, «está en Room» o «la app dice verificada» no equivale necesariamente a «revisada por una persona hablante». La procedencia, el estado y la revisión humana deben distinguirse.</p>
+<h3>10.2 Cámara</h3>
+<p>CameraX obtiene imágenes. ML Kit puede reconocer texto, detectar regiones y producir etiquetas. La capa de dominio toma la identidad detectada y busca una equivalencia documental. Para el corpus controlado, <code>CorpusCamaraRepositoryImpl</code> usa selecciones locales y IDs de palabras; otras etiquetas pasan por búsquedas exactas y traducción.</p>
+<p>Cuando hay conexión, <code>ReconocerObjetoUseCase</code> intenta Gemini para identificar el objeto en español, y conserva el respaldo local si esa llamada falla. La traducción de la etiqueta vuelve al diccionario o al corpus Room. En el caso especial de destino español, el código puede devolver directamente la etiqueta española reconocida fuera del corpus controlado: no debe describirse como una validación documental universal de toda etiqueta.</p>
+<p>El corpus controlado documentado contempla 30 conceptos. La evidencia previa registró 119 selecciones por idioma: 30 Miskito, 30 español, 29 Kriol y 30 inglés. Esto no prueba reconocimiento universal de objetos; además, reconocer correctamente una imagen y traducir correctamente su etiqueta son dos comprobaciones distintas.</p>
+<h3>10.3 Tuki</h3>
+<p>Tuki combina clasificación de intención, respuestas funcionales, contexto real del estudiante, memoria local, recuperación de información y un motor remoto opcional. Las preguntas sobre idioma seleccionado, XP y función del tutor tienen respuestas directas para no tratarlas erróneamente como búsquedas de palabras.</p>
+<p>La memoria guarda resúmenes y contexto de conversación; no significa que los pesos de Gemini se reentrenen con cada conversación. El motor local no es un LLM instalado. La generación remota se apoya en contenido recuperado, un patrón de recuperación aumentada sin evidencia de base vectorial o embeddings en este flujo.</p>
+<p>El proxy remoto también construye contexto consultando funciones SQL y el perfil. Sus instrucciones buscan evitar invenciones, pero las instrucciones a un modelo no garantizan fidelidad perfecta. Además, su tratamiento de componentes o rutas documentadas y algunas ramas de Tuki no son idénticos a la negativa estricta del Traductor. La defensa debe reconocer la necesidad de pruebas diferenciadas de ambos módulos.</p>
+<h3>10.4 Voz y pronunciación</h3>
+<p>Vosk usa modelos incluidos para español e inglés. Los audios se procesan localmente en esos idiomas cuando la ruta tiene éxito; Miskito y Kriol usan transcripción remota si hay conexión. <code>SpeechRecognitionManager</code> también integra el reconocedor del sistema para determinados flujos; pedir modo offline a un servicio del sistema no demuestra que todos sus paquetes lingüísticos estén disponibles.</p>
+<p><code>PronunciationEngineImpl</code> prioriza audio local verificado y, para Miskito, exige audio humano: si no existe, devuelve no disponible. Para otras lenguas puede usar caché y luego ElevenLabs. Una voz sintética multilingüe no certifica pronunciación nativa Kriol, y leer letras de una palabra no sustituye validación fonética.</p>
+<h3>10.5 Entrenamiento de traducción</h3>
+<p>El corpus de entrenamiento documenta, por dirección, 2 752 pares de entrenamiento Miskito–español, 281 Kriol–inglés, 83 Kriol–español y 879 español–inglés, además de validación y prueba separadas. No hay pares directos en las particiones documentadas para Miskito–inglés ni Miskito–Kriol.</p>
+<p>El pipeline controla contaminación entre particiones y ambos sentidos, y no fabrica traducciones inversas inexistentes. Los ensayos técnicos pequeños no produjeron un traductor útil; el modelo entrenable es trabajo separado de la app. No se ha incorporado un modelo de traducción neuronal validado en el candidato Android. Completar ese objetivo requiere datos adecuados, entrenamiento, evaluación lingüística y conversión/integración eficiente en dispositivo.</p>
+<h2 id="seccion-11">11 Seguridad e integridad</h2>
+<p>RLS permite condicionar acceso por fila con la identidad de Auth. En los datos personales revisados aparecen predicados como <code>auth.uid() = usuario_id</code>; para perfil se compara con <code>id</code>. Catálogos y contenidos tienen políticas de lectura pública o autenticada según el recurso. Las revisiones lingüísticas requieren membresía administrativa. La distinción entre permisos de tabla y políticas de fila está documentada en <a href="https://supabase.com/docs/guides/database/postgres/row-level-security">Supabase RLS</a>.</p>
+<p>Una política habilitada no prueba seguridad completa. Deben comprobarse roles, privilegios, funciones, campos editables y contexto de cada operación. Las políticas personales observadas de tipo ALL con <code>WITH CHECK</code> no explícito usan las reglas de PostgreSQL para el predicado aplicable; no corresponde declarar acceso irrestricto solo porque el catálogo muestre ese campo como nulo.</p>
+<p>El trigger <code>proteger_columnas_gamificacion</code> conserva XP y rachas ante actualizaciones ordinarias del perfil, salvo que se active la configuración transaccional usada por la RPC. Sin embargo, la RPC de completar lección acepta el puntaje proporcionado y no comprueba allí el umbral pedagógico ni el máximo de 100. Esto debe endurecerse si los puntos necesitan resistencia a clientes manipulados.</p>
+<p>Hay claves de proveedor declaradas como campos BuildConfig en Gradle aunque los repositorios activos usan proxies. Un valor secreto colocado allí podría terminar dentro del APK: que <code>local.properties</code> esté ignorado por Git no evita su inclusión en el binario. No se inspeccionaron ni reprodujeron valores secretos; la recomendación es mantener claves de proveedor solo en servidor y retirar campos innecesarios en una tarea específica.</p>
+<p>El manifiesto permite backup y los XML de copia conservan estructura de ejemplo sin exclusiones específicas. No se observó cifrado de base mediante SQLCipher ni protección integral de todos los SharedPreferences mediante Android Keystore. El aislamiento del sandbox Android es una protección, pero no debe presentarse como cifrado adicional verificado.</p>
+<p>Los contenidos empaquetados son extraíbles del APK. Esto es compatible con contenido educativo distribuible, pero exige revisar licencias, consentimiento de audios y qué información puede publicarse. Si se envían imágenes, audio o conversaciones a servicios externos, la experiencia debe informar y aplicar políticas de privacidad apropiadas. Este informe no constituye una revisión legal ni una certificación de seguridad.</p>
+<h2 id="seccion-12">12 Pruebas y proceso de construcción</h2>
+<p>El proyecto dispone de pruebas unitarias Kotlin/JUnit y pruebas Python del pipeline. El candidato del 1 de octubre completó <strong>81 pruebas Android unitarias sin fallos</strong> siguiendo <code>sync → clean → tests → assembleDebug</code>, y fue instalado en un Samsung SM-S908U1. Estos resultados se reutilizan de la evidencia existente; no se repitió la compilación para redactar el informe.</p>
+<p><code>scripts/verify-build.ps1</code> resuelve dependencias de <code>debugRuntimeClasspath</code>, ejecuta clean, <code>testDebugUnitTest</code> y <code>assembleDebug</code>, deteniéndose si falla una etapa. La etapa llamada sync es resolución/configuración mediante CLI; no es una afirmación de haber pulsado Gradle Sync en Android Studio. El script respalda <code>build/test-captures</code> antes de clean.</p>
+<p>Hay evidencias previas de respuestas funcionales de Tuki y consultas del Traductor, pero la grabación offline continua del último candidato no quedó aprobada. La última captura se interrumpió para retirar el aviso solicitado. No se debe transformar la instalación correcta o las 81 pruebas en una afirmación de aceptación completa de Cámara y Traductor offline.</p>
+<p>El artefacto instalado es debug, versión configurada 1.0 y versionCode 1. Existe configuración Gradle para release, minificación y firma condicionada a propiedades, pero no se generó ni publicó una release en esta tarea. El ciclo de validación no equivale a un pipeline de despliegue automático en tienda.</p>
+<h2 id="seccion-13">13 Fortalezas y aspectos pendientes</h2>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>Hecho defendible</th>
+<th>Trabajo pendiente o precaución</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Arquitectura</td>
+<td>Capas, contratos, Hilt y casos de uso</td>
+<td>Reducir dependencias concretas de dominio hacia datos</td>
+</tr>
+<tr>
+<td>Datos lingüísticos</td>
+<td>Identidad, acepciones, evidencia y relaciones multilingües</td>
+<td>Unificar semántica de validación y revisar contenidos importados</td>
+</tr>
+<tr>
+<td>Offline</td>
+<td>Corpus incluido, Room, modelos Vosk y colas</td>
+<td>Homogeneizar lecturas local primero</td>
+</tr>
+<tr>
+<td>Base relacional</td>
+<td>PK, FK, UNIQUE, CHECK y RLS</td>
+<td>Formalizar dependencias y redundancias de compatibilidad</td>
+</tr>
+<tr>
+<td>Sincronización</td>
+<td>Trabajo condicionado por red y reintentos</td>
+<td>Idempotencia, usuario propietario, borrados y conflictos</td>
+</tr>
+<tr>
+<td>Traductor</td>
+<td>Equivalencias completas y rechazo de composición no validada</td>
+<td>Traducción libre neuronal y evaluación por dirección</td>
+</tr>
+<tr>
+<td>Cámara</td>
+<td>Reconocimiento y resolución documental separados</td>
+<td>Mayor cobertura y prueba física controlada sin red</td>
+</tr>
+<tr>
+<td>Tuki</td>
+<td>Contexto, intenciones y respaldo local</td>
+<td>Consistencia entre políticas locales y remotas</td>
+</tr>
+<tr>
+<td>Seguridad</td>
+<td>Proxies, Auth, RLS y protección de campos</td>
+<td>Hardening de RPC, secretos de compilación y backups</td>
+</tr>
+<tr>
+<td>Evolución</td>
+<td>Migraciones locales y scripts SQL</td>
+<td>Exportar esquemas Room y completar espejo local de backend</td>
+</tr>
+</tbody></table>
+<p><code>exportSchema=false</code> en Room desactiva su exportación automática de esquema. Las migraciones locales existen, pero no se debe asegurar cobertura de pruebas de todas ellas sin evidencia. Solo una de las tres Edge Functions desplegadas tiene código en la carpeta local <code>supabase/functions</code> inspeccionada; es conveniente versionar también las otras para recuperación y revisión. Las cinco migraciones SQL locales no son por sí solas una reproducción demostrada de todo el esquema remoto evolucionado.</p>
+<p>También hay diferencias semánticas entre servidor y réplica, como la clave que el sincronizador espera para <code>expresion_contexto_cultural</code> frente a su PK real. No se modificaron estas áreas al preparar el informe: se registran como riesgos verificables, no como fallos funcionales reproducidos en esta sesión.</p>
+<h2 id="seccion-14">14 Argumentos para defender las decisiones</h2>
+<h3>14.1 Por qué Kotlin y Android nativo</h3>
+<p>Permiten integrar directamente CameraX, ML Kit, permisos, ciclo de vida, Room, WorkManager y SDK de identidad. La elección favorece acceso a capacidades del dispositivo y coherencia con el ecosistema Android. El costo es que no se obtiene automáticamente una versión iOS; tampoco garantiza por sí sola mayor velocidad en cualquier tarea. El rendimiento depende del modelo, consultas, memoria y trabajo en hilos adecuados.</p>
+<h3>14.2 Por qué Supabase</h3>
+<p>Concentra base PostgreSQL, autenticación, API generada y funciones de servidor. Reduce la infraestructura propia necesaria para entregar un prototipo funcional manteniendo un modelo SQL relacional y reglas de acceso en servidor. El costo incluye dependencia operativa del proveedor, cuotas, conectividad para servicios remotos y disciplina de migraciones y seguridad.</p>
+<h3>14.3 Por qué Room y no solo llamadas al servidor</h3>
+<p>El estudiante puede necesitar consultar contenido sin señal. El almacenamiento local reduce dependencia de latencia y permite conservar trabajo pendiente. La nube sigue siendo necesaria para identidad, actualización compartida y servicios remotos. Room no sustituye PostgreSQL: cada uno resuelve un entorno distinto.</p>
+<h3>14.4 Por qué separar palabra acepción expresión y oración</h3>
+<p>La grafía no determina un único significado. Una acepción expresa un sentido; una expresión puede tener significado no composicional; una oración conserva contexto y equivalencia completa. Mezclar todo en una sola estructura dificulta desambiguar y justificar traducciones. Esa separación mejora el modelado, pero no genera por sí misma un traductor capaz de producir frases inéditas.</p>
+<h3>14.5 Por qué usar fuentes y estados de revisión</h3>
+<p>Las lenguas con pocos recursos requieren trazabilidad. La fuente permite explicar de dónde salió una equivalencia y su página; el estado distingue importación de validación. Esto facilita revisión y corrección sin presentar una salida generativa como verdad documental. La calidad depende de aplicar esos estados de forma consistente en todas las consultas.</p>
+<h3>14.6 Por qué conservar tablas puente</h3>
+<p>Porque los hechos son muchos a muchos. Una palabra puede estar en muchas lecciones y una lección usa muchas palabras. La tabla puente evita duplicar la palabra y permite atributos propios del vínculo. Algunas extensiones son uno a uno, y otras usan referencias polimórficas: no se debe llamar tabla puente N:M a cualquier tabla con dos identificadores.</p>
+<h2 id="seccion-15">15 Preguntas de defensa y respuestas sugeridas</h2>
+<p><strong>¿Cuál es la arquitectura?</strong> Android nativo con Compose y MVVM, organizado en presentación, dominio, datos e inyección. Es una aplicación cliente de un backend Supabase, con persistencia local y separación por paquetes dentro de un único módulo Gradle.</p>
+<p><strong>¿La app está escrita en Java?</strong> El código propio principal inspeccionado es Kotlin. Usa herramientas y bibliotecas compatibles con el ecosistema Java/Android y se ejecuta sobre Android Runtime.</p>
+<p><strong>¿Por qué 44 tablas?</strong> Porque separan entidades, relaciones, evidencia documental, currículo y progreso personal. El número es consecuencia del alcance y de la evolución; no es una métrica de calidad por sí mismo.</p>
+<p><strong>¿Cómo demuestras 3FN?</strong> Explicando dependencias y claves con ejemplos como idioma, fuente y progreso, y reconociendo campos derivados y relaciones de compatibilidad. No basta decir que hay muchas FK.</p>
+<p><strong>¿Cómo funciona sin internet?</strong> El APK lleva un corpus gzip que se importa en Room. Los módulos locales consultan SQLite y algunas operaciones de usuario se guardan para sincronizar más tarde. Registro y ciertos servicios de voz/IA siguen siendo online.</p>
+<p><strong>¿Se descarga la base completa de usuarios?</strong> No. El mapa de contenido se limita a tablas educativas; los datos personales se manejan bajo la sesión y sus políticas. Compartir corpus y compartir información privada son problemas distintos.</p>
+<p><strong>¿Qué ocurre si pierde señal al enviar progreso?</strong> Se conserva una operación pendiente y se reintenta. Todavía se debe garantizar idempotencia en servidor para que una respuesta perdida no duplique XP y asociar explícitamente la cola al usuario.</p>
+<p><strong>¿El frontend se conecta directamente a PostgreSQL?</strong> No mediante un socket de base y credenciales de administrador. Usa HTTPS con SDK, PostgREST, Auth y Edge Functions; PostgreSQL aplica restricciones y RLS.</p>
+<p><strong>¿El Traductor es una IA generativa?</strong> El motor Android actual recupera equivalencias documentadas. El entrenamiento neuronal es una línea separada que todavía no está integrada como traductor libre en el APK.</p>
+<p><strong>¿Por qué no concatenar las traducciones de palabras?</strong> Porque equivalencia léxica no determina orden, concordancia, sentido ni morfología de la frase. El caso de uso evita presentar esa composición como traducción completa validada.</p>
+<p><strong>¿Cómo evita Tuki inventar?</strong> Prioriza respuestas funcionales y conocimiento recuperado, limita el contexto y mantiene respaldo local. Esto reduce el riesgo, pero no permite prometer ausencia absoluta de alucinaciones del motor remoto.</p>
+<p><strong>¿Hay IA local?</strong> Sí hay inferencia local de visión y reconocimiento de voz en idiomas con modelos incluidos. El tutor local es un motor de reglas y recuperación, no un LLM instalado; son tipos distintos de procesamiento.</p>
+<p><strong>¿Toda la información de Room está validada por hablantes?</strong> No necesariamente. Hay estados importados y pendientes; documentación y aprobación humana deben distinguirse. La presencia en una tabla no es certificación lingüística.</p>
+<p><strong>¿Está lista para producción solo porque compila?</strong> No. Compilación y pruebas unitarias verifican una parte. Faltan validaciones físicas offline, endurecimiento de sincronización y seguridad, evaluación lingüística y proceso formal de distribución.</p>
+<h3>15.1 Guion breve para una exposición</h3>
+<p>Primero explique el problema educativo y la conectividad intermitente. Después presente la arquitectura de dos niveles: cliente Android con almacenamiento local y backend Supabase. Muestre una traducción como flujo Compose–ViewModel–caso de uso–Room y una operación de progreso como flujo hacia RPC con cola offline. Luego defienda palabra, acepción, expresión y fuentes como entidades distintas. Use <code>leccion_palabra</code> para 2FN e <code>idioma</code> y <code>fuente_documento</code> para 3FN. Cierre con la evidencia real y los pendientes, sin convertir el objetivo futuro de traducción libre en una capacidad ya instalada.</p>
+<h2 id="seccion-16">16 Glosario para estudiar</h2>
+<table>
+<thead>
+<tr>
+<th>Término</th>
+<th>Significado en este proyecto</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>APK</td>
+<td>Paquete instalable de Android</td>
+</tr>
+<tr>
+<td>ART</td>
+<td>Runtime que ejecuta el código Android</td>
+</tr>
+<tr>
+<td>Composable</td>
+<td>Función que describe una parte de la interfaz Compose</td>
+</tr>
+<tr>
+<td>ViewModel</td>
+<td>Componente que conserva y coordina estado de presentación</td>
+</tr>
+<tr>
+<td>Caso de uso</td>
+<td>Operación de negocio, por ejemplo traducir o completar lección</td>
+</tr>
+<tr>
+<td>Repositorio</td>
+<td>Interfaz y/o implementación de acceso a datos del dominio</td>
+</tr>
+<tr>
+<td>DTO</td>
+<td>Representación de un mensaje de transferencia, normalmente JSON</td>
+</tr>
+<tr>
+<td>Entity</td>
+<td>Representación persistida en Room</td>
+</tr>
+<tr>
+<td>DAO</td>
+<td>Contrato de consultas y escrituras locales</td>
+</tr>
+<tr>
+<td>PK</td>
+<td>Clave primaria que identifica una fila</td>
+</tr>
+<tr>
+<td>FK</td>
+<td>Clave foránea que exige una referencia válida</td>
+</tr>
+<tr>
+<td>UNIQUE</td>
+<td>Restricción de unicidad de uno o varios atributos</td>
+</tr>
+<tr>
+<td>CHECK</td>
+<td>Condición que debe cumplir una fila</td>
+</tr>
+<tr>
+<td>3FN</td>
+<td>Tercera forma normal, definida mediante dependencias funcionales</td>
+</tr>
+<tr>
+<td>RLS</td>
+<td>Política de acceso por fila en PostgreSQL</td>
+</tr>
+<tr>
+<td>JWT</td>
+<td>Token firmado usado para representar la sesión remota</td>
+</tr>
+<tr>
+<td>RPC</td>
+<td>Llamada a una función del servidor mediante API</td>
+</tr>
+<tr>
+<td>Edge Function</td>
+<td>Función de backend desplegada en el entorno administrado</td>
+</tr>
+<tr>
+<td>Idempotencia</td>
+<td>Repetir una operación no produce efectos adicionales indebidos</td>
+</tr>
+<tr>
+<td>Consistencia eventual</td>
+<td>Réplicas pueden diferir temporalmente hasta sincronizar</td>
+</tr>
+<tr>
+<td>Tombstone</td>
+<td>Marca persistente de eliminación para propagar un borrado</td>
+</tr>
+<tr>
+<td>STT</td>
+<td>Conversión de voz a texto</td>
+</tr>
+<tr>
+<td>TTS</td>
+<td>Conversión de texto a voz</td>
+</tr>
+<tr>
+<td>OCR</td>
+<td>Reconocimiento de texto en imágenes</td>
+</tr>
+<tr>
+<td>Corpus paralelo</td>
+<td>Pares de contenido equivalente en dos lenguas</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>Generación apoyada en información recuperada; no requiere necesariamente vectores</td>
+</tr>
+</tbody></table>
+<h2 id="seccion-17">17 Evidencias y referencias</h2>
+<p>El anexo <strong>Diccionario de datos</strong> contiene todas las columnas, tipos, nulabilidad, PK, FK, UNIQUE, CHECK, políticas e índices recuperados del catálogo. <code>metadatos_supabase_20261001.json</code> conserva el resultado estructurado sin filas de usuarios ni secretos. Las consultas fueron de lectura; los conteos de distintas consultas no forman una instantánea transaccional única si otros clientes modificaron la base simultáneamente.</p>
+<p>Archivos principales usados, expresados respecto de la raíz del proyecto para facilitar búsqueda dentro del informe:</p>
+<ul>
+<li><code>gradle/libs.versions.toml</code>, <code>app/build.gradle.kts</code>, <code>settings.gradle.kts</code>: plataforma, dependencias y módulos.</li>
+<li><code>app/src/main/java/com/aikukisna/app/AikukisnaApplication.kt</code>: preparación inicial y programación del trabajo.</li>
+<li><code>app/src/main/java/com/aikukisna/app/di/NetworkModule.kt</code>, <code>RepositoryModule.kt</code>, <code>Databasemodule.kt</code>: conexión e inyección.</li>
+<li><code>app/src/main/java/com/aikukisna/app/data/local/Aikukisnadatabase.kt</code>, <code>entity/Entities.kt</code>, <code>dao/Daos.kt</code>: contrato Room.</li>
+<li><code>app/src/main/java/com/aikukisna/app/data/local/SembradorReplicaSupabase.kt</code>: importación inicial y actualización.</li>
+<li><code>app/src/main/java/com/aikukisna/app/data/local/OfflineUserDataCache.kt</code>: preferencias y pendientes personales.</li>
+<li><code>app/src/main/java/com/aikukisna/app/data/sync/SyncWorker.kt</code>, <code>SincronizadorConocimientoLinguistico.kt</code>, <code>SincronizadorReplicaSupabase.kt</code>: sincronización.</li>
+<li><code>app/src/main/java/com/aikukisna/app/data/repository/RepositorioConocimientoImpl.kt</code>, <code>DiccionarioRepositoryImpl.kt</code>, <code>LeccionRepositoryImpl.kt</code>: acceso y políticas de datos.</li>
+<li><code>app/src/main/java/com/aikukisna/app/domain/usecase/Traducirtextousecase.kt</code>, <code>Reconocerobjetousecase.kt</code>, <code>TranscribirAudioUseCase.kt</code>, <code>Completarleccionusecase.kt</code>: operaciones principales.</li>
+<li><code>app/src/main/java/com/aikukisna/app/domain/assistant/TukiAssistant.kt</code>: política de tutoría.</li>
+<li><code>app/src/main/java/com/aikukisna/app/presentacion/viewmodel/TraductorViewModel.kt</code>: estado de traducción e inversión.</li>
+<li><code>app/src/main/java/com/aikukisna/app/ui/theme/</code>: colores, tipografía y tema.</li>
+<li><code>supabase/functions/login-usuario/index.ts</code>: login por nombre de usuario.</li>
+<li>Código desplegado consultado de <code>gemini-proxy</code> y <code>sintetizar-voz</code>: integración real de proveedores.</li>
+<li><code>docs/traductor_offline_entrenamiento.md</code>, <code>scripts/requirements-traduccion.txt</code>: alcance del entrenamiento.</li>
+<li><code>docs/evidencia_funcional/</code>, <code>docs/entrega_limitada_20261001.md</code>: evidencia y alcance del candidato.</li>
+<li><code>scripts/verify-build.ps1</code>: secuencia de construcción exigida.</li>
+</ul>
+<p>Las fuentes oficiales citadas explican las tecnologías; las afirmaciones particulares sobre Aikukisna se basan en el código y los metadatos de esta fecha. Este informe no sustituye pruebas de aceptación, una revisión de seguridad completa ni validación lingüística por especialistas.</p>
+<p class="related"><a href="DICCIONARIO_DATOS.html">Consultar el diccionario completo de datos</a></p></main></div></body></html>

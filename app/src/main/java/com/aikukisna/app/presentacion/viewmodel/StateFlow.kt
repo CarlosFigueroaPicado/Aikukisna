@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.viewmodel
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aikukisna.app.domain.usecase.ObtenerProgresoUseCase
@@ -25,7 +28,7 @@ class ProgresoViewModel(
                 _uiState.value = ProgresoUiState.Exito(listaProgreso = progreso)
             } catch (e: Exception) {
                 _uiState.value = ProgresoUiState.Error(
-                    mensaje = e.localizedMessage ?: "Error al cargar el progreso"
+                    mensaje = e.localizedMessage ?: t(R.string.stateflow_error_al_cargar_el_progreso)
                 )
             }
         }

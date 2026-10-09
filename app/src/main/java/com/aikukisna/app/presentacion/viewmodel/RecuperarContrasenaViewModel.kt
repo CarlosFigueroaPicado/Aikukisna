@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.viewmodel
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -36,8 +39,8 @@ class RecuperarContrasenaViewModel @Inject constructor(
             try {
                 solicitarRestablecimiento(correo)
                 enviado = true
-            } catch (e: Exception) {
-                errorMessage = e.message ?: "No se pudo enviar el correo de recuperación"
+            } catch (_: Exception) {
+                errorMessage = t(R.string.recuperarcontrasena_no_se_pudo_enviar_el)
             } finally {
                 isLoading = false
             }

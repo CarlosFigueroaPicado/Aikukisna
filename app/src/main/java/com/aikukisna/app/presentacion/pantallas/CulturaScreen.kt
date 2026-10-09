@@ -1,5 +1,8 @@
 package com.aikukisna.app.presentacion.pantallas
 
+import com.aikukisna.app.R
+import com.aikukisna.app.presentacion.idioma.t
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,15 +42,15 @@ fun CulturaScreen(
     onVolver: () -> Unit
 ) {
     Column(
-        Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).navigationBarsPadding()
+        Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).statusBarsPadding().navigationBarsPadding()
     ) {
         Row(
             Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", Modifier.clickable(onClick = onVolver))
-            Text("Cultura", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onBackground)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, t(R.string.cultura_volver), Modifier.clickable(onClick = onVolver))
+            Text(t(R.string.cultura_cultura), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onBackground)
         }
         when {
             viewModel.isLoading -> CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
@@ -57,9 +61,9 @@ fun CulturaScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 item {
-                    Text("Historias y saberes del Caribe", style = MaterialTheme.typography.displayLarge, color = MaterialTheme.colorScheme.onBackground)
+                    Text(t(R.string.cultura_historias_y_saberes_del_caribe), style = MaterialTheme.typography.displayLarge, color = MaterialTheme.colorScheme.onBackground)
                     Spacer(Modifier.height(6.dp))
-                    Text("Conoce la cultura de los pueblos que inspiran Aikukisna.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(t(R.string.cultura_conoce_la_cultura_de_los), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 items(viewModel.contenido, key = { it.id }) { item -> CulturaCard(item) }
             }
@@ -79,7 +83,7 @@ private fun CulturaCard(item: CulturaContenido) {
             Spacer(Modifier.height(8.dp))
             Text(item.contenido, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 5, overflow = TextOverflow.Ellipsis)
             Spacer(Modifier.height(10.dp))
-            Text("Fuente: ${item.fuente.titulo}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            Text(t(R.string.cultura_fuente, item.fuente.titulo), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
         }
     }
 }
