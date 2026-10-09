@@ -60,17 +60,32 @@ class OfflineUserDataCache @Inject constructor(
 
     suspend fun guardarProgresoLocal(progreso: ProgresoLeccion) {
         val usuarioId = progreso.usuarioId.toString()
-        val datos = leer<ProgresoCache>("progreso")
-            .filterNot { it.usuarioId == usuarioId && it.leccionId == progreso.leccion.id }
-            .plus(
-                ProgresoCache(
-                    usuarioId = usuarioId,
-                    leccionId = progreso.leccion.id,
-                    estado = progreso.estado,
-                    puntaje = progreso.puntaje,
-                    fecha = progreso.fechaCompletado?.toString()
-                )
+        val todos = leer<ProgresoCache>("progreso")
+        val anterior = todos.firstOrNull { it.usuarioId == usuarioId && it.leccionId == progreso.leccion.id }
+        // Una lección aprobada no vuelve atrás: repetirla y no aprobar guardaba "en_progreso" con el puntaje bajo,
+        // y el mapa bloqueaba el mundo siguiente hasta que Supabase devolvía el progreso real. Se conserva el
+        // estado "completada" y el mejor puntaje.
+        val yaCompletada = anterior?.estado == "completada"
+        val nuevo = if (yaCompletada) {
+            ProgresoCache(
+                usuarioId = usuarioId,
+                leccionId = progreso.leccion.id,
+                estado = "completada",
+                puntaje = maxOf(anterior?.puntaje ?: 0, if (progreso.estado == "completada") progreso.puntaje ?: 0 else 0),
+                fecha = if (progreso.estado == "completada") progreso.fechaCompletado?.toString() else anterior?.fecha
             )
+        } else {
+            ProgresoCache(
+                usuarioId = usuarioId,
+                leccionId = progreso.leccion.id,
+                estado = progreso.estado,
+                puntaje = progreso.puntaje,
+                fecha = progreso.fechaCompletado?.toString()
+            )
+        }
+        val datos = todos
+            .filterNot { it.usuarioId == usuarioId && it.leccionId == progreso.leccion.id }
+            .plus(nuevo)
         guardar("progreso", datos)
     }
 

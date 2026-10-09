@@ -29,3 +29,7 @@ modelos/traduccion/**/*.jsonl
 modelos/traduccion/**/*.zip
 modelos/traduccion/corpus/
 modelos/traduccion/validaciones/
+
+# Modelo de Tuki incluido en el APK (572 MB): GitHub no admite archivos de más de 100 MB.
+# Para compilar con el modelo, copia gemma3-1b-aikukisna-int4.task (Release modelo-tuki-v2) a esta carpeta.
+app/src/main/assets/modelos_llm/*.task

@@ -33,4 +33,20 @@ class FormatoTextosInterfazTest {
             }
         assertTrue("Textos con formato inválido:\n" + errores.joinToString("\n"), errores.isEmpty())
     }
+
+    /** Android recorta los espacios de los extremos si el texto no va entre comillas ("empezar elquiz"). */
+    @Test
+    fun espaciosEnLosExtremosVanEntreComillas() {
+        val recursos = listOf(File("src/main/res"), File("app/src/main/res")).first { it.isDirectory }
+        val recortados = recursos.listFiles { f -> f.isDirectory && f.name.startsWith("values") }.orEmpty()
+            .mapNotNull { File(it, "strings.xml").takeIf(File::isFile) }
+            .flatMap { archivo ->
+                Regex("""<string name="([^"]+)"[^>]*>(.*?)</string>""", RegexOption.DOT_MATCHES_ALL)
+                    .findAll(archivo.readText())
+                    .filter { val v = it.groupValues[2]; (v.startsWith(" ") || v.endsWith(" ")) }
+                    .map { "${archivo.parentFile.name}/${it.groupValues[1]}" }
+                    .toList()
+            }
+        assertTrue("Textos que perderían su espacio:\n" + recortados.joinToString("\n"), recortados.isEmpty())
+    }
 }

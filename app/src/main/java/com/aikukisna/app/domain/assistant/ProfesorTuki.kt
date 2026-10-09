@@ -79,6 +79,10 @@ class ProfesorTuki @Inject constructor(
             .also { cacheFrases[clave] = System.currentTimeMillis() to it }
     }
 
+    /** Saludo del material verificado (oraciones 138–140 del corpus, lección 17); solo Miskitu lo tiene registrado. */
+    private fun saludoEnIdioma(idiomaId: Int): String =
+        if (idiomaId == 1) "En miskito se dice: ¡Naksa! ¿Nahki sma? (¡Hola! ¿Cómo estás?). " else ""
+
     private fun raizFrase(palabra: String): String = if (palabra.length > 5) palabra.take(5) else palabra
 
     /** Respuestas breves de cortesía y ánimo, como las de un profesor en clase. */
@@ -97,8 +101,8 @@ class ProfesorTuki @Inject constructor(
         val corto = palabras.size <= 6
         return when {
             corto && palabras.any { it in SALUDOS } && texto.containsAny("como estas", "que tal", "como te va", "how are you") ->
-                "¡Hola$trato! Estoy muy bien, gracias por preguntar. ¿Qué quieres aprender hoy de $idioma? " +
-                    "Puedo enseñarte palabras, explicarte la gramática o contarte de la cultura."
+                "¡Hola$trato! Estoy muy bien, gracias por preguntar. " + saludoEnIdioma(idiomaId) +
+                    "¿Qué quieres aprender hoy de $idioma? Puedo enseñarte palabras, explicarte la gramática o contarte de la cultura."
             corto && (palabras.firstOrNull() in SALUDOS || texto in setOf("buenos dias", "buenas tardes", "buenas noches")) ->
                 "¡Hola$trato! Qué bueno verte. ¿Practicamos $idioma? Pregúntame cómo se dice algo, " +
                     "pídeme que te explique una regla o que te cuente de la cultura."
@@ -112,6 +116,15 @@ class ProfesorTuki @Inject constructor(
                 "Te entiendo$trato, aprender otro idioma cuesta y es normal sentirse así. Te propongo algo corto: " +
                     "repasemos 5 palabras de tu lección y una frase para usarlas. Pequeños pasos todos los días funcionan mejor que mucho de una vez. " +
                     "¿Empezamos? Pídeme \"háblame en $idioma\" o pregúntame cómo se dice una palabra."
+            // Comentarios sobre el propio Tuki: no son preguntas de idioma ni deben buscarse en el material.
+            corto && texto.containsAny("tardaste", "tardas", "tarda mucho", "demoraste", "demoras", "eres lento", "muy lento",
+                "por que tardaste", "tanto tiempo") ->
+                "Perdona la espera$trato. Sin internet preparo las respuestas con mi material guardado en el teléfono, " +
+                    "y a veces tardo unos segundos. ¿Qué quieres aprender de $idioma?"
+            corto && texto.containsAny("no entendi", "no te entiendo", "que dijiste", "no tiene sentido", "eso no te pregunte",
+                "no te pregunte eso", "eso no es lo que") ->
+                "Perdona$trato, creo que no te entendí bien. ¿Me lo preguntas de otra forma? Por ejemplo: " +
+                    "\"¿cómo se dice casa en $idioma?\" o \"explícame el plural\"."
             corto && texto.containsAny("eres genial", "te quiero", "eres el mejor", "me caes bien", "buen trabajo") ->
                 "¡Gracias$trato! A mí también me gusta aprender contigo. ¿Qué practicamos ahora?"
             else -> null
@@ -285,13 +298,18 @@ class ProfesorTuki @Inject constructor(
             "dime", "explica", "explicame", "ensename", "puedes", "podrias", "quiero", "saber", "tengo", "tiene",
             "hace", "hacer", "usa", "usar", "uso", "forma", "formar", "dice", "decir", "palabra", "palabras",
             "idioma", "lengua", "miskito", "miskitu", "kriol", "creole", "ingles", "espanol", "tuki", "profe",
-            "diferencia", "significa", "funciona", "ayuda", "ayudas", "solo", "tres"
+            "diferencia", "significa", "funciona", "ayuda", "ayudas", "solo", "tres",
+            // Palabras comunes que no identifican un tema: "porque tardaste tanto" respondía con el texto del
+            // sukia porque contiene "capaz tanto de curar".
+            "tanto", "tanta", "tantos", "tantas", "mucho", "mucha", "muchos", "muchas", "poco", "poca", "pocos",
+            "siempre", "nunca", "ahora", "aqui", "alli", "entonces", "despues", "antes", "todavia", "bien", "mal",
+            "algo", "nada", "todo", "toda", "todos", "todas", "cosa", "cosas", "vez", "veces", "hoy", "ayer",
+            "eres", "estas", "soy", "tienes", "tiene", "pueden", "puede", "cuanto",
+            "tardaste", "tardas", "tarda", "demoras", "demoraste", "lento", "rapido", "favor", "porfa", "oye", "mira"
         )
 
         /** Términos con que los estudiantes preguntan y cómo aparecen en las reglas documentadas. */
         val SINONIMOS = mapOf(
-            // "¿Quiénes son los miskitos?" pregunta por el pueblo: origen, región, dónde viven.
-            "quiene" to listOf("viven", "origen", "region", "pueblo"),
             "plural" to listOf("nani", "dem"),
             "conjug" to listOf("verbo", "verbal", "infini", "presen", "pasado", "futuro"),
             "verbos" to listOf("verbo", "verbal", "infini"),
@@ -317,7 +335,9 @@ class ProfesorTuki @Inject constructor(
             "capaci" to listOf("kyan", "kan"),
             "viven" to listOf("ubicac", "geogra", "region", "habita"),
             "vive" to listOf("ubicac", "geogra", "region", "habita"),
-            "quiene" to listOf("pueblo", "poblac", "grupos")
+            // "¿Quiénes son los miskitos?" pregunta por el pueblo: origen, región, dónde viven. (Una sola entrada:
+            // en mapOf una clave repetida reemplaza a la anterior sin aviso.)
+            "quiene" to listOf("pueblo", "poblac", "grupos", "viven", "origen", "region", "ubicac", "geogra")
         )
     }
 }

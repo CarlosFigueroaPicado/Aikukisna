@@ -25,6 +25,8 @@ class CulturaRepositoryImpl @Inject constructor(
     private val contenidoEmbed = "*, fuente_documento(*)"
 
     override suspend fun obtenerContenidoCultural(): List<CulturaContenido> {
+        // Primero lo guardado en el teléfono (la réplica incluida en la app): la red solo si no hay nada.
+        locales().takeIf { it.isNotEmpty() }?.let { return it.paraEstudiantes() }
         if (conectividad.hayConexion()) {
             try {
                 val resultado = client.from("cultura_contenido")
@@ -72,6 +74,7 @@ class CulturaRepositoryImpl @Inject constructor(
 
     override suspend fun obtenerContenidoCulturalPorId(id: Int): CulturaContenido? {
         if (id in OCULTOS_A_ESTUDIANTES) return null
+        locales().firstOrNull { it.id == id }?.let { return it }
         if (conectividad.hayConexion()) {
             try {
                 val resultado = client.from("cultura_contenido")

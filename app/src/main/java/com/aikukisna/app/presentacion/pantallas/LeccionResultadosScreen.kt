@@ -40,12 +40,14 @@ fun LeccionResultadosScreen(
     totalPreguntas: Int,
     palabrasAprendidas: Int,
     aprobado: Boolean,
+    xpGanado: Int = 0,
     onVolver: () -> Unit,
     idiomaId: Int? = null
 ) {
 
     val porcentaje = if (totalPreguntas == 0) 0 else (respuestasCorrectas * 100) / totalPreguntas
-    val xpEstimado = if (aprobado) 20 + porcentaje * 5 else 0
+    // XP real que sumó el intento (20 + bono la primera vez; al repetir solo la mejora del bono).
+    val xpEstimado = if (aprobado) xpGanado else 0
 
     Column(
         modifier = Modifier
@@ -64,19 +66,20 @@ fun LeccionResultadosScreen(
         ) {
             Text(
                 text = if (aprobado) {
-                    FrasesIdioma.felicitacion(idiomaId)
+                    t(R.string.leccionresultados_excelente_superada) + "\n" + FrasesIdioma.felicitacion(idiomaId)
                 } else {
                     t(R.string.leccionresultados_necesitas_para_aprobar, ObtenerMapaLeccionesUseCase.PORCENTAJE_APROBACION)
                 },
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface
+                style = if (aprobado) MaterialTheme.typography.labelLarge else MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
         Image(
-            painter = painterResource(id = R.drawable.tuki_celebrating),
+            painter = painterResource(id = if (aprobado) R.drawable.tuki_celebrating else R.drawable.tuki_teaching),
             contentDescription = null,
-            modifier = Modifier.size(width = 89.dp, height = 80.dp)
+            modifier = Modifier.size(width = 134.dp, height = 120.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(

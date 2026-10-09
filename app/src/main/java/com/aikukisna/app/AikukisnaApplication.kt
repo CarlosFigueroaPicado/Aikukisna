@@ -11,7 +11,6 @@ import com.aikukisna.app.domain.repository.AuthRepository
 import com.aikukisna.app.domain.repository.UsuarioRepository
 import com.aikukisna.app.domain.usecase.SincronizarFavoritosPendientesUseCase
 import com.aikukisna.app.domain.usecase.SincronizarLeccionesPendientesUseCase
-import com.aikukisna.app.domain.usecase.SincronizarDatosOfflineUseCase
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,9 +34,10 @@ class AikukisnaApplication : Application() {
 
     @Inject lateinit var sembradorAudiosHumanos: SembradorAudiosHumanos
 
+    @Inject lateinit var modeloTukiLocal: com.aikukisna.app.data.local.ia.ModeloTukiLocal
+
     @Inject lateinit var sincronizarLeccionesPendientesUseCase: SincronizarLeccionesPendientesUseCase
     @Inject lateinit var sincronizarFavoritosPendientesUseCase: SincronizarFavoritosPendientesUseCase
-    @Inject lateinit var sincronizarDatosOfflineUseCase: SincronizarDatosOfflineUseCase
     @Inject lateinit var authRepository: AuthRepository
     @Inject lateinit var usuarioRepository: UsuarioRepository
     @Inject lateinit var memoriaTukiLocalDao: MemoriaTukiLocalDao
@@ -50,6 +50,14 @@ class AikukisnaApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         com.aikukisna.app.presentacion.idioma.IdiomaInterfaz.envolver(this)
+        // El modelo incluido se copia en paralelo a la carga de datos (unos segundos, sin red).
+        scopeInicializacion.launch {
+            try {
+                modeloTukiLocal.prepararDesdeApp()
+            } catch (e: Exception) {
+                Log.e(ETIQUETA, "No se pudo preparar el modelo incluido; tipo=${e.javaClass.simpleName}")
+            }
+        }
         scopeInicializacion.launch {
             try {
                 sembradorReplicaSupabase.sembrarSiExiste()
@@ -68,8 +76,8 @@ class AikukisnaApplication : Application() {
                     Log.e(ETIQUETA, "No se pudieron registrar los audios de hablantes; tipo=${e.javaClass.simpleName}")
                 }
                 SyncWorker.programar(applicationContext)
-                // El modelo de Tuki offline se baja solo cuando hay Wi-Fi.
-                DescargaModeloTukiWorker.programar(applicationContext)
+                // Sin modelo incluido en el APK, el de Tuki offline se baja solo cuando hay Wi-Fi.
+                if (!modeloTukiLocal.incluidoEnApp()) DescargaModeloTukiWorker.programar(applicationContext)
             }
         }
     }

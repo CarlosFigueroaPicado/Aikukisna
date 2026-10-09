@@ -108,7 +108,11 @@ class PalabraPronunciacionRoomTest {
                 listOf(FuenteDocumentoEntity(1, "Fuente", null, null, null))
             )
             db.palabraDao().guardarTodas(listOf(PalabraEntity(1, 1, "Naksa", null, 1)))
-            val repositorio = AudioPronunciacionRepositoryImpl(context, db.audioPronunciacionDao())
+            val repositorio = AudioPronunciacionRepositoryImpl(
+                context,
+                db.audioPronunciacionDao(),
+                SembradorAudiosHumanos(context, db.audioPronunciacionDao())
+            )
             val miskito = Idioma(1, "mi", "Miskito")
             repositorio.registrar(
                 AudioPronunciacion(

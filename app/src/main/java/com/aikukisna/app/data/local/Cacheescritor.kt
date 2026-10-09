@@ -143,16 +143,22 @@ class CacheEscritor @Inject constructor(
         idiomaDestinoId: Int
     ): String? {
         val buscado = normalizarOracion(texto)
-        return oracionEjemploDao.obtenerPorIdiomas(idiomaOrigenId, idiomaDestinoId)
-            .firstNotNullOfOrNull { oracion ->
-                when {
-                    oracion.idiomaOrigenId == idiomaOrigenId &&
-                        normalizarOracion(oracion.textoOrigen) == buscado -> oracion.textoDestino
-                    oracion.idiomaDestinoId == idiomaOrigenId &&
-                        normalizarOracion(oracion.textoDestino) == buscado -> oracion.textoOrigen
-                    else -> null
-                }
-            }
+        if (buscado.isBlank()) return null
+        val oraciones = oracionEjemploDao.obtenerPorIdiomas(idiomaOrigenId, idiomaDestinoId)
+        // Lado del idioma de origen primero, el otro después.
+        fun orientada(oracion: com.aikukisna.app.data.local.entity.OracionEjemploEntity): Pair<String, String>? = when {
+            oracion.idiomaOrigenId == idiomaOrigenId -> oracion.textoOrigen to oracion.textoDestino
+            oracion.idiomaDestinoId == idiomaOrigenId -> oracion.textoDestino to oracion.textoOrigen
+            else -> null
+        }
+        oraciones.firstNotNullOfOrNull { oracion ->
+            orientada(oracion)?.takeIf { normalizarOracion(it.first) == buscado }?.second
+        }?.let { return it }
+        // Sin oración completa: una parte alineada de una oración registrada ("¿cómo estás?").
+        return oraciones.firstNotNullOfOrNull { oracion ->
+            val (origen, destino) = orientada(oracion) ?: return@firstNotNullOfOrNull null
+            partesAlineadas(origen, destino).firstOrNull { normalizarOracion(it.first) == buscado }?.second
+        }
     }
 
     suspend fun obtenerOracionesPorIdiomas(
@@ -308,6 +314,43 @@ private fun OracionEjemplo.aEntity(leccionId: Int?) = OracionEjemploEntity(
     estadoValidacion = estadoValidacion,
     updatedAtEpochMs = updatedAtEpochMs
 )
+
+/**
+ * Partes alineadas de una oración del corpus: "¡Naksa, Pedro! ¿Nahki sma?" ↔ "¡Hola, Pedro! ¿Cómo estás?"
+ * da "¿Nahki sma?" ↔ "¿Cómo estás?". Solo se alinean si ambos lados tienen el mismo número de partes
+ * (primero por signos de oración, luego por comas); así no se mezclan fragmentos que no se corresponden.
+ */
+internal fun partesAlineadas(origen: String, destino: String): List<Pair<String, String>> {
+    val oracionesOrigen = partirOracion(origen)
+    val oracionesDestino = partirOracion(destino)
+    if (oracionesOrigen.size != oracionesDestino.size) return emptyList()
+    val pares = mutableListOf<Pair<String, String>>()
+    oracionesOrigen.zip(oracionesDestino).forEach { (o, d) ->
+        if (oracionesOrigen.size > 1) pares += o to d
+        val comasO = o.split(',').map(String::trim).filter(String::isNotBlank)
+        val comasD = d.split(',').map(String::trim).filter(String::isNotBlank)
+        if (comasO.size > 1 && comasO.size == comasD.size) {
+            comasO.zip(comasD).forEach { (a, b) -> pares += limpiarParte(a) to limpiarParte(b) }
+        }
+    }
+    return pares
+}
+
+private val PARTE_ORACION = Regex("[¡¿]*[^.!?¡¿;]+[.!?;]*")
+
+private fun partirOracion(texto: String): List<String> =
+    PARTE_ORACION.findAll(texto).map { it.value.trim() }.filter { normalizarOracion(it).isNotBlank() }.toList()
+
+/** "¡Naksa" de "¡Naksa, Pedro!" queda "¡Naksa!": se cierran los signos que abrió la parte. */
+private fun limpiarParte(parte: String): String {
+    val sinFinal = parte.trimEnd('.', '!', '?', ';')
+    val cierre = when {
+        sinFinal.startsWith("¡") -> "!"
+        sinFinal.startsWith("¿") -> "?"
+        else -> ""
+    }
+    return sinFinal.trimEnd() + cierre
+}
 
 // Las variantes entre paréntesis ("Tingki (tengki) pali.") no deben impedir encontrar "tingki pali".
 private fun normalizarOracion(texto: String): String = texto

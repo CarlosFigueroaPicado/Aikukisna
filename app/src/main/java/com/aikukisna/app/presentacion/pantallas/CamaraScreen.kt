@@ -309,7 +309,13 @@ private fun TarjetaInferior(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                resultado != null -> ContenidoResultado(resultado, modo, idioma)
+                resultado != null -> ContenidoResultado(
+                    resultado,
+                    modo,
+                    // Texto que ya estaba en el idioma meta: se muestra su significado en español.
+                    resultado.idiomaTraduccionId?.let { id -> com.aikukisna.app.domain.model.Idioma.DISPONIBLES.firstOrNull { it.id == id }?.nombre }
+                        ?: idioma
+                )
                 errorMessage != null -> {
                     Text(errorMessage, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
                     Text(t(R.string.camara_toca_otra_vez_para_intentarlo), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

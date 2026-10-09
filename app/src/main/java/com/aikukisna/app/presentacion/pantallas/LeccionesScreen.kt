@@ -267,6 +267,22 @@ private fun NodoMapaLeccion(item: LeccionConEstado, index: Int, onClick: () -> U
                 .size(width = if (index % 3 == 2) 116.dp else 90.dp, height = 68.dp)
         )
 
+        // "Mundo N" en el lado libre de la fila: el nodo ocupa 84–152 dp desde su borde y la escena el lado opuesto.
+        val (alineacionMundo, margenMundo) = when (index % posicionesNodo.size) {
+            1 -> Alignment.CenterEnd to Modifier.padding(end = 164.dp)
+            2 -> Alignment.CenterStart to Modifier.padding(start = 164.dp)
+            else -> Alignment.CenterStart to Modifier.padding(start = 20.dp)
+        }
+        Text(
+            text = t(R.string.lecciones_mundo, index + 1),
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            color = if (habilitada) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            softWrap = false,
+            modifier = Modifier.align(alineacionMundo).then(margenMundo)
+        )
+
         Box(
             modifier = Modifier
                 .align(alineacionNodo)

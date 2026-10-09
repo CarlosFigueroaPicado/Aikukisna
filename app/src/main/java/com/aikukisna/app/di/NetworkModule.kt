@@ -24,7 +24,8 @@ object NetworkModule {
             supabaseUrl = BuildConfig.SUPABASE_URL,
             supabaseKey = BuildConfig.SUPABASE_ANON_KEY
         ) {
-            requestTimeout = 30.seconds
+            // Con señal débil 30 s por consulta dejaba las pantallas cargando; los datos ya están en el teléfono.
+            requestTimeout = 12.seconds
             install(Postgrest)
             install(Auth) {
                 scheme = "aikukisna"

@@ -1,6 +1,7 @@
 package com.aikukisna.app.data.repository
 
 import android.content.Context
+import com.aikukisna.app.data.local.SembradorAudiosHumanos
 import com.aikukisna.app.data.local.dao.AudioPronunciacionDao
 import com.aikukisna.app.data.local.entity.AudioPronunciacionEntity
 import com.aikukisna.app.domain.model.AudioPronunciacion
@@ -19,13 +20,20 @@ import kotlinx.coroutines.withContext
 @Singleton
 class AudioPronunciacionRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val dao: AudioPronunciacionDao
+    private val dao: AudioPronunciacionDao,
+    private val sembrador: SembradorAudiosHumanos
 ) : AudioPronunciacionRepository {
+
+    /** Si al arrancar la réplica aún no estaba lista, las grabaciones se registran (o completan) al consultarlas. */
+    private suspend fun asegurarGrabaciones() {
+        if (sembrador.registroCompleto) return
+        runCatching { sembrador.sembrarSiCambio() }
+    }
 
     override suspend fun buscarVerificados(
         palabraId: Int,
         idioma: Idioma
-    ): List<AudioPronunciacion> = dao
+    ): List<AudioPronunciacion> = asegurarGrabaciones().let { dao }
         .buscarVerificados(palabraId, idioma.codigo)
         .mapNotNull { it.aDomain(idioma) }
 
@@ -35,6 +43,7 @@ class AudioPronunciacionRepositoryImpl @Inject constructor(
     ): List<AudioPronunciacion> {
         val forma = normalizarFormaAudio(texto)
         if (forma.isBlank()) return emptyList()
+        asegurarGrabaciones()
         return dao.buscarHumanosPorTexto(forma, idioma.codigo).mapNotNull { it.aDomain(idioma) }
     }
 

@@ -37,8 +37,12 @@ class TraducirOracionUseCase @Inject constructor(
 
         // En frases muy cortas el modelo inventa más de lo que ayuda ("yang yapti" → "es mi hijo"):
         // si el diccionario conoce cada palabra, se prefiere la versión literal documentada.
-        val segmentosCortos = if (tokens.size <= MAX_PALABRAS_LITERAL_PRIMERO) componer(tokens, idiomaOrigenId, idiomaDestinoId) else null
-        if (segmentosCortos != null && segmentosCortos.all { it.destino != null }) {
+        // Lo mismo si unas pocas frases registradas cubren toda la oración ("hola cómo estás" →
+        // "¡Naksa! ¿Nahki sma?"): el modelo inventaba aunque el corpus tenía cada parte.
+        val segmentosCortos = if (tokens.size <= MAX_PALABRAS_COMPOSICION) componer(tokens, idiomaOrigenId, idiomaDestinoId) else null
+        if (segmentosCortos != null && segmentosCortos.all { it.destino != null } &&
+            segmentosCortos.size <= MAX_PALABRAS_LITERAL_PRIMERO
+        ) {
             return literal(segmentosCortos)
         }
 
@@ -85,7 +89,11 @@ class TraducirOracionUseCase @Inject constructor(
             fuente = FuenteTraduccion.DICCIONARIO,
             tipo = TipoTraduccion.LITERAL,
             nota = buildString {
-                append("Traducción literal palabra por palabra con el diccionario; el orden de la oración puede no ser natural.")
+                if (segmentos.size > 1 && segmentos.all { it.destino != null } && segmentos.any { it.palabras > 1 }) {
+                    append("Unida con frases y palabras registradas en el material; la oración completa no está validada.")
+                } else {
+                    append("Traducción literal palabra por palabra con el diccionario; el orden de la oración puede no ser natural.")
+                }
                 if (desconocidas.isNotEmpty()) append(" Sin equivalencia: ${desconocidas.joinToString()}.")
             }
         )
@@ -129,5 +137,6 @@ class TraducirOracionUseCase @Inject constructor(
     private companion object {
         const val MAX_PALABRAS_FRAGMENTO = 4
         const val MAX_PALABRAS_LITERAL_PRIMERO = 3
+        const val MAX_PALABRAS_COMPOSICION = 8
     }
 }

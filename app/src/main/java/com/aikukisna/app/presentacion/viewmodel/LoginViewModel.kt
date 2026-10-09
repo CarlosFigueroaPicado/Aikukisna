@@ -17,6 +17,7 @@ import com.aikukisna.app.domain.usecase.IniciarSesionConGoogleUseCase
 import com.aikukisna.app.domain.usecase.IniciarSesionUseCase
 import com.aikukisna.app.domain.usecase.ObtenerUsuarioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -78,13 +79,10 @@ class LoginViewModel @Inject constructor(
                 val credencial = proveedorTokenGoogle.obtenerCredencial(context)
                 iniciarSesionConGoogleUseCase(credencial.idToken, credencial.nonce)
                 continuarTrasAutenticacion()
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-
-                errorMessage = if (e.message?.contains("cancel", ignoreCase = true) == true) {
-                    t(R.string.login_inicio_de_sesion_cancelado)
-                } else {
-                    e.message ?: t(R.string.login_error_al_iniciar_sesion_con)
-                }
+                errorMessage = mensajeErrorGoogle(e, t(R.string.login_inicio_de_sesion_cancelado))
             } finally {
                 isLoadingGoogle = false
             }

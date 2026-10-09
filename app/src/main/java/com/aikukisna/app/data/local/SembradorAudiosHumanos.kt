@@ -30,15 +30,29 @@ class SembradorAudiosHumanos @Inject constructor(
 
     suspend fun sembrarSiCambio(): Int = withContext(Dispatchers.IO) { candado.withLock { sembrar() } }
 
+    /** true cuando todas las grabaciones del índice quedaron registradas en esta instalación. */
+    @Volatile var registroCompleto = false
+        private set
+
     private suspend fun sembrar(): Int {
         val indice = runCatching {
             context.assets.open("$DIRECTORIO/$INDICE").bufferedReader().use { JSONObject(it.readText()) }
         }.getOrNull() ?: return 0
         val version = indice.optInt("version")
-        if (preferencias.getInt(CLAVE_VERSION, 0) == version) return 0
-
         val fuentes = indice.getJSONArray("fuentes")
+        val esperadas = (0 until fuentes.length()).sumOf { f ->
+            val audios = fuentes.getJSONObject(f).getJSONArray("audios")
+            (0 until audios.length()).sumOf { audios.getJSONObject(it).getJSONArray("palabra_ids").length() }
+        }
+        // Versión registrada y con todas sus filas: nada que hacer. Si quedó vacía o a medias (se registró
+        // mientras la réplica todavía cargaba las palabras), se vuelve a intentar.
+        if (preferencias.getInt(CLAVE_VERSION, 0) == version && dao.contarHumanos() >= esperadas) {
+            registroCompleto = true
+            return 0
+        }
+
         var total = 0
+        var completo = true
         for (f in 0 until fuentes.length()) {
             val fuente = fuentes.getJSONObject(f)
             val fuenteId = fuente.getInt("fuente_id")
@@ -49,6 +63,10 @@ class SembradorAudiosHumanos @Inject constructor(
                 (0 until lista.length()).map { lista.getInt(it) }
             }
             val existentes = ids.distinct().chunked(LOTE).flatMap { dao.palabrasExistentes(it) }.toSet()
+            // Recién instalada, la réplica puede no haber cargado las palabras todavía: sin ellas no se
+            // registra nada y no se guarda la versión, para reintentar en la próxima consulta.
+            if (ids.isNotEmpty() && existentes.isEmpty()) return 0
+            if (existentes.size < ids.distinct().size) completo = false
             val filas = (0 until audios.length()).flatMap { i ->
                 val audio = audios.getJSONObject(i)
                 val lista = audio.getJSONArray("palabra_ids")
@@ -69,7 +87,9 @@ class SembradorAudiosHumanos @Inject constructor(
             dao.reemplazarFuente(fuenteId, filas)
             total += filas.size
         }
-        preferencias.edit().putInt(CLAVE_VERSION, version).apply()
+        // La versión solo se marca cuando estaban todas las palabras; si no, se completa en otra consulta.
+        if (completo) preferencias.edit().putInt(CLAVE_VERSION, version).apply()
+        registroCompleto = completo
         return total
     }
 

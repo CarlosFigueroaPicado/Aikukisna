@@ -39,7 +39,8 @@ class PrimerUsoViewModel @Inject constructor(
     /** Ruta a la que va el usuario autenticado: términos, descarga del modelo o la app. */
     fun pasoPendiente(): PasoPrimerUso = when {
         !preferencias.terminosAceptados() -> PasoPrimerUso.TERMINOS
-        !modelo.estaDisponible() && !preferencias.descargaModeloMostrada() -> PasoPrimerUso.DESCARGA_MODELO
+        // Si el APK trae el modelo no hay nada que descargar: se copia solo al arrancar.
+        !modelo.estaDisponible() && !modelo.incluidoEnApp() && !preferencias.descargaModeloMostrada() -> PasoPrimerUso.DESCARGA_MODELO
         else -> PasoPrimerUso.NINGUNO
     }
 

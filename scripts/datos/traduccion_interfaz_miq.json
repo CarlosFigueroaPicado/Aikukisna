@@ -430,5 +430,9 @@
 "configuracion_idioma_de_la_app": "App bîla aisanka",
 "configuracion_traduccion_en_revision": "lakanka kaikisa kaina",
 "configuracion_idioma_app_explicacion": "Menu bara batan nani bîla aisanka laks. Bîla aisanka man lan takisma ba lakras.",
-"configuracion_borrador_revision_nativos": "Kau kat ulbanka: miskitu upla nani kaikisa kaina"
+"configuracion_borrador_revision_nativos": "Kau kat ulbanka: miskitu upla nani kaikisa kaina",
+"lecciones_mundo": "Mundo %1$s",
+"leccionresultados_excelente_superada": "¡Pain pali! Lección superada",
+"login_google_sin_cuenta": "No hay una cuenta de Google en este teléfono. Agrégala en Ajustes > Cuentas o usa tu correo y contraseña.",
+"login_google_no_se_pudo": "No se pudo continuar con Google. Revisa tu conexión a internet e inténtalo de nuevo."
 }

@@ -12,7 +12,6 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.aikukisna.app.AikukisnaApplication
 import com.aikukisna.app.domain.model.MemoriaTuki
-import com.aikukisna.app.domain.repository.EstadoSincronizacion
 import java.time.Instant
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -45,15 +44,16 @@ class SyncWorker(
         }
     }
 
+    /**
+     * Solo se suben los cambios del estudiante. El contenido (diccionario, lecciones, cultura) ya viene en la
+     * réplica incluida en la app y se actualiza con cada versión (VERSION_REPLICA). Antes, al abrir la app y
+     * cada 30 minutos se volvían a descargar las ~900 000 filas de todas las tablas: cientos de MB por teléfono,
+     * que agotaron el tráfico del plan gratuito de Supabase (5,3 GB de 5 GB en octubre de 2026).
+     * La descarga completa queda solo para la pantalla "Descarga sin conexión" cuando no hay datos.
+     */
     private suspend fun sincronizarContenido(aplicacion: AikukisnaApplication) {
         val usuarioId = aplicacion.authRepository.usuarioActualId() ?: return
         aplicacion.usuarioRepository.sincronizarPerfilPendiente(usuarioId)
-        val idiomaMetaId = aplicacion.usuarioRepository.obtenerUsuario(usuarioId)?.idiomaMeta?.id
-        aplicacion.sincronizarDatosOfflineUseCase.invoke(idiomaMetaId).collect { estado ->
-            if (estado is EstadoSincronizacion.Error) {
-                throw IllegalStateException("La actualización remota quedó pendiente")
-            }
-        }
     }
 
     private suspend fun sincronizarMemoria(aplicacion: AikukisnaApplication) {

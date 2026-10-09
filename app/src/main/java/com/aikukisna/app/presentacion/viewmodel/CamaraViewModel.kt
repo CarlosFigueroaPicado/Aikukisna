@@ -100,7 +100,10 @@ class CamaraViewModel @Inject constructor(
                 val inicio = System.currentTimeMillis()
                 resultado = when (modo) {
                     ModoCamara.OBJETOS -> identificarObjeto(imagenBase64, punto, idioma.id)
-                    ModoCamara.TEXTO -> reconocerTextoEnImagenUseCase(imagenBase64, idioma.id)
+                    // Solo el texto tocado, marcado en pantalla en cuanto se lee.
+                    ModoCamara.TEXTO -> reconocerTextoEnImagenUseCase(imagenBase64, idioma.id, punto.x, punto.y) { leido ->
+                        if (toque == toqueActual) regionSeleccionada = leido.region
+                    }
                 }
                 Log.i(ETIQUETA, "modo=$modo idioma=${idioma.id} objeto=${resultado?.objetoDetectado} " +
                     "traduccion=${resultado?.traduccion} ms=${System.currentTimeMillis() - inicio}")
